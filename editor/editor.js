@@ -17,6 +17,7 @@ const fieldsets = {
     ['resume', '이력서 PDF (선택)', 'pdf', 'PDF를 선택하면 Résumé 링크가 표시됩니다.']
   ],
   projects: [
+    ['caseStudy', '연결할 상세 페이지 (선택)', 'case-study', '이 페이지로 프로젝트 제목과 Read case study 링크가 연결됩니다.'],
     ['title', '프로젝트 이름', 'text', '제목을 비우면 사이트에서 숨겨집니다.'], ['year', '연도', 'text', '2026'],
     ['category', '분류', 'text', '예: Research / Engineering'], ['role', '내 역할 (선택)', 'text', '예: Developer'],
     ['summary', '짧은 소개', 'textarea', '문제와 기여를 1–2문장으로 설명해 주세요.'],
@@ -29,7 +30,7 @@ const fieldsets = {
     ['approach', '자세히 보기 · 접근 방법 (선택)', 'textarea', '어떻게 진행했고, 무엇을 담당했나요?'],
     ['outcome', '자세히 보기 · 결과 (선택)', 'textarea', '결과나 배운 점을 적어 주세요.']
   ],
-  experience: [['period', '기간', 'text', '2025 — Present'], ['title', '직책', 'text', '직책을 비우면 숨겨집니다.'], ['organization', '회사 / 연구실', 'text', '기관 이름'], ['url', '기관 링크 (선택)', 'url', 'https://...'], ['description', '설명 (선택)', 'textarea', '맡았던 일과 주요 기여']],
+  experience: [['caseStudy', '연결할 상세 페이지 (선택)', 'case-study', '경력 소개 아래에 상세 페이지 링크를 표시합니다.'], ['period', '기간', 'text', '2025 — Present'], ['title', '직책', 'text', '직책을 비우면 숨겨집니다.'], ['organization', '회사 / 연구실', 'text', '기관 이름'], ['url', '기관 링크 (선택)', 'url', 'https://...'], ['description', '설명 (선택)', 'textarea', '맡았던 일과 주요 기여']],
   education: [['period', '기간', 'text', '2022 — 2026'], ['organization', '학교', 'text', '학교명이 학력 항목의 제목으로 표시됩니다.'], ['title', '전공 / 학위', 'text', '학교 아래 표시됩니다. 비우면 학력 항목이 숨겨집니다.'], ['url', '학교 링크 (선택)', 'url', 'https://...'], ['gpa', 'CGPA (선택)', 'text', '예: 3.4 / 4.3'], ['majorGpa', '전공 GPA (선택)', 'text', '예: 3.6 / 4.3'], ['description', '추가 설명 (선택)', 'textarea', '성적 외에 추가로 소개할 내용']]
 };
 const names = { profile: '소개', projects: '프로젝트', experience: '경력', education: '학력' };
@@ -40,16 +41,44 @@ function fieldHTML(group, index, field, object) {
   const attrs = `id="${id}" data-group="${group}" data-index="${index ?? ''}" data-key="${key}"`;
   const value = escape(object[key]);
   const upload = ['image', 'pdf'].includes(type);
-  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
+  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
 }
 function render() {
-  $('#fields').innerHTML = ['profile', 'education', 'projects', 'experience'].map(group => {
+  $('#fields').innerHTML = ['profile', 'projects', 'experience', 'education'].map(group => {
     const collection = Array.isArray(content[group]);
     const fields = (object, index) => `<div class="field-grid">${fieldsets[group].map(field => fieldHTML(group, index, field, object)).join('')}</div>`;
     return `<section class="editor-section" id="${group}"><div class="section-title"><h2>${names[group]}</h2>${collection ? `<button type="button" data-action="add" data-group="${group}">+ ${names[group]} 추가</button>` : ''}</div>${collection ? content[group].length ? content[group].map((item, index) => `<details class="entry" data-entry="${group}-${index}"><summary>${String(index + 1).padStart(2, '0')} · ${escape(item.title || `새 ${names[group]}`)}</summary><div class="entry-inner">${fields(item, index)}<div class="entry-tools"><button type="button" data-action="up" data-group="${group}" data-index="${index}" ${index === 0 ? 'disabled' : ''}>위로 ↑</button><button type="button" data-action="down" data-group="${group}" data-index="${index}" ${index === content[group].length - 1 ? 'disabled' : ''}>아래로 ↓</button><button type="button" class="delete" data-action="remove" data-group="${group}" data-index="${index}">삭제</button></div></div></details>`).join('') : `<p class="empty">등록된 항목이 없습니다. 추가 버튼으로 시작하세요.</p>` : fields(content[group])}</section>`;
-  }).join('');
+  }).join('') + renderCaseStudies();
 }
 function getObject(input) { return input.dataset.index === '' ? content[input.dataset.group] : content[input.dataset.group][Number(input.dataset.index)]; }
+function setCaseValue(path, value) {
+  const keys = path.split('.');
+  const key = keys.pop();
+  let object = content.caseStudies;
+  for (const part of keys) object = object[part];
+  object[key] = value;
+}
+function caseField(path, label, value, kind = 'textarea') {
+  const id = `case-${path.replaceAll('.', '-')}`;
+  const attrs = `id="${id}" data-case-path="${path}"`;
+  return `<div class="field wide"><label for="${id}">${escape(label)}</label>${kind === 'textarea' ? `<textarea ${attrs} rows="3">${escape(value)}</textarea>` : `<input ${attrs} type="text" value="${escape(value)}">`}${kind === 'image' ? `<div class="upload"><input type="file" aria-label="${escape(label)} 파일 선택" data-upload-for="${id}" accept=".png,.jpg,.jpeg,.webp,.gif"><span class="help">이미지를 교체하면 웹과 PDF에 함께 반영됩니다.</span></div>` : ''}</div>`;
+}
+function renderCaseStudies() {
+  const studies = content.caseStudies || [];
+  if (!studies.length) return '';
+  const fields = (object, path, schema) => schema.map(([key, label, kind]) => caseField(`${path}.${key}`, label, object[key], kind)).join('');
+  const figureFields = [['image', '그림', 'image'], ['alt', '그림 대체 설명'], ['caption', '그림 아래 설명'], ['link', '자료 링크 (선택)', 'text'], ['label', '자료 링크에 표시할 글자', 'text']];
+  const blocks = (section, path) => section.blocks.map((block, index) => {
+    const at = `${path}.blocks.${index}`;
+    let body = '';
+    const names = { text: '문단', heading: '소제목', figure: '그림', comparison: '사례 비교' };
+    if (block.type === 'text' || block.type === 'heading') body = caseField(`${at}.text`, names[block.type], block.text, block.type === 'heading' ? 'text' : 'textarea');
+    if (block.type === 'figure') body = fields(block, at, figureFields);
+    if (block.type === 'comparison') body = fields(block, at, [['intro', '비교 도입'], ['caption', '비교 설명'], ['printImage', 'PDF에 사용할 비교 그림', 'image'], ['alt', '비교 그림 대체 설명']]) + block.cases.map((item, i) => `<fieldset><legend>사례 ${i + 1}</legend>${fields(item, `${at}.cases.${i}`, [['question', '질문'], ['source', '원본 페이지'], ['input', '답변 모델 입력'], ['response', '최종 응답 요약'], ['diagnosis', '진단 단계', 'text']])}</fieldset>`).join('');
+    return `<div class="case-editor-block"><p class="help">${index + 1} · ${names[block.type]}</p>${body}</div>`;
+  }).join('');
+  return `<section class="editor-section" id="case-studies"><div class="section-title"><h2>상세 페이지 본문</h2></div><p class="help case-editor-help">여기서 수정한 내용은 상세 페이지와 해당 페이지의 PDF에 함께 반영됩니다. 주소는 고정되므로 홈과 경력 링크가 유지됩니다. 새 상세 페이지나 섹션 추가는 Codex에 요청하세요.</p>${studies.map((study, index) => `<details class="entry"><summary>${escape(study.title)}</summary><div class="entry-inner"><a href="/projects/${escape(study.slug)}/" target="_blank" rel="noopener">상세 페이지 미리보기 ↗</a><div class="field-grid">${fields(study, `${index}`, [['title', '상세 제목', 'text'], ['subtitle', '소속 · 역할 · 기간', 'text'], ['description', '검색 결과에 표시할 소개'], ['introduction', '팀과 내 역할 소개']])}</div><fieldset><legend>첫 화면의 질문과 근거</legend>${fields(study.example, `${index}.example`, [['question', '질문', 'text'], ['answer', '답변 요약'], ['evidence', '검색 구간 · 순위', 'text'], ['note', '번역 · 요약 안내'], ['image', '대표 그림', 'image'], ['alt', '대표 그림 대체 설명'], ['caption', '그림 아래 설명'], ['source', '원본 영상 링크', 'text'], ['sourceLabel', '원본 링크에 표시할 글자', 'text']])}</fieldset>${study.sections.map((section, i) => `<details class="entry case-section-editor"><summary>${escape(section.title)}</summary><div class="entry-inner">${caseField(`${index}.sections.${i}.title`, '섹션 제목', section.title, 'text')}${blocks(section, `${index}.sections.${i}`)}</div></details>`).join('')}</div></details>`).join('')}</section>`;
+}
 function error(message) { $('#error').textContent = message; $('#error').hidden = false; $('#error').scrollIntoView({ block: 'center' }); }
 async function api(url, data) {
   const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Portfolio-Editor': '1' }, body: JSON.stringify(data) });
@@ -59,6 +88,7 @@ async function api(url, data) {
 }
 $('#fields').addEventListener('input', event => {
   const input = event.target;
+  if (input.dataset.casePath) { setCaseValue(input.dataset.casePath, input.value); markDirty(); return; }
   if (!input.dataset.key) return;
   getObject(input)[input.dataset.key] = input.value;
   if (input.dataset.key === 'title') input.closest('details').querySelector('summary').textContent = `${String(Number(input.dataset.index) + 1).padStart(2, '0')} · ${input.value || `새 ${names[input.dataset.group]}`}`;
@@ -100,7 +130,8 @@ $('#fields').addEventListener('change', async event => {
     const target = document.getElementById(input.dataset.uploadFor);
     if (!target) throw new Error('파일을 추가하는 동안 항목이 변경되었습니다. 다시 선택해 주세요.');
     target.value = result.path;
-    getObject(target)[target.dataset.key] = result.path;
+    if (target.dataset.casePath) setCaseValue(target.dataset.casePath, result.path);
+    else getObject(target)[target.dataset.key] = result.path;
     markDirty();
   } catch (err) { error(err.message || '파일을 불러오지 못했습니다.'); $('#status').textContent = '파일 추가 실패'; }
   finally { pendingUploads--; $('#save').disabled = pendingUploads > 0; input.value = ''; }

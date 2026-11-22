@@ -1,7 +1,11 @@
+import { escapeHTML as text, safeURL, paragraphs, link } from './html.mjs';
+import { validateCaseStudies, caseStudyPath } from './case-studies.mjs';
+export { escapeHTML, safeURL } from './html.mjs';
+
 // All interface copy lives here. Add another language file and label set later.
 export const labels = {
   en: {
-    portfolio: 'Personal portfolio', about: 'About', work: 'Selected projects',
+    portfolio: 'Personal portfolio', about: 'About', work: 'Selected Work',
     experience: 'Experience', education: 'Education',
     project: 'View project', code: 'Code', paper: 'PDF', resume: 'Résumé',
     read: 'Read project', problem: 'The question', approach: 'The approach',
@@ -9,26 +13,6 @@ export const labels = {
     top: 'Back to top', skip: 'Skip to content'
   }
 };
-
-export function escapeHTML(value = '') {
-  return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
-
-export function safeURL(value = '', asset = false) {
-  const raw = String(value).trim();
-  if (!raw) return '';
-  if (/^assets\/[a-zA-Z0-9_./-]+$/.test(raw) && !raw.split('/').includes('..')) return raw;
-  try {
-    const url = new URL(raw);
-    if (['https:', 'http:'].includes(url.protocol) && !url.username && !url.password) return raw;
-  } catch { /* Invalid URLs are omitted from the page. */ }
-  return '';
-}
-
-const text = escapeHTML;
-const paragraphs = value => String(value || '').split(/\n\s*\n/).filter(s => s.trim()).map(s => `<p>${text(s).replace(/\n/g, '<br>')}</p>`).join('');
-const external = url => /^https?:/.test(url) ? ' target="_blank" rel="noopener noreferrer"' : '';
-const link = (url, label, className = '') => safeURL(url) ? `<a class="${className}" href="${text(safeURL(url))}"${external(url)}>${text(label)} <span aria-hidden="true">↗</span></a>` : '';
 
 export function validateContent(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('내용은 JSON 객체여야 합니다.');
@@ -49,6 +33,7 @@ export function validateContent(data) {
     }
   }
   if (data.profile.email && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(data.profile.email)) throw new Error('이메일 주소를 확인해 주세요.');
+  validateCaseStudies(data);
   return data;
 }
 
@@ -61,21 +46,22 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
   const education = data.education.filter(x => x.title.trim());
   const email = p.email ? `<div class="email-control"><button type="button" class="email-copy" data-email="${text(p.email)}" title="Copy email address" aria-label="Copy email address: ${text(p.email)}"><span class="email-address">${text(p.email)}</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M10 5V2H2v9h3"/></svg></button><span class="copy-status" role="status" aria-live="polite"></span></div>` : '';
   const social = [link(p.github, 'GitHub'), link(p.linkedin, 'LinkedIn'), link(p.scholar, 'Google Scholar')].filter(Boolean).join('');
-  const sections = [['about', t.about], ...(education.length ? [['education', t.education]] : []), ...(projects.length ? [['work', t.work]] : []), ...(experiences.length ? [['experience', t.experience]] : [])];
-  const nav = sections.map(([id, label], i) => `<a href="#${id}"${i === 0 ? ' aria-current="location"' : ''}><span class="nav-index">${String(i + 1).padStart(2, '0')}</span>${text(id === 'work' ? 'Projects' : label)}</a>`).join('');
+  const sections = [['about', t.about], ...(projects.length ? [['work', t.work]] : []), ...(experiences.length ? [['experience', t.experience]] : []), ...(education.length ? [['education', t.education]] : [])];
+  const nav = sections.map(([id, label], i) => `<a href="#${id}"${i === 0 ? ' aria-current="location"' : ''}><span class="nav-index">${String(i + 1).padStart(2, '0')}</span>${text(label)}</a>`).join('');
   const sectionHeader = (id, title) => `<header class="section-heading"><span class="section-index">${String(sections.findIndex(s => s[0] === id) + 1).padStart(2, '0')}</span><h2>${text(title)}</h2></header>`;
-  const history = rows => rows.map(row => `<article class="history-row"><p class="period">${text(row.period)}</p><div><h3>${text(row.title)}</h3><p class="organization">${safeURL(row.url) ? link(row.url, row.organization) : text(row.organization)}</p>${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}</div></article>`).join('');
+  const history = rows => rows.map(row => `<article class="history-row"><p class="period">${text(row.period)}</p><div><h3>${text(row.title)}</h3><p class="organization">${safeURL(row.url) ? link(row.url, row.organization) : text(row.organization)}</p>${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}${row.caseStudy ? `<div class="text-links project-links"><a href="${caseStudyPath(row.caseStudy)}">Read case study <span aria-hidden="true">↗</span></a></div>` : ''}</div></article>`).join('');
   const educationHTML = education.map(row => {
     const scores = [['CGPA', row.gpa], ['Major GPA', row.majorGpa]].filter(([, value]) => value?.trim());
     return `<article class="history-row education-row"><p class="period">${text(row.period)}</p><div><h3>${row.organization ? (safeURL(row.url) ? link(row.url, row.organization) : text(row.organization)) : text(row.title)}</h3>${row.organization ? `<p class="degree">${text(row.title)}</p>` : ''}${scores.length ? `<dl class="education-scores">${scores.map(([label, value]) => `<div><dt>${label}</dt><dd>${text(value)}</dd></div>`).join('')}</dl>` : ''}${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}</div></article>`;
   }).join('');
   const projectHTML = projects.map((project, i) => {
+    const casePath = project.caseStudy ? caseStudyPath(project.caseStudy) : '';
     const details = [['problem', t.problem], ['approach', t.approach], ['outcome', t.outcome]].filter(([key]) => project[key]?.trim());
     const metadata = [[t.role, project.role], [t.tools, project.tools]].filter(([, v]) => v?.trim());
     const links = [link(project.url, t.project), link(project.paper, t.paper), link(project.code, t.code)].filter(Boolean).join('');
     const hasImage = Boolean(safeURL(project.image));
     const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(project.image)}" target="_blank" rel="noopener noreferrer" aria-label="View full-size image for ${text(project.title)}"><img class="project-image" src="${text(project.image)}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="112"></a></figure>` : '';
-    return `<article class="project${hasImage ? ' has-image' : ''}"><span class="project-index" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${figure}<div class="project-body"><div class="project-meta">${[project.category, project.year].filter(Boolean).map(text).join('<span aria-hidden="true"> / </span>')}</div><h3>${text(project.title)}</h3><div class="description">${paragraphs(project.summary)}</div>${links ? `<div class="text-links project-links">${links}</div>` : ''}${details.length || metadata.length ? `<details><summary>${t.read}<span class="detail-sign" aria-hidden="true"></span></summary><div class="project-details">${metadata.length ? `<dl>${metadata.map(([k, v]) => `<div><dt>${text(k)}</dt><dd>${text(v)}</dd></div>`).join('')}</dl>` : ''}${details.map(([k, v]) => `<section><h4>${text(v)}</h4>${paragraphs(project[k])}</section>`).join('')}</div></details>` : ''}</div></article>`;
+    return `<article class="project${hasImage ? ' has-image' : ''}"><span class="project-index" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${figure}<div class="project-body"><div class="project-meta">${[project.category, project.year].filter(Boolean).map(text).join('<span aria-hidden="true"> / </span>')}</div><h3>${casePath ? `<a href="${casePath}">${text(project.title)}</a>` : text(project.title)}</h3><div class="description">${paragraphs(project.summary)}</div>${links ? `<div class="text-links project-links">${links}</div>` : ''}${casePath ? `<div class="text-links project-links"><a href="${casePath}">Read case study <span aria-hidden="true">↗</span></a></div>` : details.length || metadata.length ? `<details><summary>${t.read}<span class="detail-sign" aria-hidden="true"></span></summary><div class="project-details">${metadata.length ? `<dl>${metadata.map(([k, v]) => `<div><dt>${text(k)}</dt><dd>${text(v)}</dd></div>`).join('')}</dl>` : ''}${details.map(([k, v]) => `<section><h4>${text(v)}</h4>${paragraphs(project[k])}</section>`).join('')}</div></details>` : ''}</div></article>`;
   }).join('');
   return `<!doctype html>
 <html lang="${lang}">
@@ -110,9 +96,9 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
             <div><h1 id="intro-heading">${text(p.name)}</h1><div class="intro">${paragraphs(p.intro)}</div>${email || social ? `<div class="text-links intro-links">${email}${social}</div>` : ''}</div>
           </div>
         </section>
-        ${education.length ? `<section id="education" class="content-section">${sectionHeader('education', t.education)}${educationHTML}</section>` : ''}
         ${projects.length ? `<section id="work" class="content-section">${sectionHeader('work', t.work)}<div class="project-list">${projectHTML}</div></section>` : ''}
         ${experiences.length ? `<section id="experience" class="content-section">${sectionHeader('experience', t.experience)}${history(experiences)}</section>` : ''}
+        ${education.length ? `<section id="education" class="content-section">${sectionHeader('education', t.education)}${educationHTML}</section>` : ''}
         <footer><span>© ${year} ${text(p.name)}</span><a href="#top">${t.top} <span aria-hidden="true">↑</span></a></footer>
       </main>
     </div>

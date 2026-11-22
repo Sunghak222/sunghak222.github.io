@@ -2,7 +2,7 @@
 html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 body { margin: 0; background: #fff; color: #292925; font: 14px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 a { color: inherit; text-underline-offset: 4px; }
-button, input, textarea { font: inherit; }
+button, input, textarea, select { font: inherit; }
 button, .upload-label { cursor: pointer; }
 button { background: #fff; color: #333; border: 1px solid #ddd; padding: 7px 13px; border-radius: 3px; }
 button:hover { border-color: #666; }
@@ -28,7 +28,7 @@ h2 { font-size: 18px; font-weight: 500; margin: 0; }
 .field { min-width: 0; }
 .field.wide { grid-column: 1 / -1; }
 label { display: block; font-size: 13px; margin-bottom: 6px; }
-input, textarea { display: block; width: 100%; background: #fcfcfa; color: #292925; border: 1px solid #dcdcd5; border-radius: 2px; padding: 10px 12px; }
+input, textarea, select { display: block; width: 100%; background: #fcfcfa; color: #292925; border: 1px solid #dcdcd5; border-radius: 2px; padding: 10px 12px; }
 textarea { min-height: 104px; resize: vertical; }
 .help { font-size: 11px; color: #79796f; margin: 5px 0 0; }
 .upload { margin-top: 9px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -36,6 +36,14 @@ input[type=file] { max-width: 100%; padding: 4px 0; border: 0; background: none;
 .entry { border: 1px solid #e2e2dc; margin-bottom: 14px; }
 .entry summary { cursor: pointer; padding: 16px 20px; font-weight: 500; font-size: 14px; }
 .entry-inner { padding: 4px 20px 22px; }
+.entry-inner > .field-grid { margin-top: 18px; }
+.case-editor-help { margin-bottom: 20px; }
+.case-editor-block { border-top: 1px solid #e5e5df; margin-top: 24px; padding-top: 14px; }
+.case-editor-block > .help { margin-bottom: 12px; }
+#case-studies .field + .field { margin-top: 16px; }
+#case-studies .field-grid .field { margin-top: 0; }
+#case-studies fieldset { border: 1px solid #e5e5df; padding: 18px; margin: 22px 0; min-width: 0; }
+#case-studies legend { padding: 0 7px; font-size: 13px; }
 .entry-tools { border-top: 1px solid #eee; margin-top: 22px; padding-top: 16px; display: flex; gap: 8px; }
 .entry-tools button { font-size: 11px; }
 .entry-tools .delete { margin-left: auto; color: #9b422c; }

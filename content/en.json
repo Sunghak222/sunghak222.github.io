@@ -14,6 +14,23 @@
   },
   "projects": [
     {
+      "title": "Multimodal Retrieval & RAG Evaluation",
+      "year": "2026",
+      "category": "KAIST Auto-ID Labs",
+      "summary": "I built a retrieval layer that could point a product question to the relevant passage in a video. I then built a benchmark to trace where evidence was lost between a source page and the final answer.",
+      "caseStudy": "kaist-gs1-rag",
+      "image": "assets/kaist-gs1-rag/sweater-evidence-timeline.png",
+      "imageAlt": "Timeline of a 57.6-second video. The highest-ranked passage spans 00:44 to 00:58.",
+      "role": "",
+      "tools": "",
+      "url": "",
+      "code": "",
+      "paper": "",
+      "problem": "",
+      "approach": "",
+      "outcome": ""
+    },
+    {
       "title": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design",
       "year": "Nov 2026",
       "category": "Quantum computing / Optimization",
@@ -64,11 +81,12 @@
   ],
   "experience": [
     {
-      "period": "May 2026 - August 2026",
+      "period": "May–August 2026",
       "title": "AI Research Engineer Intern",
       "organization": "KAIST Auto-ID Labs",
-      "description": "",
-      "url": ""
+      "description": "Built and evaluated multimodal retrieval for a conversational system that answers questions about scanned products.",
+      "url": "",
+      "caseStudy": "kaist-gs1-rag"
     }
   ],
   "education": [
@@ -80,6 +98,147 @@
       "url": "",
       "gpa": "3.4 / 4.3",
       "majorGpa": "3.6 / 4.3"
+    }
+  ],
+  "caseStudies": [
+    {
+      "slug": "kaist-gs1-rag",
+      "title": "Finding evidence for a scanned product",
+      "subtitle": "KAIST Auto-ID Labs · AI Research Engineer Intern · May–August 2026",
+      "description": "Building multimodal retrieval and tracing evidence loss in a product question-answering system.",
+      "example": {
+        "question": "How should I store a sweater?",
+        "answer": "Fold it to keep the shoulders from stretching.",
+        "evidence": "Retrieved video passage · 00:44–00:58 · Ranked first",
+        "note": "Question translated from the Korean experiment; answer summarized from the generated response. The spoken narration provides the evidence.",
+        "image": "assets/kaist-gs1-rag/sweater-evidence-timeline.png",
+        "alt": "Timeline of a 57.6-second video. The highest-ranked passage spans 00:44 to 00:58.",
+        "caption": "A single query on a 57.6-second storage video. Passage timestamps are rounded to seconds.",
+        "source": "https://www.youtube.com/shorts/xKVRzslPwJs",
+        "sourceLabel": "Original storage video"
+      },
+      "introduction": "At KAIST Auto-ID Labs, our team built a system that lets people scan a product and ask questions about it. A GS1 Digital Link identifies the product and leads to its resources, such as a care label, a product page or a storage video. I built the multimodal retrieval layer and later developed the dataset and evaluation tools we used to investigate failures.",
+      "sections": [
+        {
+          "id": "vector-search",
+          "title": "Vector Search",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Processing speech and frames in parallel"
+            },
+            {
+              "type": "text",
+              "text": "I ran speech transcription alongside visual analysis and requested captions for up to four video frames at a time. On one 57.6-second storage video, preprocessing took 17.6 seconds sequentially and 5.0 seconds with parallel processing."
+            },
+            {
+              "type": "figure",
+              "image": "assets/kaist-gs1-rag/video-preprocessing.png",
+              "alt": "For one video, sequential preprocessing took 17.6 seconds and parallel preprocessing took 5.0 seconds.",
+              "caption": "One run per configuration using live APIs, with eight scene-detected frames sampled across the video. These times cover preprocessing only; indexing, search and answer synthesis were measured separately.",
+              "link": "assets/kaist-gs1-rag/video-timings.csv",
+              "label": "Timing data (CSV)"
+            },
+            {
+              "type": "heading",
+              "text": "Keeping the end of the video in view"
+            },
+            {
+              "type": "text",
+              "text": "Selecting the first eight of 17 detected scenes left the last representative frame at 19.5 seconds. I changed the selection to sample eight frames evenly across the detected scenes, extending coverage to 54.5 seconds, and added a regression test. This fixed missing visual information near the end of the video. The sweater answer above came from speech, not from the selected frame."
+            },
+            {
+              "type": "heading",
+              "text": "Resource queue + autorater · Proposed design"
+            },
+            {
+              "type": "figure",
+              "image": "assets/kaist-gs1-rag/resource-queue-proposal.png",
+              "alt": "The proposed external retrieval queue checks incoming evidence before generating an answer. A final critic reviews the answer.",
+              "caption": "Design proposal from the internship presentation. The queue and evidence-sufficiency gate were not evaluated in the later benchmark.",
+              "link": "",
+              "label": ""
+            },
+            {
+              "type": "text",
+              "text": "Making video processing faster raised another question. If a care label already gives the washing temperature, why wait for a storage video? I proposed keeping the knowledge graph as the first lookup. When external retrieval is needed, completed items enter a resource queue. An autorater checks whether the accumulated evidence supports an answer to the question. Once it does, the system can generate the answer and pass it to the final critic."
+            },
+            {
+              "type": "text",
+              "text": "The autorater checks the question and evidence before generation; the final critic also reviews the generated answer. At the time, we had no suitable benchmark for testing that decision. The later benchmark evaluated the existing pipeline. The proposed gate’s latency and its risk of stopping before essential evidence arrives remain unmeasured."
+            },
+            {
+              "type": "text",
+              "text": "A follow-up experiment would compare waiting for all resources against the queue on the same questions, measuring both latency and the rate of missing essential evidence."
+            }
+          ]
+        },
+        {
+          "id": "benchmark",
+          "title": "Benchmark",
+          "blocks": [
+            {
+              "type": "text",
+              "text": "Public GS1 links rarely offered media as varied as our clothing demo. I extracted facts from public datasets, then used the same facts to generate resource linksets, web pages, reference answers and evidence locations for products and places. I also created pages with selected values changed, so we could test whether the system followed the document rather than a familiar answer."
+            },
+            {
+              "type": "text",
+              "text": "The evaluation connected the page the system opened, the evidence passed to the answer model and the final response. This made it possible to separate an extraction failure from a generation failure."
+            },
+            {
+              "type": "comparison",
+              "intro": "Two questions. Both received an “unable to answer” response. The traces pointed to different stages.",
+              "cases": [
+                {
+                  "question": "How tall is Busan Tower?",
+                  "source": "The page body contained 120 m.",
+                  "input": "The extractor selected JSON-LD containing only the tower’s name. The height was lost.",
+                  "response": "Said the height could not be established.",
+                  "diagnosis": "Page extraction"
+                },
+                {
+                  "question": "What nickname is Gamcheon Culture Village known by?",
+                  "source": "The page body contained “Korea’s Machu Picchu”.",
+                  "input": "The nickname reached the answer model.",
+                  "response": "Said the nickname could not be confirmed.",
+                  "diagnosis": "Answer generation"
+                }
+              ],
+              "printImage": "assets/kaist-gs1-rag/benchmark-traces.png",
+              "alt": "The reference page was read in both cases. Only the Gamcheon nickname reached the answer model.",
+              "caption": "Questions are English translations; the responses and trace descriptions here are editorial summaries of the Korean runs."
+            },
+            {
+              "type": "heading",
+              "text": "Dataset built · August handover"
+            },
+            {
+              "type": "text",
+              "text": "The merged server corpus contained 100,831 entities and 2,456,026 source facts: 75,197 food products, 254 places and 25,380 drug labels. Sources included Open Food Facts, the Korea Tourism Organization’s TourAPI and openFDA."
+            },
+            {
+              "type": "heading",
+              "text": "Pipeline evaluated · July frozen set"
+            },
+            {
+              "type": "text",
+              "text": "The earlier frozen set contained 221 reviewed questions across 20 food and place entities. On its 216 single-hop questions, the existing pipeline produced 179 fully correct answers (82.9%), 20 partially correct answers, 12 non-answers and 5 incorrect answers."
+            },
+            {
+              "type": "text",
+              "text": "This run used original pages and a warm cache. It assumed a knowledge-graph miss and began at external retrieval, skipping the initial graph lookup and review. It contained no video questions. The result is not an accuracy estimate for the later full corpus, which also included drug labels."
+            },
+            {
+              "type": "heading",
+              "text": "Checking what the score actually measured"
+            },
+            {
+              "type": "text",
+              "text": "All 11 image questions were marked correct. When I checked the citations, all 11 answers cited the HTML nutrition table and only two also cited a label photo. The result showed that the questions could be answered through another source. Testing label reading would require controlling access to the HTML answer."
+            }
+          ]
+        }
+      ]
     }
   ]
 }

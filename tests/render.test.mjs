@@ -16,10 +16,10 @@ test('renders actual page content without a client-side fetch', () => {
   assert.match(html, /<details>/);
   assert.doesNotMatch(html, /href="(?:#|)"/);
   assert.doesNotMatch(html, /\/editor/);
-  assert.ok(html.indexOf('id="education"') < html.indexOf('id="work"'));
+  assert.ok(html.indexOf('id="experience"') < html.indexOf('id="education"'));
   assert.ok(html.indexOf('id="work"') < html.indexOf('id="experience"'));
-  assert.match(html, /section-index">02<\/span><h2>Education/);
-  assert.match(html, /section-index">03<\/span><h2>Selected projects/);
+  assert.match(html, /section-index">04<\/span><h2>Education/);
+  assert.match(html, /section-index">02<\/span><h2>Selected Work/);
   assert.doesNotMatch(html, /A little about me|class="bio"|id="contact"/);
 });
 test('omits empty sections, links, and images', () => {

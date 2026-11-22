@@ -8,7 +8,7 @@ import { validateContent } from './render.mjs';
 const port = Number(process.env.PORT || 4173);
 const origin = `http://127.0.0.1:${port}`;
 const contentPath = path.join(root, 'content/en.json');
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.pdf': 'application/pdf', '.ico': 'image/x-icon' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.pdf': 'application/pdf', '.ico': 'image/x-icon', '.csv': 'text/csv; charset=utf-8' };
 let saving = false;
 function json(response, status, value) {
   response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
@@ -64,9 +64,16 @@ const server = http.createServer(async (req, res) => {
     const isEditor = pathname === '/editor' || pathname.startsWith('/editor/');
     const base = path.join(root, isEditor ? 'editor' : 'dist');
     const relative = isEditor ? pathname.replace(/^\/editor\/?/, '') || 'index.html' : pathname === '/' ? 'index.html' : pathname.slice(1);
-    const file = path.resolve(base, relative);
+    let file = path.resolve(base, relative);
     if (!file.startsWith(`${base}${path.sep}`)) return json(res, 403, { error: 'Forbidden.' });
     try {
+      if ((await stat(file)).isDirectory()) {
+        if (!pathname.endsWith('/')) {
+          res.writeHead(301, { Location: `${pathname}/${new URL(req.url, origin).search}` });
+          return res.end();
+        }
+        file = path.join(file, 'index.html');
+      }
       if (!(await stat(file)).isFile()) return json(res, 404, { error: 'Not found.' });
       res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
       res.end(req.method === 'HEAD' ? undefined : await readFile(file));

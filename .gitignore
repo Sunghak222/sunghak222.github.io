@@ -1,4 +1,5 @@
 dist/
+dist.building-*/
 .local/
 .DS_Store
 node_modules/
