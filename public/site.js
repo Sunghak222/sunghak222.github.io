@@ -1,4 +1,17 @@
 // Page content stays readable without JavaScript.
+// Retire the former Chirpy blog's root worker after a hard refresh.
+// Leave workers belonging to other GitHub Pages projects untouched.
+if (location.hostname === 'sunghak222.github.io' && 'serviceWorker' in navigator) {
+  const legacyWorker = new URL('/sw.min.js', location.origin).href;
+  navigator.serviceWorker.getRegistration('/').then(async registration => {
+    if (registration?.scope !== `${location.origin}/`) return;
+    const worker = registration.active || registration.waiting || registration.installing;
+    if (worker?.scriptURL !== legacyWorker) return;
+    const controlled = navigator.serviceWorker.controller?.scriptURL === legacyWorker;
+    if (await registration.unregister() && controlled) location.reload();
+  }).catch(() => { /* The portfolio also works when worker access is blocked. */ });
+}
+
 const navigation = [...document.querySelectorAll('nav a')];
 const sections = navigation.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
 let scheduled = false;
