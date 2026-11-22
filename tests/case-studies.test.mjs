@@ -39,6 +39,36 @@ test('detail page includes the whole article, safe text and nested-page assets',
   assert.doesNotMatch(html, /<script>unsafe/);
 });
 
+test('an imageless example survives a save round trip and keeps its source outside a figure', () => {
+  const data = fixture();
+  Object.assign(data.caseStudies[0].example, { image: '', alt: '', caption: '', timestamp: '00:44–00:58' });
+  const saved = validateContent(JSON.parse(JSON.stringify(data)));
+  const html = renderCaseStudy(saved.caseStudies[0], saved.profile);
+  assert.doesNotMatch(html, /<img|<figure/);
+  assert.match(html, /href="https:\/\/example.com\/video"/);
+  assert.match(html, /<strong>00:44–00:58<\/strong>/);
+  assert.ok(html.indexOf('My contribution') < html.indexOf('A question?'));
+  assert.equal(html.match(/A question\?/g).length, 1);
+  assert.equal(saved.caseStudies[0].example.image, '');
+});
+
+test('comparison evidence and diagnoses render as text without a separate print image', () => {
+  const data = fixture();
+  data.caseStudies[0].sections[1].blocks.push({
+    type: 'comparison', intro: 'Two failures', caption: 'Translated summaries',
+    cases: [
+      { question: 'Height?', source: '120 m', input: 'Name only', response: 'Unknown', diagnosis: 'Page extraction' },
+      { question: 'Nickname?', source: 'Machu Picchu', input: 'Nickname received', response: 'Unknown', diagnosis: 'Answer generation' }
+    ]
+  });
+  validateContent(data);
+  const html = renderCaseStudy(data.caseStudies[0], data.profile);
+  for (const value of ['120 m', 'Machu Picchu', 'Page extraction', 'Answer generation']) {
+    assert.ok(html.includes(`<dd>${value}</dd>`));
+  }
+  assert.doesNotMatch(html, /print-comparison/);
+});
+
 test('rejects unknown references, unsafe paths, duplicate IDs and executable figure links', () => {
   const mutations = [
     d => { d.projects[0].caseStudy = 'missing'; },

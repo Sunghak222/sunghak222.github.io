@@ -17,10 +17,10 @@
       "title": "Multimodal Retrieval & RAG Evaluation",
       "year": "2026",
       "category": "KAIST Auto-ID Labs",
-      "summary": "I built a retrieval layer that could point a product question to the relevant passage in a video. I then built a benchmark to trace where evidence was lost between a source page and the final answer.",
+      "summary": "I built a search layer that retrieves timestamped evidence from product videos. I also built a benchmark to trace where evidence goes missing between a source page and the final answer.",
       "caseStudy": "kaist-gs1-rag",
-      "image": "assets/kaist-gs1-rag/sweater-evidence-timeline.png",
-      "imageAlt": "Timeline of a 57.6-second video. The highest-ranked passage spans 00:44 to 00:58.",
+      "image": "",
+      "imageAlt": "",
       "role": "",
       "tools": "",
       "url": "",
@@ -109,33 +109,38 @@
       "example": {
         "question": "How should I store a sweater?",
         "answer": "Fold it to keep the shoulders from stretching.",
-        "evidence": "Retrieved video passage · 00:44–00:58 · Ranked first",
-        "note": "Question translated from the Korean experiment; answer summarized from the generated response. The spoken narration provides the evidence.",
-        "image": "assets/kaist-gs1-rag/sweater-evidence-timeline.png",
-        "alt": "Timeline of a 57.6-second video. The highest-ranked passage spans 00:44 to 00:58.",
-        "caption": "A single query on a 57.6-second storage video. Passage timestamps are rounded to seconds.",
-        "source": "https://www.youtube.com/shorts/xKVRzslPwJs",
-        "sourceLabel": "Original storage video"
+        "evidence": "Top-ranked passage from this 57.6-second video.",
+        "note": "Question translated from the Korean experiment; answer summarized from the generated response. The evidence came from spoken narration. The ranking is among passages extracted from this video.",
+        "image": "",
+        "alt": "",
+        "caption": "",
+        "source": "https://www.youtube.com/watch?v=xKVRzslPwJs&t=44s",
+        "sourceLabel": "Watch the original at 00:44",
+        "timestamp": "00:44–00:58"
       },
-      "introduction": "At KAIST Auto-ID Labs, our team built a system that lets people scan a product and ask questions about it. A GS1 Digital Link identifies the product and leads to its resources, such as a care label, a product page or a storage video. I built the multimodal retrieval layer and later developed the dataset and evaluation tools we used to investigate failures.",
+      "introduction": "At KAIST Auto-ID Labs, our team built a system that lets people scan a product and ask questions about it. A GS1 Digital Link identifies the product and leads to its resources, such as a care label, a product page or a storage video.\n\nI built the multimodal retrieval layer and later developed the dataset and evaluation tools we used to investigate failures.",
       "sections": [
         {
           "id": "vector-search",
           "title": "Vector Search",
           "blocks": [
             {
+              "type": "text",
+              "text": "I combined speech transcripts and frame captions into timestamped passages, embedded each passage, and ranked the passages against the question."
+            },
+            {
               "type": "heading",
               "text": "Processing speech and frames in parallel"
             },
             {
               "type": "text",
-              "text": "I ran speech transcription alongside visual analysis and requested captions for up to four video frames at a time. On one 57.6-second storage video, preprocessing took 17.6 seconds sequentially and 5.0 seconds with parallel processing."
+              "text": "I ran speech transcription alongside visual analysis and requested captions for up to four video frames at a time. The chart compares this with sequential preprocessing on the same storage video."
             },
             {
               "type": "figure",
               "image": "assets/kaist-gs1-rag/video-preprocessing.png",
               "alt": "For one video, sequential preprocessing took 17.6 seconds and parallel preprocessing took 5.0 seconds.",
-              "caption": "One run per configuration using live APIs, with eight scene-detected frames sampled across the video. These times cover preprocessing only; indexing, search and answer synthesis were measured separately.",
+              "caption": "One 57.6-second video, one run per configuration using live APIs. Both configurations used eight scene-detected frames sampled across the video; parallel processing allowed up to four caption requests at once. These times cover preprocessing only; indexing, search and answer synthesis were measured separately.",
               "link": "assets/kaist-gs1-rag/video-timings.csv",
               "label": "Timing data (CSV)"
             },
@@ -161,7 +166,7 @@
             },
             {
               "type": "text",
-              "text": "Making video processing faster raised another question. If a care label already gives the washing temperature, why wait for a storage video? I proposed keeping the knowledge graph as the first lookup. When external retrieval is needed, completed items enter a resource queue. An autorater checks whether the accumulated evidence supports an answer to the question. Once it does, the system can generate the answer and pass it to the final critic."
+              "text": "I also investigated when the system had enough evidence to answer. If the care label already gives the washing temperature, should the user have to wait for a storage video? I proposed keeping the knowledge graph as the first lookup. When external retrieval is needed, completed items enter a resource queue. An autorater checks whether the accumulated evidence supports an answer to the question. Once it does, the system can generate the answer and pass it to the final critic."
             },
             {
               "type": "text",
@@ -179,11 +184,23 @@
           "blocks": [
             {
               "type": "text",
-              "text": "Public GS1 links rarely offered media as varied as our clothing demo. I extracted facts from public datasets, then used the same facts to generate resource linksets, web pages, reference answers and evidence locations for products and places. I also created pages with selected values changed, so we could test whether the system followed the document rather than a familiar answer."
+              "text": "Of the seven GS1 identifiers we checked, only the clothing demo exposed a comparable set of multimedia resources directly in its linkset. I extracted facts from public datasets, then used the same facts to generate resource linksets, web pages, reference answers and evidence locations for products and places. I also created pages with selected values changed, so we could test whether the system followed the document rather than a familiar answer."
             },
             {
               "type": "text",
               "text": "The evaluation connected the page the system opened, the evidence passed to the answer model and the final response. This made it possible to separate an extraction failure from a generation failure."
+            },
+            {
+              "type": "heading",
+              "text": "Separate June test · Knowledge-graph routing"
+            },
+            {
+              "type": "text",
+              "text": "In a June test, the knowledge graph returned a T-shirt and its care instructions. The brand was missing, yet the first critic ended the search before the system checked an external source. This routing failure was separate from the July evaluation, which skipped the initial graph lookup and first critic."
+            },
+            {
+              "type": "heading",
+              "text": "July evaluation · Extraction and generation"
             },
             {
               "type": "comparison",
@@ -192,20 +209,18 @@
                 {
                   "question": "How tall is Busan Tower?",
                   "source": "The page body contained 120 m.",
-                  "input": "The extractor selected JSON-LD containing only the tower’s name. The height was lost.",
+                  "input": "The extractor kept JSON-LD containing only the tower’s name, so the 120 m height never reached the answer model.",
                   "response": "Said the height could not be established.",
                   "diagnosis": "Page extraction"
                 },
                 {
                   "question": "What nickname is Gamcheon Culture Village known by?",
                   "source": "The page body contained “Korea’s Machu Picchu”.",
-                  "input": "The nickname reached the answer model.",
+                  "input": "The text “Korea’s Machu Picchu” reached the answer model.",
                   "response": "Said the nickname could not be confirmed.",
                   "diagnosis": "Answer generation"
                 }
               ],
-              "printImage": "assets/kaist-gs1-rag/benchmark-traces.png",
-              "alt": "The reference page was read in both cases. Only the Gamcheon nickname reached the answer model.",
               "caption": "Questions are English translations; the responses and trace descriptions here are editorial summaries of the Korean runs."
             },
             {

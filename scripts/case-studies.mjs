@@ -23,7 +23,8 @@ export function validateCaseStudies(data) {
     if (!study.title.trim() || slugs.has(study.slug)) throw new Error('상세 페이지 제목과 중복 식별자를 확인해 주세요.');
     slugs.add(study.slug);
     strings(study.example, ['question', 'answer', 'evidence', 'note', 'image', 'alt', 'caption', 'source', 'sourceLabel']);
-    url(study.example.image, true); url(study.example.source);
+    if (study.example.timestamp !== undefined) strings(study.example, ['timestamp']);
+    url(study.example.image); url(study.example.source);
     if (!Array.isArray(study.sections) || !study.sections.length || study.sections.length > 20) throw new Error('상세 페이지 섹션을 확인해 주세요.');
     const ids = new Set();
     for (const section of study.sections) {
@@ -37,7 +38,7 @@ export function validateCaseStudies(data) {
           strings(block, ['image', 'alt', 'caption', 'link', 'label']);
           url(block.image, true); url(block.link);
         } else if (block?.type === 'comparison') {
-          strings(block, ['intro', 'printImage', 'alt', 'caption']); url(block.printImage, true);
+          strings(block, ['intro', 'caption']);
           if (!Array.isArray(block.cases) || block.cases.length !== 2) throw new Error('비교 사례 두 개를 입력해 주세요.');
           for (const item of block.cases) strings(item, ['question', 'source', 'input', 'response', 'diagnosis']);
         } else throw new Error('지원하지 않는 상세 페이지 본문 형식입니다.');
@@ -56,18 +57,18 @@ const assetURL = value => {
 const sourceLink = (url, label) => url ? `<a href="${text(assetURL(url))}"${external(url)}>${text(label)}</a>` : '';
 const figure = ({ image, alt, caption, link = '', label = '' }, className = '') => `<figure class="case-figure ${className}"><a href="${text(assetURL(image))}" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure"><img src="${text(assetURL(image))}" alt="${text(alt)}"></a><figcaption>${text(caption)}${link ? ` ${sourceLink(link, label)}` : ''}</figcaption></figure>`;
 
-export function renderCaseStudyBody(study) {
+export function renderCaseStudyBody(study, profile = {}) {
   const ex = study.example;
   const blockHTML = block => {
     if (block.type === 'text') return paragraphs(block.text);
     if (block.type === 'heading') return `<h3>${text(block.text)}</h3>`;
     if (block.type === 'figure') return figure(block);
-    if (block.type === 'comparison') return `<div class="case-comparison"><p class="comparison-intro">${text(block.intro)}</p><div class="trace-comparison">${block.cases.map(item => `<article class="trace-case"><h3>${text(item.question)}</h3><dl>${[['Reference page', item.source], ['Answer model input', item.input], ['Final response', item.response], ['Diagnosed stage', item.diagnosis]].map(([label, value]) => `<div><dt>${text(label)}</dt><dd>${text(value)}</dd></div>`).join('')}</dl></article>`).join('')}</div><p class="comparison-caption">${text(block.caption)}</p>${figure({ image: block.printImage, alt: block.alt, caption: block.caption }, 'print-comparison')}</div>`;
+    if (block.type === 'comparison') return `<div class="case-comparison"><p class="comparison-intro">${text(block.intro)}</p><div class="trace-comparison">${block.cases.map(item => `<article class="trace-case"><h3>${text(item.question)}</h3><dl>${[['Reference page', item.source], ['Answer model input', item.input], ['Final response', item.response], ['Diagnosed stage', item.diagnosis]].map(([label, value]) => `<div><dt>${text(label)}</dt><dd>${text(value)}</dd></div>`).join('')}</dl></article>`).join('')}</div><p class="comparison-caption">${text(block.caption)}</p></div>`;
     return '';
   };
-  return `<header class="case-header"><p class="case-subtitle">${text(study.subtitle)}</p><h1>${text(study.title)}</h1></header>
-    <div class="case-example"><h2 class="example-question">${text(ex.question)}</h2><p class="example-answer">${text(ex.answer)}</p><p class="example-evidence">${text(ex.evidence)}</p><p class="case-note">${text(ex.note)}</p>${figure({ image: ex.image, alt: ex.alt, caption: ex.caption, link: ex.source, label: ex.sourceLabel })}</div>
+  return `<header class="case-header"><p class="case-subtitle">${profile.name ? `<span class="print-author">${text(profile.name)} · </span>` : ''}${text(study.subtitle)}</p><h1>${text(study.title)}</h1></header>
     <div class="case-introduction">${paragraphs(study.introduction)}</div>
+    <div class="case-example"><h2 class="example-question">${text(ex.question)}</h2><p class="example-answer">${text(ex.answer)}</p><p class="example-evidence">${ex.timestamp?.trim() ? `<strong>${text(ex.timestamp)}</strong> · ` : ''}${text(ex.evidence)}${ex.source ? ` ${sourceLink(ex.source, ex.sourceLabel)}` : ''}</p><p class="case-note">${text(ex.note)}</p>${safeURL(ex.image) ? figure({ image: ex.image, alt: ex.alt, caption: ex.caption }) : ''}</div>
     ${study.sections.map(section => `<section class="case-section" aria-labelledby="${text(section.id)}"><h2 id="${text(section.id)}">${text(section.title)}</h2>${section.blocks.map(blockHTML).join('\n')}</section>`).join('\n')}`;
 }
 
@@ -95,7 +96,7 @@ export function renderCaseStudy(study, profile) {
       <button class="print-case" type="button">Save case study as PDF</button>
     </aside>
     <main id="main" class="case-document" tabindex="-1">
-      ${renderCaseStudyBody(study)}
+      ${renderCaseStudyBody(study, profile)}
       <footer><span>${text(profile.name)} · ${text(study.title)}</span><a href="../../#work">Back to portfolio ↑</a></footer>
     </main>
   </div></div>
