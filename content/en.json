@@ -53,12 +53,13 @@
       "year": "Sep 2026 — Present",
       "category": "Capstone research · In progress",
       "summary": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach.",
-      "image": "",
-      "imageAlt": "",
+      "image": "assets/qubit-reuse-mapping/qarma-reuse-one-transfer.png",
+      "imageAlt": "Qubit-reuse circuit on two processors, with the required inter-processor transfer marked in red.",
       "url": "",
       "code": "",
       "paper": "",
-      "caseStudy": "qubit-reuse-mapping"
+      "caseStudy": "qubit-reuse-mapping",
+      "imageFit": "cover"
     },
     {
       "title": "The Pet Mischief Detector",
@@ -942,7 +943,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "I compared two reuse plans. Both used four physical qubits and had nine layers of operations before communication steps were added."
+                "text": "I compared two reuse plans. Both used four physical qubits and had nine layers of operations before communication steps were added. This comparison is a motivational example for the project: minimizing the number of qubits does not necessarily minimize communication between processors."
               }
             ]
           },

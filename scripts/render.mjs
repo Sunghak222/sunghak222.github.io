@@ -46,7 +46,7 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
   const experiences = data.experience.filter(x => x.title.trim());
   const education = data.education.filter(x => x.title.trim());
   const email = p.email ? `<div class="email-control"><button type="button" class="email-copy" data-email="${text(p.email)}" title="Copy email address" aria-label="Copy email address: ${text(p.email)}"><span class="email-address">${text(p.email)}</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M10 5V2H2v9h3"/></svg></button><span class="copy-status" role="status" aria-live="polite"></span></div>` : '';
-  const social = [link(p.github, 'GitHub'), link(p.linkedin, 'LinkedIn'), link(p.scholar, 'Google Scholar'), link(p.resume, `${t.resume} (PDF)`)].filter(Boolean).join('');
+  const social = [link(p.github, 'GitHub'), link(p.linkedin, 'LinkedIn'), link(p.scholar, 'Google Scholar'), link(p.resume, `${t.resume} (PDF)`, '', { newTab: true })].filter(Boolean).join('');
   const sections = [['about', t.about], ...(projects.length ? [['work', t.work]] : []), ...(experiences.length ? [['experience', t.experience]] : []), ...(education.length ? [['education', t.education]] : [])];
   const nav = sections.map(([id, label], i) => `<a href="#${id}"${i === 0 ? ' aria-current="location"' : ''}><span class="nav-index">${String(i + 1).padStart(2, '0')}</span>${text(label)}</a>`).join('');
   const sectionHeader = (id, title) => `<header class="section-heading"><span class="section-index">${String(sections.findIndex(s => s[0] === id) + 1).padStart(2, '0')}</span><h2>${text(title)}</h2></header>`;
