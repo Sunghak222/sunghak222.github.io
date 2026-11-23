@@ -1,6 +1,10 @@
+import { createDocumentEditor, documentEditorHTML } from './document-editor.js';
+import { documentTitle } from '../scripts/rich-document.mjs';
+
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 let content;
+let documentEditors = [];
 let dirty = false;
 let version = 0;
 let pendingUploads = 0;
@@ -44,11 +48,33 @@ function fieldHTML(group, index, field, object) {
   return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
 }
 function render() {
+  documentEditors.forEach(editor => editor.destroy());
+  documentEditors = [];
   $('#fields').innerHTML = ['profile', 'projects', 'experience', 'education'].map(group => {
     const collection = Array.isArray(content[group]);
     const fields = (object, index) => `<div class="field-grid">${fieldsets[group].map(field => fieldHTML(group, index, field, object)).join('')}</div>`;
     return `<section class="editor-section" id="${group}"><div class="section-title"><h2>${names[group]}</h2>${collection ? `<button type="button" data-action="add" data-group="${group}">+ ${names[group]} 추가</button>` : ''}</div>${collection ? content[group].length ? content[group].map((item, index) => `<details class="entry" data-entry="${group}-${index}"><summary>${String(index + 1).padStart(2, '0')} · ${escape(item.title || `새 ${names[group]}`)}</summary><div class="entry-inner">${fields(item, index)}<div class="entry-tools"><button type="button" data-action="up" data-group="${group}" data-index="${index}" ${index === 0 ? 'disabled' : ''}>위로 ↑</button><button type="button" data-action="down" data-group="${group}" data-index="${index}" ${index === content[group].length - 1 ? 'disabled' : ''}>아래로 ↓</button><button type="button" class="delete" data-action="remove" data-group="${group}" data-index="${index}">삭제</button></div></div></details>`).join('') : `<p class="empty">등록된 항목이 없습니다. 추가 버튼으로 시작하세요.</p>` : fields(content[group])}</section>`;
   }).join('') + renderCaseStudies();
+  document.querySelectorAll('[data-document-study]').forEach(entry => {
+    let initialized = false;
+    entry.addEventListener('toggle', () => {
+      if (!entry.open || initialized) return;
+      initialized = true;
+      const study = content.caseStudies[Number(entry.dataset.documentStudy)];
+      const editor = createDocumentEditor(entry.querySelector('.document-editor'), study, {
+        onChange: doc => {
+          study.document = doc;
+          study.title = documentTitle(doc, study.title);
+          for (const key of ['subtitle', 'introduction', 'example', 'sections']) delete study[key];
+          entry.querySelector('summary').textContent = study.title;
+          markDirty();
+        },
+        onError: error,
+        upload: uploadDocumentImage
+      });
+      documentEditors.push(editor);
+    });
+  });
 }
 function getObject(input) { return input.dataset.index === '' ? content[input.dataset.group] : content[input.dataset.group][Number(input.dataset.index)]; }
 function setCaseValue(path, value) {
@@ -66,18 +92,17 @@ function caseField(path, label, value, kind = 'textarea') {
 function renderCaseStudies() {
   const studies = content.caseStudies || [];
   if (!studies.length) return '';
-  const fields = (object, path, schema) => schema.map(([key, label, kind]) => caseField(`${path}.${key}`, label, object[key], kind)).join('');
-  const figureFields = [['image', '그림', 'image'], ['alt', '그림 대체 설명'], ['caption', '그림 아래 설명'], ['link', '자료 링크 (선택)', 'text'], ['label', '자료 링크에 표시할 글자', 'text']];
-  const blocks = (section, path) => section.blocks.map((block, index) => {
-    const at = `${path}.blocks.${index}`;
-    let body = '';
-    const names = { text: '문단', heading: '소제목', figure: '그림', comparison: '사례 비교' };
-    if (block.type === 'text' || block.type === 'heading') body = caseField(`${at}.text`, names[block.type], block.text, block.type === 'heading' ? 'text' : 'textarea');
-    if (block.type === 'figure') body = fields(block, at, figureFields);
-    if (block.type === 'comparison') body = fields(block, at, [['intro', '비교 도입'], ['caption', '비교 설명']]) + block.cases.map((item, i) => `<fieldset><legend>사례 ${i + 1}</legend>${fields(item, `${at}.cases.${i}`, [['question', '질문'], ['source', '원본 페이지'], ['input', '답변 모델 입력'], ['response', '최종 응답 요약'], ['diagnosis', '진단 단계', 'text']])}</fieldset>`).join('');
-    return `<div class="case-editor-block"><p class="help">${index + 1} · ${names[block.type]}</p>${body}</div>`;
-  }).join('');
-  return `<section class="editor-section" id="case-studies"><div class="section-title"><h2>상세 페이지 본문</h2></div><p class="help case-editor-help">여기서 수정한 내용은 상세 페이지와 해당 페이지의 PDF에 함께 반영됩니다. 주소는 고정되므로 홈과 경력 링크가 유지됩니다. 새 상세 페이지나 섹션 추가는 Codex에 요청하세요.</p>${studies.map((study, index) => `<details class="entry"><summary>${escape(study.title)}</summary><div class="entry-inner"><a href="/projects/${escape(study.slug)}/" target="_blank" rel="noopener">상세 페이지 미리보기 ↗</a><div class="field-grid">${fields(study, `${index}`, [['title', '프로젝트 제목', 'text'], ['subtitle', '소속 · 역할 · 기간 (제목 아래)', 'text'], ['description', '검색 결과에 표시할 소개'], ['introduction', '팀과 내 역할 소개']])}</div><fieldset><legend>첫 섹션의 검색 예시</legend>${fields(study.example, `${index}.example`, [['question', '질문', 'text'], ['answer', '답변 요약'], ['timestamp', '검색 구간 (선택)', 'text'], ['evidence', '검색 순위 · 범위', 'text'], ['note', '번역 · 요약 안내'], ['image', '대표 그림 (선택 · 비우면 숨김)', 'image'], ['alt', '대표 그림 대체 설명'], ['caption', '그림 아래 설명'], ['source', '원본 영상 링크', 'text'], ['sourceLabel', '원본 링크에 표시할 글자', 'text']])}</fieldset>${study.sections.map((section, i) => `<details class="entry case-section-editor"><summary>${escape(section.title)}</summary><div class="entry-inner">${caseField(`${index}.sections.${i}.title`, '섹션 제목', section.title, 'text')}${blocks(section, `${index}.sections.${i}`)}</div></details>`).join('')}</div></details>`).join('')}</section>`;
+  return `<section class="editor-section" id="case-studies"><div class="section-title"><h2>프로젝트 상세 문서</h2></div><p class="case-editor-help">문서를 열고 글을 직접 수정하세요. 제목 1은 프로젝트 제목, 제목 2는 Vector Search 같은 섹션, 제목 3은 소제목입니다. 저장하면 상세 페이지와 PDF에 같은 서식이 적용됩니다.</p>${studies.map((study, index) => `<details class="entry document-entry" data-document-study="${index}"><summary>${escape(study.title)}</summary><div class="entry-inner"><a href="/projects/${escape(study.slug)}/" target="_blank" rel="noopener">상세 페이지 미리보기 ↗</a>${documentEditorHTML()}<details class="document-settings"><summary>검색 결과 소개</summary>${caseField(`${index}.description`, '검색 결과에 표시할 소개', study.description)}</details></div></details>`).join('')}</section>`;
+}
+async function uploadDocumentImage(file) {
+  pendingUploads++;
+  $('#save').disabled = true;
+  $('#status').textContent = '파일을 추가하는 중…';
+  try {
+    if (file.size > 10 * 1024 * 1024) throw new Error('파일은 10 MB 이하로 올려 주세요.');
+    const base64 = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
+    return (await api('/api/upload', { name: file.name, base64 })).path;
+  } finally { pendingUploads--; $('#save').disabled = pendingUploads > 0; $('#status').textContent = dirty ? '저장하지 않은 변경사항' : '모든 변경사항이 저장되어 있습니다'; }
 }
 function error(message) { $('#error').textContent = message; $('#error').hidden = false; $('#error').scrollIntoView({ block: 'center' }); }
 async function api(url, data) {
@@ -161,4 +186,5 @@ async function initialize() {
     $('#status').textContent = '모든 변경사항이 저장되어 있습니다';
   } catch (err) { error(`${err.message} 로컬 서버가 실행 중인지 확인해 주세요.`); }
 }
+new ResizeObserver(([entry]) => document.documentElement.style.setProperty('--editor-header-height', `${entry.target.offsetHeight}px`)).observe($('.toolbar'));
 initialize();

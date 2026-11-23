@@ -3,4 +3,5 @@ dist.building-*/
 .local/
 .DS_Store
 node_modules/
+editor/editor.bundle.js
 *.tar.gz

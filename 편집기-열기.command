@@ -6,5 +6,8 @@ if ! command -v node >/dev/null 2>&1; then
   read -k 1 "?종료하려면 아무 키나 누르세요."
   exit 1
 fi
+if [[ ! -d node_modules/@tiptap/core || ! -d node_modules/esbuild ]]; then
+  npm ci || exit 1
+fi
 (sleep 2; open "http://127.0.0.1:4173/editor/") &
 node scripts/dev.mjs

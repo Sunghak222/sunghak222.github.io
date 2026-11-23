@@ -52,3 +52,32 @@ input[type=file] { max-width: 100%; padding: 4px 0; border: 0; background: none;
 footer { font-size: 12px; color: #77776e; border-top: 1px solid #ddd; padding-top: 20px; }
 @media(max-width: 600px) { .toolbar { padding: 12px 18px; } .toolbar strong { display: block; } .actions { gap: 12px; } main { padding: 32px 20px; } .field-grid { grid-template-columns: 1fr; } .field.wide { grid-column: auto; } h1 { font-size: 27px; } nav { gap: 18px; } }
 @media(prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+main { max-width: 1024px; }
+.case-editor-help { font-size: 15px; line-height: 1.7; color: #444; }
+.document-entry > .entry-inner { padding: 8px 20px 24px; }
+.document-editor { margin-top: 20px; }
+.document-toolbar { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; position: sticky; top: var(--editor-header-height, 76px); z-index: 2; padding: 12px; border: 1px solid #ddd; background: #fafaf8; }
+.document-toolbar label { margin: 0; font-size: 12px; }
+.document-toolbar select, .document-toolbar input { background: white; height: 38px; padding: 5px 8px; margin-top: 4px; font-size: 15px; }
+.document-toolbar input { width: 84px; }
+.document-toolbar button { height: 38px; min-width: 38px; font-size: 17px; padding: 4px 10px; }
+.document-toolbar button[aria-pressed=true] { background: #252525; color: white; border-color: #252525; }
+.document-toolbar .unit { color: #666; font-size: 11px; }
+.document-hint { font-size: 13px; color: #505050; margin: 12px 0; }
+.document-canvas { border: 1px solid #ddd; background: white; padding: 32px; }
+.document-canvas .rich-document { min-height: 300px; outline: 0; }
+.document-canvas:focus-within { border-color: #777; box-shadow: 0 0 0 1px #777; }
+.document-canvas .ProseMirror-selectednode { outline: 2px solid #777; outline-offset: 4px; }
+.document-canvas ::selection { background: #dce6ed; }
+.document-media, .document-settings { margin-top: 20px; }
+.document-media summary, .document-settings summary { padding: 10px 0; font-size: 14px; }
+.document-media label + label { margin-top: 12px; }
+.document-media input { margin-top: 5px; }
+.document-media-fields { font-size: 14px; }
+@media (max-width: 600px) {
+  .document-entry > .entry-inner { padding-left: 10px; padding-right: 10px; }
+  .document-toolbar { gap: 8px; padding: 10px; }
+  .document-canvas { padding: 22px 16px; }
+  .document-canvas .rich-document { --case-body-size: 19px; --case-title-size: 30px; --case-section-size: 26px; }
+}

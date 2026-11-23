@@ -4,6 +4,7 @@ import { readFile, writeFile, mkdir, rename, stat } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { build, root } from './build.mjs';
 import { validateContent } from './render.mjs';
+import { buildEditor } from './build-editor.mjs';
 
 const port = Number(process.env.PORT || 4173);
 const origin = `http://127.0.0.1:${port}`;
@@ -24,6 +25,7 @@ async function body(request) {
   }
   return JSON.parse(Buffer.concat(chunks).toString());
 }
+await buildEditor();
 await build();
 const server = http.createServer(async (req, res) => {
   try {
