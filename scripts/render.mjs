@@ -7,8 +7,8 @@ export const labels = {
   en: {
     portfolio: 'Personal portfolio', about: 'About', work: 'Selected Work',
     experience: 'Experience', education: 'Education',
-    project: 'View project', code: 'Code', paper: 'PDF', resume: 'Résumé',
-    read: 'Read project', problem: 'The question', approach: 'The approach',
+    project: 'Read more', code: 'Code', paper: 'PDF', resume: 'Résumé',
+    read: 'Read more', problem: 'The question', approach: 'The approach',
     outcome: 'The outcome', role: 'Role', tools: 'Tools & methods',
     top: 'Back to top', skip: 'Skip to content'
   }
@@ -34,6 +34,7 @@ export function validateContent(data) {
   }
   if (data.profile.email && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(data.profile.email)) throw new Error('이메일 주소를 확인해 주세요.');
   validateCaseStudies(data);
+  if (data.projects.some(project => project.imageFit && !['contain', 'cover'].includes(project.imageFit))) throw new Error('프로젝트 이미지 표시 방식을 확인해 주세요.');
   return data;
 }
 
@@ -58,10 +59,11 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
     const casePath = project.caseStudy ? caseStudyPath(project.caseStudy) : '';
     const details = [['problem', t.problem], ['approach', t.approach], ['outcome', t.outcome]].filter(([key]) => project[key]?.trim());
     const metadata = [[t.role, project.role], [t.tools, project.tools]].filter(([, v]) => v?.trim());
-    const links = [link(project.url, t.project), link(project.paper, t.paper), link(project.code, t.code)].filter(Boolean).join('');
+    const readMore = casePath ? `<a href="${casePath}">${t.read} <span aria-hidden="true">↗</span></a>` : link(project.url, t.read);
+    const links = [readMore, link(project.code, t.code), link(project.paper, t.paper)].filter(Boolean).join('');
     const hasImage = Boolean(safeURL(project.image));
-    const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(project.image)}" target="_blank" rel="noopener noreferrer" aria-label="View full-size image for ${text(project.title)}"><img class="project-image" src="${text(project.image)}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="112"></a></figure>` : '';
-    return `<article class="project${hasImage ? ' has-image' : ''}"><span class="project-index" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${figure}<div class="project-body"><div class="project-meta">${[project.category, project.year].filter(Boolean).map(text).join('<span aria-hidden="true"> / </span>')}</div><h3>${casePath ? `<a href="${casePath}">${text(project.title)}</a>` : text(project.title)}</h3><div class="description">${paragraphs(project.summary)}</div>${links ? `<div class="text-links project-links">${links}</div>` : ''}${casePath ? `<div class="text-links project-links"><a href="${casePath}">Read case study <span aria-hidden="true">↗</span></a></div>` : details.length || metadata.length ? `<details><summary>${t.read}<span class="detail-sign" aria-hidden="true"></span></summary><div class="project-details">${metadata.length ? `<dl>${metadata.map(([k, v]) => `<div><dt>${text(k)}</dt><dd>${text(v)}</dd></div>`).join('')}</dl>` : ''}${details.map(([k, v]) => `<section><h4>${text(v)}</h4>${paragraphs(project[k])}</section>`).join('')}</div></details>` : ''}</div></article>`;
+    const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(project.image)}" target="_blank" rel="noopener noreferrer" aria-label="View full-size image for ${text(project.title)}"><img class="project-image${project.imageFit === 'cover' ? ' is-cropped' : ''}" src="${text(project.image)}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="112"></a></figure>` : '';
+    return `<article class="project${hasImage ? ' has-image' : ''}"><span class="project-index" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${figure}<div class="project-body"><div class="project-meta">${[project.category, project.year].filter(Boolean).map(text).join('<span aria-hidden="true"> / </span>')}</div><h3>${casePath ? `<a href="${casePath}">${text(project.title)}</a>` : text(project.title)}</h3><div class="description">${paragraphs(project.summary)}</div>${links ? `<div class="text-links project-links">${links}</div>` : ''}${!readMore && (details.length || metadata.length) ? `<details><summary>${t.read}<span class="detail-sign" aria-hidden="true"></span></summary><div class="project-details">${metadata.length ? `<dl>${metadata.map(([k, v]) => `<div><dt>${text(k)}</dt><dd>${text(v)}</dd></div>`).join('')}</dl>` : ''}${details.map(([k, v]) => `<section><h4>${text(v)}</h4>${paragraphs(project[k])}</section>`).join('')}</div></details>` : ''}</div></article>`;
   }).join('');
   return `<!doctype html>
 <html lang="${lang}">
@@ -83,9 +85,7 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
   <div class="page-shell">
     <div class="layout">
       <aside class="sidebar">
-        <a class="identity" href="#about">${text(p.name)}</a>
-        <p class="role">${text(p.role)}</p>
-        ${p.location ? `<p class="location">${text(p.location)}</p>` : ''}
+        <a class="identity" href="#about">Home</a>
         <nav aria-label="Main navigation">${nav}</nav>
         ${p.resume ? `<div class="sidebar-bottom">${link(p.resume, `${t.resume} (PDF)`)}</div>` : ''}
       </aside>

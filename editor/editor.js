@@ -21,14 +21,15 @@ const fieldsets = {
     ['resume', '이력서 PDF (선택)', 'pdf', 'PDF를 선택하면 Résumé 링크가 표시됩니다.']
   ],
   projects: [
-    ['caseStudy', '연결할 상세 페이지 (선택)', 'case-study', '이 페이지로 프로젝트 제목과 Read case study 링크가 연결됩니다.'],
+    ['caseStudy', 'Read more · 상세 페이지 (선택)', 'case-study', '프로젝트 제목과 Read more가 이 페이지로 연결됩니다. 본문은 아래 프로젝트 상세 문서에서 수정하세요.'],
     ['title', '프로젝트 이름', 'text', '제목을 비우면 사이트에서 숨겨집니다.'], ['year', '연도', 'text', '2026'],
     ['category', '분류', 'text', '예: Research / Engineering'], ['role', '내 역할 (선택)', 'text', '예: Developer'],
     ['summary', '짧은 소개', 'textarea', '문제와 기여를 1–2문장으로 설명해 주세요.'],
     ['tools', '사용 기술 / 방법 (선택)', 'text', '예: Python, PyTorch'],
     ['image', '프로젝트 이미지 (선택)', 'image', '프로젝트 왼쪽에 같은 크기의 미리보기로 표시됩니다. 이미지가 없어도 본문 정렬은 유지됩니다. 모바일에서는 글 위에 표시됩니다.'],
+    ['imageFit', '이미지 표시 방식', 'image-fit', '칸 채우기는 이미지를 확대해 빈 공간 없이 표시하며 가장자리가 잘릴 수 있습니다.'],
     ['imageAlt', '이미지 설명 (선택)', 'text', '이미지에 무엇이 보이는지 설명해 주세요.'],
-    ['url', '프로젝트 링크 (선택)', 'url', 'https://...'], ['code', '코드 링크 (선택)', 'url', 'https://github.com/...'],
+    ['url', 'Read more · 외부 상세 주소 (선택)', 'url', '위에서 상세 페이지를 선택하지 않은 경우 이 주소로 연결됩니다.'], ['code', 'Code · GitHub 주소 (선택)', 'url', 'GitHub 저장소 주소를 넣으면 메인 페이지에 Code가 표시됩니다. 비우면 숨겨집니다.'],
     ['paper', '프로젝트 PDF (선택)', 'pdf', 'PDF 파일을 올리거나 https:// 주소를 입력하세요. 설명 아래 PDF 링크가 표시됩니다.'],
     ['problem', '자세히 보기 · 문제 / 질문 (선택)', 'textarea', '어떤 문제를 해결하려고 했나요?'],
     ['approach', '자세히 보기 · 접근 방법 (선택)', 'textarea', '어떻게 진행했고, 무엇을 담당했나요?'],
@@ -45,14 +46,14 @@ function fieldHTML(group, index, field, object) {
   const attrs = `id="${id}" data-group="${group}" data-index="${index ?? ''}" data-key="${key}"`;
   const value = escape(object[key]);
   const upload = ['image', 'pdf'].includes(type);
-  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
+  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'image-fit' ? `<select ${attrs}><option value="contain"${object[key] !== 'cover' ? ' selected' : ''}>전체 보기</option><option value="cover"${object[key] === 'cover' ? ' selected' : ''}>칸 채우기 (확대)</option></select>` : type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
 }
 function render() {
   documentEditors.forEach(editor => editor.destroy());
   documentEditors = [];
   $('#fields').innerHTML = ['profile', 'projects', 'experience', 'education'].map(group => {
     const collection = Array.isArray(content[group]);
-    const fields = (object, index) => `<div class="field-grid">${fieldsets[group].map(field => fieldHTML(group, index, field, object)).join('')}</div>`;
+    const fields = (object, index) => `<div class="field-grid">${fieldsets[group].filter(field => !(group === 'projects' && object.caseStudy && ['problem', 'approach', 'outcome', 'role', 'tools'].includes(field[0]))).map(field => fieldHTML(group, index, field, object)).join('')}</div>`;
     return `<section class="editor-section" id="${group}"><div class="section-title"><h2>${names[group]}</h2>${collection ? `<button type="button" data-action="add" data-group="${group}">+ ${names[group]} 추가</button>` : ''}</div>${collection ? content[group].length ? content[group].map((item, index) => `<details class="entry" data-entry="${group}-${index}"><summary>${String(index + 1).padStart(2, '0')} · ${escape(item.title || `새 ${names[group]}`)}</summary><div class="entry-inner">${fields(item, index)}<div class="entry-tools"><button type="button" data-action="up" data-group="${group}" data-index="${index}" ${index === 0 ? 'disabled' : ''}>위로 ↑</button><button type="button" data-action="down" data-group="${group}" data-index="${index}" ${index === content[group].length - 1 ? 'disabled' : ''}>아래로 ↓</button><button type="button" class="delete" data-action="remove" data-group="${group}" data-index="${index}">삭제</button></div></div></details>`).join('') : `<p class="empty">등록된 항목이 없습니다. 추가 버튼으로 시작하세요.</p>` : fields(content[group])}</section>`;
   }).join('') + renderCaseStudies();
   document.querySelectorAll('[data-document-study]').forEach(entry => {

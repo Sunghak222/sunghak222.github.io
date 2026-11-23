@@ -19,64 +19,53 @@
       "category": "KAIST Auto-ID Labs",
       "summary": "I built a vector search layer that retrieves evidences from HTML, images, and videos. I also built a benchmark to trace where evidence goes missing between a source page and the final answer.",
       "caseStudy": "kaist-gs1-rag",
-      "image": "",
-      "imageAlt": "",
+      "image": "assets/kaist-gs1-rag/resource-queue-proposal.png",
+      "imageAlt": "Proposed resource queue and sufficient-context autorater.",
       "role": "",
       "tools": "",
       "url": "",
-      "code": "",
+      "code": "https://github.com/Sunghak222/gs1-digital-link-benchmark",
       "paper": "",
       "problem": "",
       "approach": "",
-      "outcome": ""
+      "outcome": "",
+      "imageFit": "cover"
     },
     {
       "title": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design",
       "year": "Nov 2026",
       "category": "Quantum computing / Optimization",
       "summary": "A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs.",
-      "role": "Team lead · Design & implementation",
-      "tools": "Qiskit · SPSA · COMET",
       "image": "assets/83ac227b-4edc-495c-8c26-1c5c17579392.png",
       "imageAlt": "",
       "url": "",
       "code": "https://github.com/Sunghak222/lipoq",
       "paper": "",
-      "problem": "Lipid nanoparticle design involves selecting lipid identities and mixing ratios within a constrained search space. This project explored how to discover promising formulations under a limited model-evaluation budget.",
-      "approach": "I led the design and implementation of a constrained black-box optimizer, using the pretrained COMET model to score candidate formulations. The search combined Qiskit circuits and SPSA optimization across 6,048 feasible combinations of lipid identities and mixing ratios.\n\nI benchmarked candidate discovery against random search using matched evaluation budgets.",
-      "outcome": "Winner of the IBM Quantum Qiskit Fall Fest Hackathon. In one simulation run, the mean sampled COMET score increased from -3.06 to 5.16."
+      "caseStudy": "lipoq"
     },
     {
       "title": "Qubit Reuse and Mapping in Distributed Quantum Computing",
       "year": "Sep 2026 — Present",
       "category": "Capstone research · In progress",
-      "role": "Individual capstone · Supervisor: Prof. Yu Liu",
       "summary": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach.",
-      "tools": "Qubit reuse · QPU mapping · Experimental design",
       "image": "",
       "imageAlt": "",
       "url": "",
       "code": "",
       "paper": "",
-      "problem": "Fixing reuse pairs before mapping may rule out configurations that reduce inter-QPU communication. This project examines whether reuse and mapping should be optimized jointly instead of in separate stages.",
-      "approach": "I reviewed literature on qubit reuse and mapping and formulated a hypothesis about the limitations of fixing reuse pairs before mapping.\n\nI am developing an experimental plan to compare sequential and joint reuse–mapping optimization, while exploring reinforcement learning and neural networks as possible methods.",
-      "outcome": "Ongoing. The current work focuses on experimental design and method selection; comparative results are not yet available."
+      "caseStudy": "qubit-reuse-mapping"
     },
     {
       "title": "The Pet Mischief Detector",
       "year": "Apr 2026",
       "category": "Computer vision · Group project",
-      "role": "Group project · Pipeline design & fine-tuning",
       "summary": "A pet-monitoring pipeline that combines object detection with depth estimation to distinguish close interactions from objects that only appear adjacent in a 2D image.",
-      "tools": "YOLOv11 · Depth Anything V2 · COCO-derived dataset",
       "image": "",
       "imageAlt": "",
       "url": "",
       "code": "https://github.com/Sunghak222/The-Pet-Mischief-Detector",
       "paper": "",
-      "problem": "Two objects may look adjacent in an image while being metres apart in 3D. A proximity rule based only on 2D detections can therefore trigger false alerts.",
-      "approach": "I designed a dual-model pipeline combining YOLOv11 object detection with Depth Anything V2 monocular depth estimation. Depth similarity acts as a multiplicative gate on the 2D proximity score to suppress perspective-induced false positives.\n\nI also designed and ran fine-tuning experiments on a custom eight-class, COCO-derived dataset, using a two-phase backbone-freeze strategy to separate detection-head warmup from backbone adaptation.",
-      "outcome": "The project introduced depth-aware proximity scoring to address a failure mode of 2D-only detection, alongside a structured fine-tuning workflow that separates head warmup from backbone adaptation."
+      "caseStudy": "pet-mischief-detector"
     }
   ],
   "experience": [
@@ -188,79 +177,7 @@
             "content": [
               {
                 "type": "text",
-                "marks": [
-                  {
-                    "type": "bold"
-                  }
-                ],
-                "text": "How should I store a sweater?"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "attrs": {
-              "lineSpacing": null,
-              "id": null,
-              "role": null
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Fold it to keep the shoulders from stretching."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "attrs": {
-              "lineSpacing": null,
-              "id": null,
-              "role": "note"
-            },
-            "content": [
-              {
-                "type": "text",
-                "marks": [
-                  {
-                    "type": "bold"
-                  }
-                ],
-                "text": "00:44–00:58"
-              },
-              {
-                "type": "text",
-                "text": " · Top-ranked passage from this 57.6-second video. "
-              },
-              {
-                "type": "text",
-                "marks": [
-                  {
-                    "type": "link",
-                    "attrs": {
-                      "href": "https://www.youtube.com/watch?v=xKVRzslPwJs&t=44s",
-                      "target": "_blank",
-                      "rel": "noopener noreferrer nofollow",
-                      "class": null,
-                      "title": null
-                    }
-                  }
-                ],
-                "text": "Watch the original at 00:44"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "attrs": {
-              "lineSpacing": null,
-              "id": null,
-              "role": null
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "I combined speech transcripts and frame captions into timestamped passages, embedded each passage, and ranked the passages against the question."
+                "text": "I made label photos searchable by describing their contents in text. For video, I combined speech transcripts and frame descriptions into timestamped passages, embedded each passage and ranked it against the question. When I asked in Korean how to store a sweater, 00:44–00:58 ranked first among the passages from a 57.6-second clothing-care video. The narrator recommends folding sweaters. Using that spoken evidence, the system answered in Korean that folding keeps the shoulders from stretching. "
               }
             ]
           },
@@ -293,28 +210,16 @@
             ]
           },
           {
-            "type": "figure",
+            "type": "paragraph",
             "attrs": {
-              "id": "figure-1",
-              "image": "assets/kaist-gs1-rag/video-preprocessing.png",
-              "alt": "For one video, sequential preprocessing took 17.6 seconds and parallel preprocessing took 5.0 seconds.",
-              "link": "assets/kaist-gs1-rag/video-timings.csv",
-              "label": "Timing data (CSV)"
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
             "content": [
               {
-                "type": "paragraph",
-                "attrs": {
-                  "lineSpacing": null,
-                  "id": null,
-                  "role": null
-                },
-                "content": [
-                  {
-                    "type": "text",
-                    "text": "One 57.6-second video, one run per configuration using live APIs. Both configurations used eight scene-detected frames sampled across the video; parallel processing allowed up to four caption requests at once. These times cover preprocessing only; indexing, search and answer synthesis were measured separately."
-                  }
-                ]
+                "type": "text",
+                "text": "One 57.6-second video, one run per configuration using live APIs. Both configurations used eight scene-detected frames sampled across the video; parallel processing allowed up to four caption requests at once. These times cover preprocessing only; indexing, search and answer synthesis were measured separately."
               }
             ]
           },
@@ -356,7 +261,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Resource queue + autorater · Proposed design"
+                "text": "Proposed Design: resource queue + autorater"
               }
             ]
           },
@@ -380,7 +285,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Design proposal from the internship presentation. The queue and evidence-sufficiency gate were not evaluated in the later benchmark."
+                    "text": "Design proposal from the internship presentation. "
                   }
                 ]
               }
@@ -492,23 +397,7 @@
               },
               {
                 "type": "text",
-                "text": " so we could test whether the answer would change with the source. "
-              },
-              {
-                "type": "text",
-                "marks": [
-                  {
-                    "type": "link",
-                    "attrs": {
-                      "href": "https://github.com/Sunghak222/gs1-digital-link-benchmark/tree/master/examples/food",
-                      "target": "_blank",
-                      "rel": "noopener noreferrer nofollow",
-                      "class": null,
-                      "title": null
-                    }
-                  }
-                ],
-                "text": "Pesto record and both pages"
+                "text": " so we could test whether the answer would change with the source."
               }
             ]
           },
@@ -535,23 +424,7 @@
               },
               {
                 "type": "text",
-                "text": ". Another 20 earned partial credit, 12 went unanswered, and five drew incorrect answers. In both cases below, the system said it couldn’t confirm the answer. "
-              },
-              {
-                "type": "text",
-                "marks": [
-                  {
-                    "type": "link",
-                    "attrs": {
-                      "href": "https://sunghak222.github.io/assets/kaist-gs1-rag/benchmark-traces.png",
-                      "target": "_blank",
-                      "rel": "noopener noreferrer nofollow",
-                      "class": null,
-                      "title": null
-                    }
-                  }
-                ],
-                "text": "Side-by-side failure traces"
+                "text": ". Another 20 earned partial credit, 12 went unanswered, and five drew incorrect answers. In both cases below, the system said it couldn’t confirm the answer."
               }
             ]
           },
@@ -845,23 +718,493 @@
               },
               {
                 "type": "text",
-                "text": " retained a reference to the source field a reviewer could use to check it. "
-              },
+                "text": " retained a reference to the source field a reviewer could use to check it."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slug": "lipoq",
+      "title": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design",
+      "description": "A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs.",
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
               {
                 "type": "text",
-                "marks": [
-                  {
-                    "type": "link",
-                    "attrs": {
-                      "href": "https://github.com/Sunghak222/gs1-digital-link-benchmark",
-                      "target": "_blank",
-                      "rel": "noopener noreferrer nofollow",
-                      "class": null,
-                      "title": null
-                    }
-                  }
-                ],
-                "text": "Benchmark code and worked examples"
+                "text": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Quantum computing / Optimization · Nov 2026"
+              }
+            ],
+            "attrs": {
+              "role": "subtitle"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "my-role"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "My role"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Team lead · Design & implementation"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "tools"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Tools & methods"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Qiskit · SPSA · COMET"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "question"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The question"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Lipid nanoparticle design involves selecting lipid identities and mixing ratios within a constrained search space. This project explored how to discover promising formulations under a limited model-evaluation budget."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "approach"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Approach"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I led the design and implementation of a constrained black-box optimizer, using the pretrained COMET model to score candidate formulations. The search combined Qiskit circuits and SPSA optimization across 6,048 feasible combinations of lipid identities and mixing ratios."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I benchmarked candidate discovery against random search using matched evaluation budgets."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "outcome"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Outcome"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Winner of the IBM Quantum Qiskit Fall Fest Hackathon. In one simulation run, the mean sampled COMET score increased from -3.06 to 5.16."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slug": "qubit-reuse-mapping",
+      "title": "Qubit Reuse and Mapping in Distributed Quantum Computing",
+      "description": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach.",
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Qubit Reuse and Mapping in Distributed Quantum Computing"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Capstone research · In progress · Sep 2026 — Present"
+              }
+            ],
+            "attrs": {
+              "role": "subtitle"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "my-role"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "My role"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Individual capstone · Supervisor: Prof. Yu Liu"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "tools"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Tools & methods"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Qubit reuse · QPU mapping · Experimental design"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "question"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The question"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Fixing reuse pairs before mapping may rule out configurations that reduce inter-QPU communication. This project examines whether reuse and mapping should be optimized jointly instead of in separate stages."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "approach"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Approach"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I reviewed literature on qubit reuse and mapping and formulated a hypothesis about the limitations of fixing reuse pairs before mapping."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I am developing an experimental plan to compare sequential and joint reuse–mapping optimization, while exploring reinforcement learning and neural networks as possible methods."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "outcome"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Outcome"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Ongoing. The current work focuses on experimental design and method selection; comparative results are not yet available."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slug": "pet-mischief-detector",
+      "title": "The Pet Mischief Detector",
+      "description": "A pet-monitoring pipeline that combines object detection with depth estimation to distinguish close interactions from objects that only appear adjacent in a 2D image.",
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The Pet Mischief Detector"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Computer vision · Group project · Apr 2026"
+              }
+            ],
+            "attrs": {
+              "role": "subtitle"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A pet-monitoring pipeline that combines object detection with depth estimation to distinguish close interactions from objects that only appear adjacent in a 2D image."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "my-role"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "My role"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Group project · Pipeline design & fine-tuning"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "tools"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Tools & methods"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "YOLOv11 · Depth Anything V2 · COCO-derived dataset"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "question"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The question"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Two objects may look adjacent in an image while being metres apart in 3D. A proximity rule based only on 2D detections can therefore trigger false alerts."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "approach"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Approach"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I designed a dual-model pipeline combining YOLOv11 object detection with Depth Anything V2 monocular depth estimation. Depth similarity acts as a multiplicative gate on the 2D proximity score to suppress perspective-induced false positives."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I also designed and ran fine-tuning experiments on a custom eight-class, COCO-derived dataset, using a two-phase backbone-freeze strategy to separate detection-head warmup from backbone adaptation."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "outcome"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Outcome"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The project introduced depth-aware proximity scoring to address a failure mode of 2D-only detection, alongside a structured fine-tuning workflow that separates head warmup from backbone adaptation."
               }
             ]
           }

@@ -97,7 +97,7 @@ export function renderCaseStudy(study, profile) {
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="page-shell"><div class="layout">
     <aside class="sidebar">
-      <a class="identity" href="../../">${text(profile.name)}</a>
+      <a class="identity" href="../../">Home</a>
       <a class="back-link" href="../../#work">← All work</a>
       <nav aria-label="Case study contents">${sections.map((section, index) => `<a href="#${text(section.id)}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span>${text(section.title)}</a>`).join('')}</nav>
       <button class="print-case" type="button" aria-label="Save case study as PDF">Save as PDF</button>
