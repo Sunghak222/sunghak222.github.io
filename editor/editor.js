@@ -18,7 +18,7 @@ const fieldsets = {
     ['github', 'GitHub (선택)', 'url', 'https://github.com/username'],
     ['linkedin', 'LinkedIn (선택)', 'url', 'https://www.linkedin.com/in/username'],
     ['scholar', 'Google Scholar (선택)', 'url', 'https://scholar.google.com/...'],
-    ['resume', '이력서 PDF (선택)', 'pdf', 'PDF를 선택하면 Résumé 링크가 표시됩니다.']
+    ['resume', '이력서 PDF (선택)', 'pdf', '자기소개 아래 이메일·GitHub·LinkedIn 옆에 Résumé 링크가 표시됩니다.']
   ],
   projects: [
     ['caseStudy', 'Read more · 상세 페이지 (선택)', 'case-study', '프로젝트 제목과 Read more가 이 페이지로 연결됩니다. 본문은 아래 프로젝트 상세 문서에서 수정하세요.'],

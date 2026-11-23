@@ -36,8 +36,6 @@ nav a { display: flex; align-items: baseline; gap: 10px; width: fit-content; max
 nav a[aria-current] { font-weight: 600; }
 .nav-index { flex: 0 0 20px; font-size: 14px; font-weight: 400; font-variant-numeric: tabular-nums; color: var(--ink); }
 nav a[aria-current] .nav-index { color: var(--ink); }
-.sidebar-bottom { margin-top: 40px; font-size: 17px; }
-.sidebar-bottom a { display: inline-flex; align-items: baseline; gap: 12px; white-space: nowrap; }
 main { min-width: 0; }
 .about-section { padding: 57px 0 var(--section-gap); }
 h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(46px, 5.1vw, 68px); line-height: 1.08; letter-spacing: -.055em; overflow-wrap: anywhere; }
@@ -115,7 +113,6 @@ footer { padding: 24px 0 30px; border-top: 1px solid var(--line); display: flex;
   nav { display: flex; gap: 22px; margin-top: 25px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
   nav a { font-size: 17px; margin-left: 0; max-width: 100%; padding: 3px 0; }
   .nav-index { display: none; }
-  .sidebar-bottom { margin-top: 14px; }
   .about-section { padding-top: 43px; }
   h1 { font-size: clamp(42px, 11vw, 60px); }
   .intro { font-size: var(--body-size); margin-top: 22px; }

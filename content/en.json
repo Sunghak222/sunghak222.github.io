@@ -52,17 +52,12 @@
       "title": "Qubit Reuse and Mapping in Distributed Quantum Computing",
       "year": "Sep 2026 — Present",
       "category": "Capstone research · In progress",
-      "role": "Individual capstone · Supervisor: Prof. Yu Liu",
       "summary": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach.",
-      "tools": "Qubit reuse · QPU mapping · Experimental design",
       "image": "",
       "imageAlt": "",
       "url": "",
       "code": "",
       "paper": "",
-      "problem": "Fixing reuse pairs before mapping may rule out configurations that reduce inter-QPU communication. This project examines whether reuse and mapping should be optimized jointly instead of in separate stages.",
-      "approach": "I reviewed literature on qubit reuse and mapping and formulated a hypothesis about the limitations of fixing reuse pairs before mapping.\n\nI am developing an experimental plan to compare sequential and joint reuse–mapping optimization, while exploring reinforcement learning and neural networks as possible methods.",
-      "outcome": "Ongoing. The current work focuses on experimental design and method selection; comparative results are not yet available.",
       "caseStudy": "qubit-reuse-mapping"
     },
     {
@@ -905,7 +900,7 @@
     {
       "slug": "qubit-reuse-mapping",
       "title": "Qubit Reuse and Mapping in Distributed Quantum Computing",
-      "description": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach.",
+      "description": "Simulating qubit reuse in Qiskit Aer and comparing mappings on two linked quantum processors.",
       "document": {
         "type": "doc",
         "content": [
@@ -923,22 +918,22 @@
           },
           {
             "type": "paragraph",
+            "attrs": {
+              "role": "subtitle"
+            },
             "content": [
               {
                 "type": "text",
                 "text": "Capstone research · In progress · Sep 2026 — Present"
               }
-            ],
-            "attrs": {
-              "role": "subtitle"
-            }
+            ]
           },
           {
             "type": "paragraph",
             "content": [
               {
                 "type": "text",
-                "text": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach."
+                "text": "Can a quantum circuit use fewer wires and still give the same results? In a Qiskit Aer simulation, three logical qubits shared two wires. The same four outputs each had a 25% probability before and after reuse."
               }
             ]
           },
@@ -946,21 +941,76 @@
             "type": "heading",
             "attrs": {
               "level": 2,
-              "id": "my-role"
+              "id": "qubit-reuse"
             },
             "content": [
               {
                 "type": "text",
-                "text": "My role"
+                "text": "Qubit Reuse"
               }
             ]
           },
           {
-            "type": "paragraph",
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
             "content": [
               {
                 "type": "text",
-                "text": "Individual capstone · Supervisor: Prof. Yu Liu"
+                "text": "Original circuit with three wires"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/qubit-reuse-mapping/original-three-wires.png",
+              "alt": "Original circuit: q₀ is measured before q₁ and q₂ are used; all three results are stored in classical register c.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The first qubit (q₀) is measured before either of the other two qubits is used. Its result is stored on the bottom line, marked c."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The same circuit with two wires"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/qubit-reuse-mapping/reused-two-wires.png",
+              "alt": "Reused circuit: r₀ is measured, reset to |0⟩ and reused for q₁, while r₁ represents q₂.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "On the top wire, the gray |0⟩ box resets the qubit after measurement. That wire can now take the place of q₁ while the first result stays in memory."
+                  }
+                ]
               }
             ]
           },
@@ -968,12 +1018,12 @@
             "type": "heading",
             "attrs": {
               "level": 2,
-              "id": "tools"
+              "id": "processor-mapping"
             },
             "content": [
               {
                 "type": "text",
-                "text": "Tools & methods"
+                "text": "Processor Mapping"
               }
             ]
           },
@@ -982,20 +1032,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Qubit reuse · QPU mapping · Experimental design"
-              }
-            ]
-          },
-          {
-            "type": "heading",
-            "attrs": {
-              "level": 2,
-              "id": "question"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "The question"
+                "text": "I compared three plans on a model of two linked quantum processors. One kept all three wires. The other two reused the first wire for either q₁ or q₂. With at most one extra action before each group of gates, all three reached the same best estimated fidelity of 0.8996. This score accounts for errors during operations and time spent waiting."
               }
             ]
           },
@@ -1004,60 +1041,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Fixing reuse pairs before mapping may rule out configurations that reduce inter-QPU communication. This project examines whether reuse and mapping should be optimized jointly instead of in separate stages."
-              }
-            ]
-          },
-          {
-            "type": "heading",
-            "attrs": {
-              "level": 2,
-              "id": "approach"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Approach"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "I reviewed literature on qubit reuse and mapping and formulated a hypothesis about the limitations of fixing reuse pairs before mapping."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "I am developing an experimental plan to compare sequential and joint reuse–mapping optimization, while exploring reinforcement learning and neural networks as possible methods."
-              }
-            ]
-          },
-          {
-            "type": "heading",
-            "attrs": {
-              "level": 2,
-              "id": "outcome"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Outcome"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "Ongoing. The current work focuses on experimental design and method selection; comparative results are not yet available."
+                "text": "Timing also set a limit. A separate six-qubit circuit needed all six qubits in its first step, so it could not fit the four available slots."
               }
             ]
           }
