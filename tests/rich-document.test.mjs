@@ -87,3 +87,22 @@ test('plain text extracted from a saved document remains available for its page 
   assert.match(renderCaseStudy(migrated(doc), { name: 'Name' }), /<title>New title \| Name<\/title>/);
   assert.ok(nodeText(doc).includes('17.6 → 5.0 s'));
 });
+
+test('imported tables preserve headers, cell emphasis and links through save and static rendering', () => {
+  const cell = (type, text, marks = []) => ({ type, content: [{ type: 'paragraph', content: [{ type: 'text', text, marks }] }] });
+  const table = { type: 'table', content: [
+    { type: 'tableRow', content: [cell('tableHeader', 'Question'), cell('tableHeader', 'Evidence'), cell('tableHeader', 'Stage')] },
+    { type: 'tableRow', content: [cell('tableCell', 'Height?'), cell('tableCell', '120 m', [{ type: 'bold' }]), cell('tableCell', 'Source', [{ type: 'link', attrs: { href: 'https://example.com' } }])] }
+  ] };
+  const doc = legacyToDocument(legacy()); doc.content.push(table);
+  const saved = validateContent(JSON.parse(JSON.stringify(content(migrated(doc)))));
+  const html = renderCaseStudy(saved.caseStudies[0], saved.profile);
+  assert.match(html, /<th scope="col"><p>Question<\/p><\/th>/);
+  assert.match(html, /<td><p><strong>120 m<\/strong><\/p><\/td>/);
+  assert.equal(html.match(/<tr>/g).length, 2);
+  assert.equal(html.match(/<td>/g).length, 3);
+  assert.match(html, /href="https:\/\/example.com"/);
+  assert.deepEqual(saved.caseStudies[0].document.content.at(-1), table);
+  table.content[1].content.pop();
+  assert.throws(() => validateRichDocument(doc));
+});

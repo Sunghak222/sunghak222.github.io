@@ -46,6 +46,19 @@ const Comparison = Node.create({ name: 'comparison', group: 'block', content: 'c
 const ComparisonColumn = Node.create({ name: 'comparisonColumn', content: 'paragraph+', defining: true, isolating: true,
   parseHTML() { return [{ tag: 'div.document-comparison-column' }]; }, renderHTML({ HTMLAttributes }) { return ['div', mergeAttributes(HTMLAttributes, { class: 'document-comparison-column' }), 0]; }
 });
+// Keep imported tables editable without adding table-building controls to the toolbar.
+const Table = Node.create({ name: 'table', group: 'block', content: 'tableRow+', isolating: true,
+  parseHTML() { return [{ tag: 'table' }]; }, renderHTML() { return ['div', { class: 'document-table-wrap' }, ['table', { class: 'document-table' }, ['tbody', 0]]]; }
+});
+const TableRow = Node.create({ name: 'tableRow', content: '(tableHeader | tableCell)+',
+  parseHTML() { return [{ tag: 'tr' }]; }, renderHTML() { return ['tr', 0]; }
+});
+const TableHeader = Node.create({ name: 'tableHeader', content: 'paragraph+', isolating: true,
+  parseHTML() { return [{ tag: 'th' }]; }, renderHTML() { return ['th', { scope: 'col' }, 0]; }
+});
+const TableCell = Node.create({ name: 'tableCell', content: 'paragraph+', isolating: true,
+  parseHTML() { return [{ tag: 'td' }]; }, renderHTML() { return ['td', 0]; }
+});
 
 export function createDocumentEditor(container, study, { onChange, onError, upload }) {
   const toolbar = container.querySelector('.document-toolbar');
@@ -69,7 +82,7 @@ export function createDocumentEditor(container, study, { onChange, onError, uplo
   };
   const editor = new Editor({
     element: container.querySelector('.document-canvas'),
-    extensions: [StarterKit.configure({ heading: { levels: [1, 2, 3] }, blockquote: false, bulletList: false, orderedList: false, listItem: false, listKeymap: false, code: false, codeBlock: false, horizontalRule: false, italic: false, strike: false, trailingNode: false, link: { openOnClick: false, autolink: false, linkOnPaste: false, isAllowedUri: url => !!safeURL(url) } }), SizedText, ParagraphStyle, Figure, Comparison, ComparisonColumn],
+    extensions: [StarterKit.configure({ heading: { levels: [1, 2, 3] }, blockquote: false, bulletList: false, orderedList: false, listItem: false, listKeymap: false, code: false, codeBlock: false, horizontalRule: false, italic: false, strike: false, trailingNode: false, link: { openOnClick: false, autolink: false, linkOnPaste: false, isAllowedUri: url => !!safeURL(url) } }), SizedText, ParagraphStyle, Figure, Comparison, ComparisonColumn, Table, TableRow, TableHeader, TableCell],
     content: doc,
     editorProps: { attributes: { class: 'rich-document', role: 'textbox', 'aria-label': `${study.title} 상세 문서`, 'aria-multiline': 'true', spellcheck: 'false' } },
     onCreate: ({ editor }) => syncToolbar(editor),

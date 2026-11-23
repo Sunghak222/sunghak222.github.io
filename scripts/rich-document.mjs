@@ -60,7 +60,7 @@ export function validateRichDocument(doc) {
   const fail = () => { throw new Error('상세 문서의 서식을 확인해 주세요. 글자 크기는 12–48px, 제목은 1–3단계를 사용할 수 있습니다.'); };
   const visit = (node, parent, depth = 0) => {
     if (!node || typeof node !== 'object' || Array.isArray(node) || ++count > 10000 || depth > 10) fail();
-    const allowed = { root: ['doc'], doc: ['paragraph', 'heading', 'figure', 'comparison'], paragraph: ['text', 'hardBreak'], heading: ['text', 'hardBreak'], figure: ['paragraph'], comparison: ['comparisonColumn'], comparisonColumn: ['paragraph'] };
+    const allowed = { root: ['doc'], doc: ['paragraph', 'heading', 'figure', 'comparison', 'table'], paragraph: ['text', 'hardBreak'], heading: ['text', 'hardBreak'], figure: ['paragraph'], comparison: ['comparisonColumn'], comparisonColumn: ['paragraph'], table: ['tableRow'], tableRow: ['tableHeader', 'tableCell'], tableHeader: ['paragraph'], tableCell: ['paragraph'] };
     if (!allowed[parent]?.includes(node.type)) fail();
     const attrs = node.attrs || {};
     if (typeof attrs !== 'object' || Array.isArray(attrs)) fail();
@@ -84,6 +84,9 @@ export function validateRichDocument(doc) {
     if (node.type === 'figure' && node.content?.length !== 1) fail();
     if (node.type === 'comparison' && node.content?.length !== 2) fail();
     if (node.type === 'comparisonColumn' && !node.content?.length) fail();
+    if (['table', 'tableRow', 'tableHeader', 'tableCell'].includes(node.type) && !node.content?.length) fail();
+    if (node.type === 'table' && (node.content.length > 100 || node.content.some(row => row.content?.length !== node.content[0].content?.length))) fail();
+    if (node.type === 'tableRow' && node.content.length > 10) fail();
     for (const child of node.content || []) visit(child, node.type, depth + 1);
   };
   visit(doc, 'root');
@@ -117,6 +120,14 @@ export function renderRichDocument(doc, author = '') {
     if (node.type === 'figure') return `<figure class="case-figure"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a><figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption></figure>`;
     if (node.type === 'comparison') return `<div class="document-comparison">${inside}</div>`;
     if (node.type === 'comparisonColumn') return `<div class="document-comparison-column">${inside}</div>`;
+    if (node.type === 'table') {
+      const hasHeader = node.content[0].content.every(cell => cell.type === 'tableHeader');
+      const rows = hasHeader ? `<thead>${render(node.content[0])}</thead><tbody>${node.content.slice(1).map(render).join('')}</tbody>` : `<tbody>${inside}</tbody>`;
+      return `<div class="document-table-wrap" tabindex="0" role="region" aria-label="Comparison table"><table class="document-table">${rows}</table></div>`;
+    }
+    if (node.type === 'tableRow') return `<tr>${inside}</tr>`;
+    if (node.type === 'tableHeader') return `<th scope="col">${inside}</th>`;
+    if (node.type === 'tableCell') return `<td>${inside}</td>`;
     return inside;
   };
   return `<div class="rich-document">${render(doc)}</div>`;

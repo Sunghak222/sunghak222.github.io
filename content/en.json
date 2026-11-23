@@ -17,7 +17,7 @@
       "title": "Multimodal Retrieval & RAG Evaluation",
       "year": "2026",
       "category": "KAIST Auto-ID Labs",
-      "summary": "I built a search layer that retrieves timestamped evidence from product videos. I also built a benchmark to trace where evidence goes missing between a source page and the final answer.",
+      "summary": "I built a vector search layer that retrieves evidences from HTML, images, and videos. I also built a benchmark to trace where evidence goes missing between a source page and the final answer.",
       "caseStudy": "kaist-gs1-rag",
       "image": "",
       "imageAlt": "",
@@ -104,156 +104,769 @@
     {
       "slug": "kaist-gs1-rag",
       "title": "Multimodal Retrieval & RAG Evaluation",
-      "subtitle": "KAIST Auto-ID Labs · AI Research Engineer Intern · May–August 2026",
       "description": "Building multimodal retrieval and tracing evidence loss in a product question-answering system.",
-      "example": {
-        "question": "How should I store a sweater?",
-        "answer": "Fold it to keep the shoulders from stretching.",
-        "evidence": "Top-ranked passage from this 57.6-second video.",
-        "note": "Question translated from the Korean experiment; answer summarized from the generated response. The evidence came from spoken narration. The ranking is among passages extracted from this video.",
-        "image": "",
-        "alt": "",
-        "caption": "",
-        "source": "https://www.youtube.com/watch?v=xKVRzslPwJs&t=44s",
-        "sourceLabel": "Watch the original at 00:44",
-        "timestamp": "00:44–00:58"
-      },
-      "introduction": "At KAIST Auto-ID Labs, our team built a system that lets people scan a product and ask questions about it. A GS1 Digital Link identifies the product and leads to its resources, such as a care label, a product page or a storage video.\n\nI built the multimodal retrieval layer and later developed the dataset and evaluation tools we used to investigate failures.",
-      "sections": [
-        {
-          "id": "vector-search",
-          "title": "Vector Search",
-          "blocks": [
-            {
-              "type": "text",
-              "text": "I combined speech transcripts and frame captions into timestamped passages, embedded each passage, and ranked the passages against the question."
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "level": 1
             },
-            {
-              "type": "heading",
-              "text": "Parallel preprocessing"
+            "content": [
+              {
+                "type": "text",
+                "text": "Multimodal Retrieval & RAG Evaluation"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": "subtitle"
             },
-            {
-              "type": "text",
-              "text": "I ran speech transcription alongside visual analysis and requested captions for up to four video frames at a time. The chart compares this with sequential preprocessing on the same storage video."
+            "content": [
+              {
+                "type": "text",
+                "text": "KAIST Auto-ID Labs · AI Research Engineer Intern · May–August 2026"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "figure",
+            "content": [
+              {
+                "type": "text",
+                "text": "At KAIST Auto-ID Labs, our team built a system that lets people scan a product and ask questions about it. A GS1 Digital Link identifies the product and leads to its resources, such as a care label, a product page or a storage video."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "I built the multimodal retrieval layer and later developed the dataset and evaluation tools we used to investigate failures."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "lineSpacing": null,
+              "id": "vector-search",
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Vector Search"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "How should I store a sweater?"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Fold it to keep the shoulders from stretching."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "00:44–00:58"
+              },
+              {
+                "type": "text",
+                "text": " · Top-ranked passage from this 57.6-second video. "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://www.youtube.com/watch?v=xKVRzslPwJs&t=44s",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer nofollow",
+                      "class": null,
+                      "title": null
+                    }
+                  }
+                ],
+                "text": "Watch the original at 00:44"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "I combined speech transcripts and frame captions into timestamped passages, embedded each passage, and ranked the passages against the question."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Parallel preprocessing"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "I ran speech transcription alongside visual analysis and requested captions for up to four video frames at a time. The chart compares this with sequential preprocessing on the same storage video."
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "id": "figure-1",
               "image": "assets/kaist-gs1-rag/video-preprocessing.png",
               "alt": "For one video, sequential preprocessing took 17.6 seconds and parallel preprocessing took 5.0 seconds.",
-              "caption": "One 57.6-second video, one run per configuration using live APIs. Both configurations used eight scene-detected frames sampled across the video; parallel processing allowed up to four caption requests at once. These times cover preprocessing only; indexing, search and answer synthesis were measured separately.",
               "link": "assets/kaist-gs1-rag/video-timings.csv",
               "label": "Timing data (CSV)"
             },
-            {
-              "type": "heading",
-              "text": "Frame sampling"
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "lineSpacing": null,
+                  "id": null,
+                  "role": null
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "One 57.6-second video, one run per configuration using live APIs. Both configurations used eight scene-detected frames sampled across the video; parallel processing allowed up to four caption requests at once. These times cover preprocessing only; indexing, search and answer synthesis were measured separately."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "level": 3
             },
-            {
-              "type": "text",
-              "text": "Selecting the first eight of 17 detected scenes left the last representative frame at 19.5 seconds. I changed the selection to sample eight frames evenly across the detected scenes, extending coverage to 54.5 seconds, and added a regression test. This fixed missing visual information near the end of the video. The sweater answer above came from speech, not from the selected frame."
+            "content": [
+              {
+                "type": "text",
+                "text": "Frame sampling"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "heading",
-              "text": "Resource queue + autorater · Proposed design"
+            "content": [
+              {
+                "type": "text",
+                "text": "Selecting the first eight of 17 detected scenes left the last representative frame at 19.5 seconds. I changed the selection to sample eight frames evenly across the detected scenes, extending coverage to 54.5 seconds, and added a regression test. This fixed missing visual information near the end of the video. The sweater answer above came from speech, not from the selected frame."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "level": 3
             },
-            {
-              "type": "figure",
+            "content": [
+              {
+                "type": "text",
+                "text": "Resource queue + autorater · Proposed design"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "id": "figure-2",
               "image": "assets/kaist-gs1-rag/resource-queue-proposal.png",
               "alt": "The proposed external retrieval queue checks incoming evidence before generating an answer. A final critic reviews the answer.",
-              "caption": "Design proposal from the internship presentation. The queue and evidence-sufficiency gate were not evaluated in the later benchmark.",
               "link": "",
               "label": ""
             },
-            {
-              "type": "text",
-              "text": "I also investigated when the system had enough evidence to answer. If the care label already gives the washing temperature, should the user have to wait for a storage video? I proposed keeping the knowledge graph as the first lookup. When external retrieval is needed, completed items enter a resource queue. An autorater checks whether the accumulated evidence supports an answer to the question. Once it does, the system can generate the answer and pass it to the final critic."
-            },
-            {
-              "type": "text",
-              "text": "The autorater checks the question and evidence before generation; the final critic also reviews the generated answer. At the time, we had no suitable benchmark for testing that decision. The later benchmark evaluated the existing pipeline. The proposed gate’s latency and its risk of stopping before essential evidence arrives remain unmeasured."
-            },
-            {
-              "type": "text",
-              "text": "A follow-up experiment would compare waiting for all resources against the queue on the same questions, measuring both latency and the rate of missing essential evidence."
-            }
-          ]
-        },
-        {
-          "id": "benchmark",
-          "title": "Benchmark",
-          "blocks": [
-            {
-              "type": "text",
-              "text": "Of the seven GS1 identifiers we checked, only the clothing demo exposed a comparable set of multimedia resources directly in its linkset. I extracted facts from public datasets, then used the same facts to generate resource linksets, web pages, reference answers and evidence locations for products and places. I also created pages with selected values changed, so we could test whether the system followed the document rather than a familiar answer."
-            },
-            {
-              "type": "text",
-              "text": "The evaluation connected the page the system opened, the evidence passed to the answer model and the final response. This made it possible to separate an extraction failure from a generation failure."
-            },
-            {
-              "type": "heading",
-              "text": "Separate June test · Knowledge-graph routing"
-            },
-            {
-              "type": "text",
-              "text": "In a June test, the knowledge graph returned a T-shirt and its care instructions. The brand was missing, yet the first critic ended the search before the system checked an external source. This routing failure was separate from the July evaluation, which skipped the initial graph lookup and first critic."
-            },
-            {
-              "type": "heading",
-              "text": "July evaluation · Extraction and generation"
-            },
-            {
-              "type": "comparison",
-              "intro": "In the July run, both questions received an “unable to answer” response, but the traces showed different causes.",
-              "cases": [
-                {
-                  "question": "How tall is Busan Tower?",
-                  "source": "The page body contained 120 m.",
-                  "input": "The extractor kept JSON-LD containing only the tower’s name, so the 120 m height never reached the answer model.",
-                  "response": "Said the height could not be established.",
-                  "diagnosis": "Page extraction"
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "lineSpacing": null,
+                  "id": null,
+                  "role": null
                 },
-                {
-                  "question": "What nickname is Gamcheon Culture Village known by?",
-                  "source": "The page body contained “Korea’s Machu Picchu”.",
-                  "input": "The text “Korea’s Machu Picchu” reached the answer model.",
-                  "response": "Said the nickname could not be confirmed.",
-                  "diagnosis": "Answer generation"
-                }
-              ],
-              "caption": "Questions are English translations; the responses and trace descriptions here are editorial summaries of the Korean runs."
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Design proposal from the internship presentation. The queue and evidence-sufficiency gate were not evaluated in the later benchmark."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "heading",
-              "text": "August dataset"
+            "content": [
+              {
+                "type": "text",
+                "text": "I also investigated when the system had enough evidence to answer. If the care label already gives the washing temperature, should the user have to wait for a storage video? I proposed keeping the knowledge graph as the first lookup. When external retrieval is needed, completed items enter a resource queue. An autorater checks whether the accumulated evidence supports an answer to the question. Once it does, the system can generate the answer and pass it to the final critic."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "text",
-              "text": "The merged server corpus contained 100,831 entities and 2,456,026 source facts: 75,197 food products, 254 places and 25,380 drug labels. Sources included Open Food Facts, the Korea Tourism Organization’s TourAPI and openFDA."
+            "content": [
+              {
+                "type": "text",
+                "text": "The autorater checks the question and evidence before generation; the final critic also reviews the generated answer. At the time, we had no suitable benchmark for testing that decision. The later benchmark evaluated the existing pipeline. The proposed gate’s latency and its risk of stopping before essential evidence arrives remain unmeasured."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "heading",
-              "text": "July evaluation results"
+            "content": [
+              {
+                "type": "text",
+                "text": "A follow-up experiment would compare waiting for all resources against the queue on the same questions, measuring both latency and the rate of missing essential evidence."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "lineSpacing": null,
+              "id": "benchmark",
+              "level": 2
             },
-            {
-              "type": "text",
-              "text": "The earlier frozen set contained 221 reviewed questions across 20 food and place entities. On its 216 single-hop questions, the existing pipeline produced 179 fully correct answers (82.9%), 20 partially correct answers, 12 non-answers and 5 incorrect answers."
+            "content": [
+              {
+                "type": "text",
+                "text": "Benchmark"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "text",
-              "text": "This run used original pages and a warm cache. It assumed a knowledge-graph miss and began at external retrieval, skipping the initial graph lookup and review. It contained no video questions. The result is not an accuracy estimate for the later full corpus, which also included drug labels."
+            "content": [
+              {
+                "type": "text",
+                "text": "In a June test, the question was which brand made a T-shirt. The graph returned the product and its care instructions. The brand was missing, yet the first critic ended the search before the system opened an external source. Seeing only the final answer would hide that routing decision."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "heading",
-              "text": "Image-question limitations"
+            "content": [
+              {
+                "type": "text",
+                "text": "I built a benchmark that records both the expected answer and where to find it. I extracted facts from public records, preserved the original field for each value, and used the facts to generate linked pages and reference answers. For Barilla pesto, Open Food Facts gives "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "22.3 g of fat per serving"
+              },
+              {
+                "type": "text",
+                "text": ". I also generated a nutrition page showing "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "13.52 g"
+              },
+              {
+                "type": "text",
+                "text": " so we could test whether the answer would change with the source. "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/Sunghak222/gs1-digital-link-benchmark/tree/master/examples/food",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer nofollow",
+                      "class": null,
+                      "title": null
+                    }
+                  }
+                ],
+                "text": "Pesto record and both pages"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
             },
-            {
-              "type": "text",
-              "text": "All 11 image questions were marked correct. When I checked the citations, all 11 answers cited the HTML nutrition table and only two also cited a label photo. The result showed that the questions could be answered through another source. Testing label reading would require controlling access to the HTML answer."
-            }
-          ]
-        }
-      ]
+            "content": [
+              {
+                "type": "text",
+                "text": "In July I evaluated the existing pipeline on 20 foods and attractions. I started the run at external retrieval, skipping the graph lookup and first critic, and used the original pages and a warm cache. Of "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "216 single-hop questions, 179 earned full credit (82.9%)"
+              },
+              {
+                "type": "text",
+                "text": ". Another 20 earned partial credit, 12 went unanswered, and five drew incorrect answers. In both cases below, the system said it couldn’t confirm the answer. "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://sunghak222.github.io/assets/kaist-gs1-rag/benchmark-traces.png",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer nofollow",
+                      "class": null,
+                      "title": null
+                    }
+                  }
+                ],
+                "text": "Side-by-side failure traces"
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "tableRow",
+                "content": [
+                  {
+                    "type": "tableHeader",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Question"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "tableHeader",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "What the trace showed"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "tableHeader",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Where it failed"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableRow",
+                "content": [
+                  {
+                    "type": "tableCell",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "How tall is Busan Tower?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "tableCell",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "The system opened the right page. Its body said "
+                          },
+                          {
+                            "type": "text",
+                            "marks": [
+                              {
+                                "type": "bold"
+                              }
+                            ],
+                            "text": "120 m"
+                          },
+                          {
+                            "type": "text",
+                            "text": ", but the extractor kept only a structured metadata block containing the tower’s name. The answer model never saw the height."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "tableCell",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Page extraction"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "tableRow",
+                "content": [
+                  {
+                    "type": "tableCell",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "What is Gamcheon Culture Village’s nickname?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "tableCell",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "marks": [
+                              {
+                                "type": "bold"
+                              }
+                            ],
+                            "text": "“Korea’s Machu Picchu”"
+                          },
+                          {
+                            "type": "text",
+                            "text": " reached the answer model. Its response cited a sculpture from an image description and said it could not confirm the nickname."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "tableCell",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "lineSpacing": null,
+                          "id": null,
+                          "role": null
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Answer generation"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Of the 37 cases that missed full credit, I traced six to source selection, six to page extraction and nine to answer generation. Eight exposed packaging facts I had placed on storage-instruction pages. In the remaining eight, I flagged the grader for potentially penalizing correct answers that included extra detail."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The benchmark also had a blind spot. All "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "11 image questions"
+              },
+              {
+                "type": "text",
+                "text": " earned full credit. Every answer cited the HTML nutrition table, and only two also cited the label photo. To measure whether the system can read a label, I would repeat those questions with the duplicate HTML evidence withheld. The July run contained no video questions."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "lineSpacing": null,
+              "id": null,
+              "role": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "By the August handover, the merged corpus covered "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "100,831 records"
+              },
+              {
+                "type": "text",
+                "text": " across food products, tourist attractions and drug labels. Each of its "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ],
+                "text": "2,456,026 facts"
+              },
+              {
+                "type": "text",
+                "text": " retained a reference to the source field a reviewer could use to check it. "
+              },
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/Sunghak222/gs1-digital-link-benchmark",
+                      "target": "_blank",
+                      "rel": "noopener noreferrer nofollow",
+                      "class": null,
+                      "title": null
+                    }
+                  }
+                ],
+                "text": "Benchmark code and worked examples"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

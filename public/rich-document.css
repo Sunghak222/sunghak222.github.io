@@ -21,6 +21,14 @@
 .rich-document figcaption > a { display: inline-block; margin-top: 4px; }
 .document-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 24px 0 22px; }
 .document-comparison-column { min-width: 0; border-top: 1px solid #e5e5df; padding-top: 20px; }
+.document-table-wrap { margin: 28px 0; overflow-x: auto; }
+.document-table { width: 100%; min-width: 680px; border-collapse: collapse; table-layout: fixed; font-size: inherit; line-height: inherit; }
+.document-table th, .document-table td { padding: 16px 18px; border-bottom: 1px solid #d8d8d3; vertical-align: top; text-align: left; }
+.document-table th { font-weight: 600; border-top: 1px solid #bcbcb6; }
+.document-table th:nth-child(2) { width: 55%; }
+.document-table th:first-child, .document-table td:first-child { padding-left: 0; }
+.document-table th:last-child, .document-table td:last-child { padding-right: 0; }
+.document-table-wrap:focus-visible { outline: 2px solid #777; outline-offset: 4px; }
 @media (max-width: 600px) { .document-comparison { grid-template-columns: 1fr; } }
 @media print {
   .rich-document { --document-size-unit: .6pt; line-height: 1.5; }
@@ -36,4 +44,8 @@
   .rich-document figcaption { margin-top: 6pt; }
   .document-comparison { grid-template-columns: 1fr 1fr; gap: 16pt; margin: 12pt 0 10pt; break-inside: avoid; }
   .document-comparison-column { padding-top: 10pt; }
+  .document-table-wrap { overflow: visible; margin: 12pt 0 16pt; }
+  .document-table { min-width: 0; }
+  .document-table th, .document-table td { padding: 8pt; }
+  .document-table tr { break-inside: avoid; }
 }
