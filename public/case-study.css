@@ -10,7 +10,7 @@
 .case-page nav { margin-top: 32px; }
 .print-case { display: block; margin-top: 32px; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; font-size: 18px; color: var(--ink); text-underline-offset: 4px; }
 .print-case:hover { text-decoration: underline; }
-.case-document { max-width: 900px; padding-top: 56px; font-family: var(--sans); font-size: var(--case-body-size); line-height: 1.7; color: var(--ink); }
+.case-document { max-width: 900px; padding-top: 56px; font-family: var(--serif); font-size: var(--case-body-size); line-height: 1.7; color: var(--ink); }
 .case-document h1, .case-document h2, .case-document h3 { font-family: inherit; font-weight: 600; letter-spacing: -.015em; line-height: 1.35; }
 .case-header { margin-bottom: 28px; }
 .case-header h1 { font-size: var(--case-title-size); }

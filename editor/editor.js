@@ -27,7 +27,7 @@ const fieldsets = {
     ['summary', '짧은 소개', 'textarea', '문제와 기여를 1–2문장으로 설명해 주세요.'],
     ['tools', '사용 기술 / 방법 (선택)', 'text', '예: Python, PyTorch'],
     ['image', '프로젝트 이미지 (선택)', 'image', '프로젝트 왼쪽에 같은 크기의 미리보기로 표시됩니다. 이미지가 없어도 본문 정렬은 유지됩니다. 모바일에서는 글 위에 표시됩니다.'],
-    ['imageFit', '이미지 표시 방식', 'image-fit', '칸 채우기는 이미지를 확대해 빈 공간 없이 표시하며 가장자리가 잘릴 수 있습니다.'],
+    ['imageFit', '이미지 표시 방식', 'image-fit', '기본값은 정사각형 칸 채우기입니다. 이미지를 확대하고 가장자리를 잘라 표시합니다.'],
     ['imageAlt', '이미지 설명 (선택)', 'text', '이미지에 무엇이 보이는지 설명해 주세요.'],
     ['url', 'Read more · 외부 상세 주소 (선택)', 'url', '위에서 상세 페이지를 선택하지 않은 경우 이 주소로 연결됩니다.'], ['code', 'Code · GitHub 주소 (선택)', 'url', 'GitHub 저장소 주소를 넣으면 메인 페이지에 Code가 표시됩니다. 비우면 숨겨집니다.'],
     ['paper', '프로젝트 PDF (선택)', 'pdf', 'PDF 파일을 올리거나 https:// 주소를 입력하세요. 설명 아래 PDF 링크가 표시됩니다.'],
@@ -46,7 +46,7 @@ function fieldHTML(group, index, field, object) {
   const attrs = `id="${id}" data-group="${group}" data-index="${index ?? ''}" data-key="${key}"`;
   const value = escape(object[key]);
   const upload = ['image', 'pdf'].includes(type);
-  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'image-fit' ? `<select ${attrs}><option value="contain"${object[key] !== 'cover' ? ' selected' : ''}>전체 보기</option><option value="cover"${object[key] === 'cover' ? ' selected' : ''}>칸 채우기 (확대)</option></select>` : type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
+  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'image-fit' ? `<select ${attrs}><option value="contain"${object[key] === 'contain' ? ' selected' : ''}>전체 보기</option><option value="cover"${object[key] !== 'contain' ? ' selected' : ''}>칸 채우기 (확대)</option></select>` : type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
 }
 function render() {
   documentEditors.forEach(editor => editor.destroy());

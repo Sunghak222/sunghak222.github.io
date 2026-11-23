@@ -88,6 +88,7 @@ export function renderCaseStudy(study, profile) {
   <title>${text(title)} | ${text(profile.name)}</title>
   <meta name="description" content="${text(study.description)}">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../fonts.css">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="../../case-study.css">
   <link rel="stylesheet" href="../../rich-document.css">

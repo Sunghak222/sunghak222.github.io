@@ -62,7 +62,7 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
     const readMore = casePath ? `<a href="${casePath}">${t.read} <span aria-hidden="true">↗</span></a>` : link(project.url, t.read);
     const links = [readMore, link(project.code, t.code), link(project.paper, t.paper)].filter(Boolean).join('');
     const hasImage = Boolean(safeURL(project.image));
-    const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(project.image)}" target="_blank" rel="noopener noreferrer" aria-label="View full-size image for ${text(project.title)}"><img class="project-image${project.imageFit === 'cover' ? ' is-cropped' : ''}" src="${text(project.image)}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="112"></a></figure>` : '';
+    const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(project.image)}" target="_blank" rel="noopener noreferrer" aria-label="View full-size image for ${text(project.title)}"><img class="project-image${project.imageFit === 'contain' ? ' is-contained' : ''}" src="${text(project.image)}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="180"></a></figure>` : '';
     return `<article class="project${hasImage ? ' has-image' : ''}"><span class="project-index" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${figure}<div class="project-body"><div class="project-meta">${[project.category, project.year].filter(Boolean).map(text).join('<span aria-hidden="true"> / </span>')}</div><h3>${casePath ? `<a href="${casePath}">${text(project.title)}</a>` : text(project.title)}</h3><div class="description">${paragraphs(project.summary)}</div>${links ? `<div class="text-links project-links">${links}</div>` : ''}${!readMore && (details.length || metadata.length) ? `<details><summary>${t.read}<span class="detail-sign" aria-hidden="true"></span></summary><div class="project-details">${metadata.length ? `<dl>${metadata.map(([k, v]) => `<div><dt>${text(k)}</dt><dd>${text(v)}</dd></div>`).join('')}</dl>` : ''}${details.map(([k, v]) => `<section><h4>${text(v)}</h4>${paragraphs(project[k])}</section>`).join('')}</div></details>` : ''}</div></article>`;
   }).join('');
   return `<!doctype html>
@@ -77,6 +77,7 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
   <meta property="og:description" content="${text(p.intro)}">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="styles.css">
   <script src="site.js" defer></script>
 </head>

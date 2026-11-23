@@ -1,5 +1,5 @@
 /* Shared by the local document editor and the static detail page. */
-.rich-document { font-family: var(--sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); font-size: var(--case-body-size, 20px); line-height: 1.7; color: #202020; overflow-wrap: anywhere; }
+.rich-document { font-family: var(--serif, 'Source Serif 4', Georgia, serif); font-optical-sizing: auto; font-size: var(--case-body-size, 20px); line-height: 1.7; color: #202020; overflow-wrap: anywhere; }
 .rich-document > :first-child { margin-top: 0; }
 .rich-document p { margin: 0; }
 .rich-document p + p { margin-top: 16px; }
