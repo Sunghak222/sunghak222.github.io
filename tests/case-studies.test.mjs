@@ -32,6 +32,9 @@ test('detail page includes the whole article, safe text and nested-page assets',
   const data = fixture(); const html = renderCaseStudy(data.caseStudies[0], data.profile);
   assert.match(html, /id="vector-search"/); assert.match(html, /id="benchmark"/);
   assert.ok(html.indexOf('id="vector-search"') < html.indexOf('id="benchmark"'));
+  assert.deepEqual([...html.matchAll(/<h2\b[^>]*>(.*?)<\/h2>/g)].map(match => match[1]), ['Vector Search', 'Benchmark']);
+  assert.ok(html.indexOf('id="vector-search"') < html.indexOf('A question?'));
+  assert.ok(html.indexOf('A question?') < html.indexOf('id="benchmark"'));
   assert.match(html, /src="\.\.\/\.\.\/assets\/favicon.svg"/);
   assert.match(html, /href="\.\.\/\.\.\/#work"/);
   assert.match(html, /Save case study as PDF/);

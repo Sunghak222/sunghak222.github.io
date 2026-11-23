@@ -59,17 +59,17 @@ const figure = ({ image, alt, caption, link = '', label = '' }, className = '') 
 
 export function renderCaseStudyBody(study, profile = {}) {
   const ex = study.example;
+  const exampleHTML = `<div class="case-example"><p class="example-question"><strong>${text(ex.question)}</strong></p><p>${text(ex.answer)}</p><p class="example-evidence">${ex.timestamp?.trim() ? `<strong>${text(ex.timestamp)}</strong> · ` : ''}${text(ex.evidence)}${ex.source ? ` ${sourceLink(ex.source, ex.sourceLabel)}` : ''}</p><p class="case-note">${text(ex.note)}</p>${safeURL(ex.image) ? figure({ image: ex.image, alt: ex.alt, caption: ex.caption }) : ''}</div>`;
   const blockHTML = block => {
     if (block.type === 'text') return paragraphs(block.text);
     if (block.type === 'heading') return `<h3>${text(block.text)}</h3>`;
     if (block.type === 'figure') return figure(block);
-    if (block.type === 'comparison') return `<div class="case-comparison"><p class="comparison-intro">${text(block.intro)}</p><div class="trace-comparison">${block.cases.map(item => `<article class="trace-case"><h3>${text(item.question)}</h3><dl>${[['Reference page', item.source], ['Answer model input', item.input], ['Final response', item.response], ['Diagnosed stage', item.diagnosis]].map(([label, value]) => `<div><dt>${text(label)}</dt><dd>${text(value)}</dd></div>`).join('')}</dl></article>`).join('')}</div><p class="comparison-caption">${text(block.caption)}</p></div>`;
+    if (block.type === 'comparison') return `<div class="case-comparison"><p>${text(block.intro)}</p><div class="trace-comparison">${block.cases.map(item => `<article class="trace-case"><p class="trace-question"><strong>${text(item.question)}</strong></p><dl>${[['Reference page', item.source], ['Answer model input', item.input], ['Final response', item.response], ['Diagnosed stage', item.diagnosis]].map(([label, value]) => `<div><dt>${text(label)}</dt><dd>${text(value)}</dd></div>`).join('')}</dl></article>`).join('')}</div><p class="comparison-caption">${text(block.caption)}</p></div>`;
     return '';
   };
-  return `<header class="case-header"><p class="case-subtitle">${profile.name ? `<span class="print-author">${text(profile.name)} · </span>` : ''}${text(study.subtitle)}</p><h1>${text(study.title)}</h1></header>
+  return `<header class="case-header"><h1>${text(study.title)}</h1><p class="case-subtitle">${profile.name ? `<span class="print-author">${text(profile.name)} · </span>` : ''}${text(study.subtitle)}</p></header>
     <div class="case-introduction">${paragraphs(study.introduction)}</div>
-    <div class="case-example"><h2 class="example-question">${text(ex.question)}</h2><p class="example-answer">${text(ex.answer)}</p><p class="example-evidence">${ex.timestamp?.trim() ? `<strong>${text(ex.timestamp)}</strong> · ` : ''}${text(ex.evidence)}${ex.source ? ` ${sourceLink(ex.source, ex.sourceLabel)}` : ''}</p><p class="case-note">${text(ex.note)}</p>${safeURL(ex.image) ? figure({ image: ex.image, alt: ex.alt, caption: ex.caption }) : ''}</div>
-    ${study.sections.map(section => `<section class="case-section" aria-labelledby="${text(section.id)}"><h2 id="${text(section.id)}">${text(section.title)}</h2>${section.blocks.map(blockHTML).join('\n')}</section>`).join('\n')}`;
+    ${study.sections.map((section, index) => `<section class="case-section" aria-labelledby="${text(section.id)}"><h2 id="${text(section.id)}">${text(section.title)}</h2>${index === 0 ? exampleHTML : ''}${section.blocks.map(blockHTML).join('\n')}</section>`).join('\n')}`;
 }
 
 export function renderCaseStudy(study, profile) {
@@ -93,7 +93,7 @@ export function renderCaseStudy(study, profile) {
       <a class="identity" href="../../">${text(profile.name)}</a>
       <a class="back-link" href="../../#work">← All work</a>
       <nav aria-label="Case study contents">${study.sections.map((section, index) => `<a href="#${text(section.id)}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span>${text(section.title)}</a>`).join('')}</nav>
-      <button class="print-case" type="button">Save case study as PDF</button>
+      <button class="print-case" type="button" aria-label="Save case study as PDF">Save as PDF</button>
     </aside>
     <main id="main" class="case-document" tabindex="-1">
       ${renderCaseStudyBody(study, profile)}
