@@ -34,7 +34,7 @@ const Figure = Node.create({
   parseHTML() { return [{ tag: 'figure[data-document-figure]', getAttrs: el => ({ id: el.dataset.figureId || '', image: el.querySelector('img')?.getAttribute('src') || '', alt: el.querySelector('img')?.alt || '', link: el.dataset.link || '', label: el.dataset.label || '', layout: el.dataset.layout || '' }), contentElement: '.figure-caption-content' }]; },
   renderHTML({ node }) {
     const a = node.attrs;
-    return ['figure', { 'data-document-figure': '', 'data-figure-id': a.id, 'data-link': a.link, 'data-label': a.label, 'data-layout': a.layout, class: a.layout === 'portrait' ? 'is-portrait' : '' },
+    return ['figure', { 'data-document-figure': '', 'data-figure-id': a.id, 'data-link': a.link, 'data-label': a.label, 'data-layout': a.layout, class: ['portrait', 'landscape'].includes(a.layout) ? `is-${a.layout}` : '' },
       ['div', { contenteditable: 'false' }, ['img', { src: asset(a.image), alt: a.alt }]],
       ['figcaption', {}, ['div', { class: 'figure-caption-content' }, 0], ...(a.link ? [['a', { href: asset(a.link), contenteditable: 'false', tabindex: '-1' }, a.label]] : [])]
     ];
@@ -43,7 +43,7 @@ const Figure = Node.create({
 const Comparison = Node.create({ name: 'comparison', group: 'block', content: 'comparisonColumn{2}', defining: true, isolating: true,
   parseHTML() { return [{ tag: 'div.document-comparison' }]; }, renderHTML({ HTMLAttributes }) { return ['div', mergeAttributes(HTMLAttributes, { class: 'document-comparison' }), 0]; }
 });
-const ComparisonColumn = Node.create({ name: 'comparisonColumn', content: 'paragraph+', defining: true, isolating: true,
+const ComparisonColumn = Node.create({ name: 'comparisonColumn', content: '(paragraph | figure)+', defining: true, isolating: true,
   parseHTML() { return [{ tag: 'div.document-comparison-column' }]; }, renderHTML({ HTMLAttributes }) { return ['div', mergeAttributes(HTMLAttributes, { class: 'document-comparison-column' }), 0]; }
 });
 // Keep imported tables editable without adding table-building controls to the toolbar.
@@ -67,8 +67,21 @@ export function createDocumentEditor(container, study, { onChange, onError, uplo
   const spacing = toolbar.querySelector('[data-format="spacing"]');
   const media = container.querySelector('.document-media');
   const doc = legacyToDocument(study);
+  const figures = [];
+  const collectFigures = node => {
+    if (node.type === 'figure') figures.push(node);
+    for (const child of node.content || []) collectFigures(child);
+  };
+  collectFigures(doc);
+  const figureIds = new Set(figures.map(node => node.attrs.id).filter(Boolean));
   let figureIndex = 0;
-  for (const node of doc.content) if (node.type === 'figure') node.attrs.id ||= `figure-${++figureIndex}`;
+  for (const node of figures) {
+    if (node.attrs.id) continue;
+    let id;
+    do { id = `figure-${++figureIndex}`; } while (figureIds.has(id));
+    node.attrs.id = id;
+    figureIds.add(id);
+  }
   const syncToolbar = editor => {
     const currentHeading = editor.getAttributes('heading').level;
     style.value = editor.isActive('heading') ? String(currentHeading) : '0';

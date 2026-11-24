@@ -88,6 +88,29 @@ test('plain text extracted from a saved document remains available for its page 
   assert.ok(nodeText(doc).includes('17.6 → 5.0 s'));
 });
 
+test('comparison photos retain captions, full-size links and localized asset paths after saving', () => {
+  const comparison = { type: 'comparison', content: ['low', 'high'].map(view => ({
+    type: 'comparisonColumn', content: [{
+      type: 'figure', attrs: { image: `assets/${view}.jpeg`, alt: `${view} viewpoint`, link: '', label: '', layout: 'landscape' },
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: `${view} viewpoint caption` }] }]
+    }]
+  })) };
+  const doc = legacyToDocument(legacy());
+  doc.content.push(comparison);
+  const saved = validateContent(JSON.parse(JSON.stringify(content(migrated(doc)))));
+  const savedDoc = saved.caseStudies[0].document;
+  const html = renderRichDocument(savedDoc, 'Name', { lang: 'ko', assetPrefix: '../../../' });
+  assert.equal(html.match(/class="case-figure is-landscape"/g).length, 2);
+  for (const view of ['low', 'high']) {
+    assert.match(html, new RegExp(`href="\\.\\./\\.\\./\\.\\./assets/${view}\\.jpeg" target="_blank"`));
+    assert.match(html, new RegExp(`src="\\.\\./\\.\\./\\.\\./assets/${view}\\.jpeg" alt="${view} viewpoint"`));
+    assert.ok(html.includes(`<figcaption><p>${view} viewpoint caption</p></figcaption>`));
+  }
+  assert.deepEqual(savedDoc.content.at(-1), comparison);
+  savedDoc.content.at(-1).content[0].content[0].attrs.image = 'javascript:alert(1)';
+  assert.throws(() => validateRichDocument(savedDoc));
+});
+
 test('imported tables preserve headers, cell emphasis and links through save and static rendering', () => {
   const cell = (type, text, marks = []) => ({ type, content: [{ type: 'paragraph', content: [{ type: 'text', text, marks }] }] });
   const table = { type: 'table', content: [

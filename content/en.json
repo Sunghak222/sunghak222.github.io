@@ -1202,6 +1202,85 @@
             "type": "heading",
             "attrs": {
               "level": 2,
+              "id": "motivation"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Motivation"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I photographed a mouse and an AirPods case from close up and farther away without moving either object. Their apparent 2D separation changed, which prompted me to try adding relative depth to object detection."
+              }
+            ]
+          },
+          {
+            "type": "comparison",
+            "content": [
+              {
+                "type": "comparisonColumn",
+                "content": [
+                  {
+                    "type": "figure",
+                    "attrs": {
+                      "image": "assets/pet-mischief-detector/motivation-mouse-airpods-near.jpeg",
+                      "alt": "A mouse and an AirPods case photographed up close",
+                      "link": "",
+                      "label": "",
+                      "layout": "landscape"
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Close up"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "comparisonColumn",
+                "content": [
+                  {
+                    "type": "figure",
+                    "attrs": {
+                      "image": "assets/pet-mischief-detector/motivation-mouse-airpods-far.jpeg",
+                      "alt": "The same mouse and AirPods case photographed from farther away",
+                      "link": "",
+                      "label": "",
+                      "layout": "landscape"
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Farther away"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
               "id": "detection-and-depth"
             },
             "content": [
@@ -1216,7 +1295,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Moving the camera changes how far apart objects appear, even when the objects stay in place. I proposed adding relative depth to YOLO detections to help interpret these relationships. The team combined proximity, bounding-box overlap, and depth information to assign an attention level to each scene. The system covers eight classes, including cats, dogs, cups, and vases."
+                "text": "The team combined proximity, bounding-box overlap, and relative depth to assign an attention level to each scene. The system covers eight classes, including cats, dogs, cups, and vases."
               }
             ]
           },

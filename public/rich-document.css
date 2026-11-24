@@ -15,13 +15,17 @@
 .rich-document .document-label { margin-top: 22px; }
 .rich-document .document-label + p { margin-top: 6px; }
 .rich-document figure { margin: 26px 0 30px; break-inside: avoid; }
-.rich-document figure img { display: block; width: 100%; height: auto; }
+.rich-document figure img { display: block; width: 100%; height: auto; margin-inline: auto; }
 .rich-document figure.is-portrait img { width: min(100%, 360px); }
+/* Landscape comparisons use the full stored frame, without EXIF auto-rotation or cropping. */
+.rich-document figure.is-landscape img { image-orientation: none; aspect-ratio: 4 / 3; object-fit: fill; }
 .rich-document figcaption { margin-top: 12px; }
 .rich-document figcaption p { font-size: inherit; }
 .rich-document figcaption > a { display: inline-block; margin-top: 4px; }
 .document-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 24px 0 22px; }
 .document-comparison-column { min-width: 0; border-top: 1px solid #e5e5df; padding-top: 20px; }
+.document-comparison-column > figure { margin: 0; }
+.document-comparison-column > figure img { aspect-ratio: 4 / 3; object-fit: contain; }
 .document-table-wrap { margin: 28px 0; overflow-x: auto; }
 .document-table { width: 100%; min-width: 680px; border-collapse: collapse; table-layout: fixed; font-size: inherit; line-height: inherit; }
 .document-table th, .document-table td { padding: 16px 18px; border-bottom: 1px solid #d8d8d3; vertical-align: top; text-align: left; }

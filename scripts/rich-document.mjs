@@ -61,7 +61,7 @@ export function validateRichDocument(doc) {
   const fail = () => { throw new Error('상세 문서의 서식을 확인해 주세요. 글자 크기는 12–48px, 제목은 1–3단계를 사용할 수 있습니다.'); };
   const visit = (node, parent, depth = 0) => {
     if (!node || typeof node !== 'object' || Array.isArray(node) || ++count > 10000 || depth > 10) fail();
-    const allowed = { root: ['doc'], doc: ['paragraph', 'heading', 'figure', 'comparison', 'table'], paragraph: ['text', 'hardBreak'], heading: ['text', 'hardBreak'], figure: ['paragraph'], comparison: ['comparisonColumn'], comparisonColumn: ['paragraph'], table: ['tableRow'], tableRow: ['tableHeader', 'tableCell'], tableHeader: ['paragraph'], tableCell: ['paragraph'] };
+    const allowed = { root: ['doc'], doc: ['paragraph', 'heading', 'figure', 'comparison', 'table'], paragraph: ['text', 'hardBreak'], heading: ['text', 'hardBreak'], figure: ['paragraph'], comparison: ['comparisonColumn'], comparisonColumn: ['paragraph', 'figure'], table: ['tableRow'], tableRow: ['tableHeader', 'tableCell'], tableHeader: ['paragraph'], tableCell: ['paragraph'] };
     if (!allowed[parent]?.includes(node.type)) fail();
     const attrs = node.attrs || {};
     if (typeof attrs !== 'object' || Array.isArray(attrs)) fail();
@@ -70,7 +70,7 @@ export function validateRichDocument(doc) {
     if (attrs.id != null && (typeof attrs.id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(attrs.id))) fail();
     if (node.type === 'heading' && ![1, 2, 3].includes(attrs.level)) fail();
     if (node.type === 'figure' && (!safeURL(attrs.image) || typeof attrs.alt !== 'string' || typeof attrs.link !== 'string' || typeof attrs.label !== 'string' || (attrs.link && !safeURL(attrs.link)))) fail();
-    if (node.type === 'figure' && attrs.layout != null && !['', 'portrait'].includes(attrs.layout)) fail();
+    if (node.type === 'figure' && attrs.layout != null && !['', 'portrait', 'landscape'].includes(attrs.layout)) fail();
     if (node.type === 'text') {
       if (typeof node.text !== 'string' || !node.text || (characters += node.text.length) > 500000) fail();
       if (node.marks !== undefined && !Array.isArray(node.marks)) fail();
@@ -119,7 +119,7 @@ export function renderRichDocument(doc, author = '', { assetPrefix = '../../', l
       const section = sections.find(item => item.node === node);
       return `<h${attrs.level}${section ? ` id="${section.id}"` : ''}${spacing}>${inside}</h${attrs.level}>`;
     }
-    if (node.type === 'figure') return `<figure class="case-figure${attrs.layout === 'portrait' ? ' is-portrait' : ''}"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="${labels[lang].fullImage}"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a><figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption></figure>`;
+    if (node.type === 'figure') return `<figure class="case-figure${attrs.layout ? ` is-${attrs.layout}` : ''}"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="${labels[lang].fullImage}"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a><figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption></figure>`;
     if (node.type === 'comparison') return `<div class="document-comparison">${inside}</div>`;
     if (node.type === 'comparisonColumn') return `<div class="document-comparison-column">${inside}</div>`;
     if (node.type === 'table') {

@@ -12,6 +12,23 @@
       "imageAlt": "리소스 큐와 자동 평가기로 모인 근거가 충분한지 확인하는 제안 구조."
     },
     {
+      "caseStudy": "lipoq",
+      "title": "LipoQ — 양자컴퓨팅을 활용한 지질 나노입자 조성 탐색",
+      "year": "2026년 11월",
+      "category": "2026 Qiskit Fall Fest 우승 / 양자컴퓨팅 / 최적화",
+      "summary": "사전학습 모델 COMET의 예측 점수를 바탕으로 양자 회로를 학습시켜 6,048개 지질 나노입자 조성을 탐색했습니다. 같은 수의 서로 다른 후보를 평가하며 무작위 탐색과 비교했습니다.",
+      "role": "개발 주도 · 설계 및 구현",
+      "imageAlt": "양자 회로의 후보 생성, 고정된 COMET 평가, SPSA 피드백으로 구성한 LipoQ 탐색 과정."
+    },
+    {
+      "caseStudy": "qubit-reuse-mapping",
+      "title": "큐비트 재사용 방식에 따른 통신 비용 비교",
+      "year": "2026년 9월 — 현재",
+      "category": "Capstone research · 진행 중",
+      "summary": "재사용 대상을 고르는 방식이 QPU 사이의 통신량에 어떤 영향을 주는지 살펴보는 캡스톤 연구. 물리 큐비트 수와 회로 깊이가 같은 두 방식에서 최소 전송 횟수가 달라지는 사례를 비교했다.",
+      "imageAlt": "물리 큐비트가 2개씩 있는 두 QPU에서 실행하는 재사용 회로. 필요한 QPU 간 전송이 빨간 선으로 표시되어 있다."
+    },
+    {
       "caseStudy": "pet-mischief-detector",
       "title": "The Pet Mischief Detector",
       "year": "2026년 4월",
@@ -578,6 +595,442 @@
       }
     },
     {
+      "slug": "lipoq",
+      "title": "LipoQ",
+      "description": "양자 회로와 고정된 COMET 모델로 6,048개 지질 나노입자 조성을 탐색하고, 동일한 후보 평가 수로 무작위 탐색과 비교한 프로젝트.",
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "LipoQ"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "양자컴퓨팅을 활용한 지질 나노입자 조성 탐색"
+              }
+            ],
+            "attrs": {
+              "role": "subtitle"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Qiskit Fall Fest Hackathon 2026 우승 · University of Waterloo"
+              }
+            ],
+            "attrs": {
+              "role": "note"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "개발 기간: 2일 · 역할: 개발 주도 · Python · Qiskit · PyTorch · SciPy"
+              }
+            ],
+            "attrs": {
+              "role": "note"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "지질 나노입자(LNP)를 설계하려면 어떤 지질을 쓸지와 각각의 비율을 함께 정해야 합니다. LipoQ는 양자 회로를 학습시켜 예측 점수가 높은 조성을 찾는 프로젝트입니다. 이틀 동안 개발을 주도하며 코드 대부분을 작성했고, 후보 생성부터 평가와 비교 실험까지 연결했습니다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "quantum-assisted-search"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "양자컴퓨팅을 활용한 조성 탐색"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "탐색 범위는 84가지 지질 조합과 72가지 배합비를 결합한 총 "
+              },
+              {
+                "type": "text",
+                "text": "6,048개 조성",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "입니다. "
+              },
+              {
+                "type": "text",
+                "text": "14큐비트 회로",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "의 측정값을 후보 조성으로 변환하고, 성분별 비율 범위와 비율의 합이 1이 되는 조건을 만족하도록 설계했습니다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "후보 평가에는 기존 사전학습 모델인 "
+              },
+              {
+                "type": "text",
+                "text": "COMET",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "을 사용했습니다. "
+              },
+              {
+                "type": "text",
+                "text": "COMET",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "의 가중치는 고정하고, 예측 점수를 바탕으로 SPSA 알고리즘이 양자 회로의 파라미터를 조정하도록 했습니다. 조정된 회로로 후보를 다시 생성하는 과정을 반복했습니다."
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/lipoq/quantum-search-pipeline.png",
+              "alt": "14큐비트 양자 회로가 조건을 만족하는 지질 조성 후보를 생성하고, 고정된 COMET 모델의 예측 점수로 SPSA가 회로 파라미터를 조정하는 과정. 같은 수의 서로 다른 후보를 평가하는 무작위 탐색과 비교한다.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "양자 회로로 후보를 생성하고, COMET의 평가 결과를 다음 탐색에 반영하는 과정."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "evaluation"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "평가"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "비교를 위해 무작위 탐색도 구현하고, 두 방법이 평가하는 서로 다른 후보 수를 동일하게 맞췄습니다. 이미 평가한 조성은 예측값을 재사용해 중복 추론을 줄였습니다. 실험 설정과 후보 기록을 저장하고 그래프를 자동으로 생성해 결과를 확인하고 재현할 수 있도록 했습니다. 평가와 결과 저장 코드는 두 방법에서 공통으로 사용했습니다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "로컬 시뮬레이터로 한 차례 실험한 결과, 회로가 생성한 후보의 평균 COMET 점수는 "
+              },
+              {
+                "type": "text",
+                "text": "−3.06에서 5.16",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "으로 상승했습니다. 두 방법이 각각 "
+              },
+              {
+                "type": "text",
+                "text": "4,682개 조성",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "을 평가했을 때 최고 점수는 "
+              },
+              {
+                "type": "text",
+                "text": "8.464",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "로 같았습니다. 학습 과정에서 후보의 평균 점수는 높아졌지만, 최고 점수에서는 무작위 탐색을 넘어서지 못했습니다. 모델의 예측 점수를 비교한 결과로, 실제 전달 성능을 검증하는 실험은 진행하지 않았습니다."
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/lipoq/learning-curves-seed21.png",
+              "alt": "시뮬레이터 실험(seed 21)의 학습 곡선. 후보의 평균 COMET 예측 점수는 상승하고 최고 점수는 일정 수준에 도달한다. 실제 생물학적 성능이 아닌 모델 예측값이다.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "학습에 따른 후보의 평균 예측 점수와 탐색 중 발견한 최고 점수 변화(seed 21)."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "GitHub 코드",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/Sunghak222/lipoq"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slug": "qubit-reuse-mapping",
+      "title": "큐비트 재사용 방식에 따른 통신 비용 비교",
+      "description": "물리 큐비트 수와 회로 깊이가 같은 두 재사용 방식에서 QPU 사이의 최소 전송 횟수가 달라지는 사례를 비교했다.",
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "큐비트 재사용 방식에 따른 통신 비용 비교"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "subtitle"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Capstone research · 진행 중 · 2026년 9월 — 현재"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "측정이 끝난 큐비트를 초기화해 다시 쓰면 회로 실행에 필요한 큐비트 수를 줄일 수 있다. 이 실험에서는 재사용 대상을 고르는 방식이 양자 프로세서 사이의 통신량에도 영향을 주는지 살펴봤다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "논리 큐비트 6개로 구성된 회로를, 물리 큐비트가 2개씩 있는 양자 프로세서 두 대에서 실행하는 모델을 사용했다. 비교한 두 방법은 모두 물리 큐비트 4개를 썼고, 전송을 위한 추가 연산을 넣기 전 회로 깊이도 9로 같았다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "이 비교는 프로젝트의 motivational example로, 큐비트 수를 최소화하는 선택이 QPU 사이의 통신량까지 최소화하지는 않음을 보여준다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "qubit-reuse-and-communication"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "큐비트 재사용과 통신 비용"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "규칙이 고른 방법은 전송이 한 번 필요했다"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/qubit-reuse-mapping/qarma-reuse-one-transfer.png",
+              "alt": "물리 큐비트가 2개씩 있는 두 QPU에서 QARMA-R을 참고한 재사용 규칙을 적용한 회로. QPU 사이에 필요한 한 번의 전송을 빨간 선으로 표시했다.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "QARMA-R을 참고해 구현한 규칙은 q₂가 쓰던 자리를 q₄에, q₃가 쓰던 자리를 q₅에 배정했다. 가능한 배치와 이동 경로를 모두 탐색한 결과, 이 방법은 QPU 사이에서 양자 상태를 최소 한 번 전송해야 했다. 그림의 빨간 선이 그 전송을 나타낸다."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "재사용 조합을 바꾸자 전송이 필요 없어졌다"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/qubit-reuse-mapping/alternative-reuse-no-transfers.png",
+              "alt": "q₂가 쓰던 자리를 q₅에, q₃가 쓰던 자리를 q₄에 배정한 대안. 함께 연산하는 큐비트를 같은 QPU에 두어 전송이 필요 없다.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "이번에는 q₂가 쓰던 자리를 q₅에, q₃가 쓰던 자리를 q₄에 배정했다. 나중에 함께 연산하는 q₀와 q₅, q₁과 q₄를 각각 같은 프로세서에 둘 수 있어, QPU 사이의 전송 없이 회로를 실행할 수 있었다."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "이 사례는 재사용 규칙이 고른 방법이 통신량까지 최소화하지는 못한 반례다. 각 방법의 연산 순서와 병렬 실행 묶음을 고정한 조건에서, 큐비트 수와 회로 깊이가 같아도 최소 전송 횟수는 달라졌다. Qiskit Aer로 두 회로의 측정 확률이 원본과 수치 오차 범위에서 일치하는 것도 확인했다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "앞서 생성한 회로 60개를 더 단순한 모델로 조사한 실험에서도 반례 9개를 찾았다. 이때는 초기화된 큐비트의 배치를 비용 없이 바꿀 수 있도록 허용했다."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "slug": "pet-mischief-detector",
       "title": "The Pet Mischief Detector",
       "description": "객체 탐지와 상대 깊이 정보를 조합해 반려동물과 생활 물체 사이의 위험 요소를 살펴보는 팀 프로젝트.",
@@ -633,6 +1086,85 @@
             "type": "heading",
             "attrs": {
               "level": 2,
+              "id": "motivation"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "프로젝트 동기"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "마우스와 에어팟 케이스를 같은 자리에 두고 가까이에서, 그리고 멀리에서 찍었다. 실제 간격은 그대로인데 사진에서 보이는 2D 간격은 달라졌다. 이 관찰에서 객체 탐지에 상대 깊이를 더하는 아이디어가 나왔다."
+              }
+            ]
+          },
+          {
+            "type": "comparison",
+            "content": [
+              {
+                "type": "comparisonColumn",
+                "content": [
+                  {
+                    "type": "figure",
+                    "attrs": {
+                      "image": "assets/pet-mischief-detector/motivation-mouse-airpods-near.jpeg",
+                      "alt": "가까이에서 촬영한 마우스와 에어팟 케이스",
+                      "link": "",
+                      "label": "",
+                      "layout": "landscape"
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "가까이"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "comparisonColumn",
+                "content": [
+                  {
+                    "type": "figure",
+                    "attrs": {
+                      "image": "assets/pet-mischief-detector/motivation-mouse-airpods-far.jpeg",
+                      "alt": "같은 마우스와 에어팟 케이스를 멀리에서 촬영한 사진",
+                      "link": "",
+                      "label": "",
+                      "layout": "landscape"
+                    },
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "멀리"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
               "id": "detection-and-depth"
             },
             "content": [
@@ -647,7 +1179,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "같은 물체 배치도 카메라 위치에 따라 화면에서는 가까워 보이거나 멀어 보인다. 이 문제를 보완하기 위해 YOLO의 객체 탐지 결과에 상대 깊이 정보를 더하는 방법을 제안했다. 팀은 객체 간 근접도, 탐지 박스의 겹침, 깊이 정보를 조합해 장면별 주의 등급을 계산했다. 고양이·개와 컵·꽃병 등 총 8종을 대상으로 했다."
+                "text": "팀은 객체 간 근접도, 탐지 박스의 겹침, 상대 깊이 정보를 조합해 장면별 주의 등급을 계산했다. 고양이·개와 컵·꽃병 등 총 8종을 대상으로 했다."
               }
             ]
           },
