@@ -46,7 +46,7 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en',
   const experiences = data.experience.filter(x => x.title.trim());
   const education = data.education.filter(x => x.title.trim());
   const email = p.email ? `<div class="email-control"><button type="button" class="email-copy" data-email="${text(p.email)}" title="${t.copyEmail}" aria-label="${t.copyEmail}: ${text(p.email)}" data-copied="${t.copied}" data-copy-fallback="${t.copyFallback}"><span class="email-address">${text(p.email)}</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M10 5V2H2v9h3"/></svg></button><span class="copy-status" role="status" aria-live="polite"></span></div>` : '';
-  const social = [localLink(p.github, 'GitHub'), localLink(p.linkedin, 'LinkedIn'), localLink(p.scholar, 'Google Scholar'), localLink(p.resume, `${t.resume} (PDF)`, '', { newTab: true })].filter(Boolean).join('');
+  const social = [localLink(p.github, 'GitHub'), localLink(p.linkedin, 'LinkedIn'), localLink(p.scholar, 'Google Scholar'), localLink(p.resume, `${t.resume} (PDF)`, '', { newTab: true }), `<a class="export-link" href="export/">${t.portfolioPDF} <span aria-hidden="true">↗</span></a>`].filter(Boolean).join('');
   const sections = [['about', t.about], ...(projects.length ? [['work', t.work]] : []), ...(experiences.length ? [['experience', t.experience]] : []), ...(education.length ? [['education', t.education]] : [])];
   const nav = sections.map(([id, label], i) => `<a href="#${id}"${i === 0 ? ' aria-current="location"' : ''}><span class="nav-index">${String(i + 1).padStart(2, '0')}</span>${text(label)}</a>`).join('');
   const sectionHeader = (id, title) => `<header class="section-heading"><span class="section-index">${String(sections.findIndex(s => s[0] === id) + 1).padStart(2, '0')}</span><h2>${text(title)}</h2></header>`;
@@ -95,7 +95,7 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en',
         <section id="about" class="about-section" aria-labelledby="intro-heading">
           <div class="intro-layout${p.photo ? ' has-photo' : ''}">
             ${p.photo ? `<img class="portrait" src="${text(asset(p.photo))}" alt="${text(p.photoAlt || `Portrait of ${p.name}`)}" width="160" height="200">` : ''}
-            <div><h1 id="intro-heading">${text(p.name)}</h1><div class="intro"${lang === 'ko' && !translation?.profile?.intro ? ' lang="en"' : ''}>${paragraphs(p.intro)}</div>${email || social ? `<div class="text-links intro-links">${email}${social}</div>` : ''}${lang === 'ko' ? `<p class="translation-notice">${t.fallback}</p>` : ''}</div>
+            <div><h1 id="intro-heading">${text(p.name)}</h1><div class="intro"${lang === 'ko' && !translation?.profile?.intro ? ' lang="en"' : ''}>${paragraphs(p.intro)}</div>${email || social ? `<div class="text-links intro-links">${email}${social}</div>` : ''}</div>
           </div>
         </section>
         ${projects.length ? `<section id="work" class="content-section">${sectionHeader('work', t.work)}<div class="project-list">${projectHTML}</div></section>` : ''}

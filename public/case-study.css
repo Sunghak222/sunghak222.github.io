@@ -1,7 +1,7 @@
 /* One type scale for every case study; body copy and captions share the same font. */
 .case-page {
   --case-title-size: 34px;
-  --case-section-size: 28px;
+  --case-section-size: 26px;
   --case-subsection-size: 22px;
   --case-body-size: 20px;
   --case-note-size: 18px;
@@ -42,7 +42,7 @@
 .comparison-caption { margin-top: 22px !important; }
 .case-document footer { margin-top: 44px; font-size: 16px; }
 @media (max-width: 800px) {
-  .case-page { --case-title-size: 30px; --case-section-size: 26px; --case-body-size: 19px; }
+  .case-page { --case-title-size: 30px; --case-section-size: 24px; --case-body-size: 19px; }
   .case-page nav { margin-top: 20px; gap: 24px; }
   .case-page .print-case { margin-top: 16px; }
   .case-document { padding-top: 36px; }
@@ -65,7 +65,6 @@
   .case-document p + p { margin-top: 9pt; }
   .case-introduction { margin-bottom: 18pt; }
   .case-section { padding-top: 12pt; margin-top: 18pt; }
-  .case-section + .case-section { break-before: page; margin-top: 0; }
   .case-section > h2 { margin-bottom: 12pt; }
   .case-example { margin: 0 0 16pt; break-inside: avoid; }
   .case-example p + p { margin-top: 6pt; }

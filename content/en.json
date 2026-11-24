@@ -14,7 +14,7 @@
   },
   "projects": [
     {
-      "title": "Multimodal Retrieval & RAG Evaluation",
+      "title": "Multimodal RAG & RAG Benchmark",
       "year": "2026",
       "category": "KAIST Auto-ID Labs",
       "summary": "I built a vector search layer that retrieves evidences from HTML, images, and videos. I also built a benchmark to trace where evidence goes missing between a source page and the final answer.",
@@ -36,7 +36,7 @@
       "year": "Nov 2026",
       "category": "2026 IBM Qiskit Fall Fest Winner / Quantum computing / Optimization",
       "summary": "2026 IBM Qiskit Fall Fest Hackathon Winner: A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs.",
-      "role": "Team lead · Design & implementation",
+      "role": "Team leader · Design & implementation",
       "tools": "Qiskit · SPSA · COMET",
       "image": "assets/83ac227b-4edc-495c-8c26-1c5c17579392.png",
       "imageAlt": "",
@@ -49,7 +49,7 @@
       "caseStudy": "lipoq"
     },
     {
-      "title": "Qubit Reuse and Mapping in Distributed Quantum Computing",
+      "title": "Qubit Reuse and Mapping in DQC",
       "year": "Sep 2026 — Present",
       "category": "Capstone research · In progress",
       "summary": "Investigating how qubit-reuse decisions affect communication costs across quantum processing units, and whether optimizing reuse and mapping together can improve on a sequential approach.",
@@ -99,7 +99,7 @@
   "caseStudies": [
     {
       "slug": "kaist-gs1-rag",
-      "title": "Multimodal Retrieval & RAG Evaluation",
+      "title": "Multimodal RAG & RAG Benchmark",
       "description": "Building multimodal retrieval and tracing evidence loss in a product question-answering system.",
       "document": {
         "type": "doc",
@@ -114,7 +114,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Multimodal Retrieval & RAG Evaluation"
+                "text": "Multimodal RAG & RAG Benchmark"
               }
             ]
           },
@@ -753,46 +753,46 @@
           },
           {
             "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "Quantum-assisted search for lipid nanoparticle formulations"
-              }
-            ],
             "attrs": {
               "role": "subtitle"
-            }
-          },
-          {
-            "type": "paragraph",
+            },
             "content": [
               {
                 "type": "text",
-                "text": "Winner — Qiskit Fall Fest Hackathon 2026, University of Waterloo"
+                "text": "University of Waterloo · Team leader · Nov 2026 (2 days)"
               }
-            ],
-            "attrs": {
-              "role": "note"
-            }
+            ]
           },
           {
             "type": "paragraph",
+            "attrs": {
+              "role": "metadata"
+            },
             "content": [
               {
                 "type": "text",
-                "text": "2 days · Lead developer · Python · Qiskit · PyTorch · SciPy"
+                "text": "Winner · IBM Qiskit Fall Fest Hackathon 2026"
               }
-            ],
+            ]
+          },
+          {
+            "type": "paragraph",
             "attrs": {
-              "role": "note"
-            }
+              "role": "metadata"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Python · Qiskit · PyTorch · SciPy"
+              }
+            ]
           },
           {
             "type": "paragraph",
             "content": [
               {
                 "type": "text",
-                "text": "Designing a lipid nanoparticle formulation involves choosing both the lipid ingredients and their proportions. LipoQ explores whether a trainable quantum circuit can learn to generate candidates with higher predicted scores. I led development and wrote most of the code over two days, building a working pipeline from candidate generation to evaluation and comparison."
+                "text": "Designing a lipid nanoparticle formulation involves choosing both the lipid ingredients and their proportions. LipoQ explores whether a trainable quantum circuit can learn to generate candidates with higher predicted scores. As team leader, I wrote most of the code over two days, building a working pipeline from candidate generation to evaluation and comparison."
               }
             ]
           },
@@ -975,33 +975,13 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "Code on GitHub",
-                "marks": [
-                  {
-                    "type": "link",
-                    "attrs": {
-                      "href": "https://github.com/Sunghak222/lipoq"
-                    }
-                  }
-                ]
-              }
-            ],
-            "attrs": {
-              "role": "note"
-            }
           }
         ]
       }
     },
     {
       "slug": "qubit-reuse-mapping",
-      "title": "Qubit Reuse and Mapping in Distributed Quantum Computing",
+      "title": "Qubit Reuse and Mapping in DQC",
       "description": "Comparing two qubit-reuse plans for a six-qubit circuit on two processors: four physical qubits in both plans, but one transfer versus none.",
       "document": {
         "type": "doc",
@@ -1014,7 +994,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Qubit Reuse and Mapping in Distributed Quantum Computing"
+                "text": "Qubit Reuse and Mapping in DQC"
               }
             ]
           },
@@ -1179,22 +1159,22 @@
           },
           {
             "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "A prototype that looks at photos and flags interactions where a pet could knock over or break a household object."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
             "attrs": {
-              "role": "note"
+              "role": "metadata"
             },
             "content": [
               {
                 "type": "text",
                 "text": "Python · PyTorch · YOLO · Depth Anything V2 · OpenCV"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A prototype that looks at photos and flags interactions where a pet could knock over or break a household object."
               }
             ]
           },
@@ -1216,7 +1196,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "I photographed a mouse and an AirPods case from close up and farther away without moving either object. Their apparent 2D separation changed, which prompted me to try adding relative depth to object detection."
+                "text": "I photographed a mouse and an AirPods case from different distances without moving either object. This observation prompted me to try adding relative depth to object detection."
               }
             ]
           },
@@ -1238,12 +1218,7 @@
                     "content": [
                       {
                         "type": "paragraph",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "Close up"
-                          }
-                        ]
+                        "content": []
                       }
                     ]
                   }
@@ -1264,16 +1239,23 @@
                     "content": [
                       {
                         "type": "paragraph",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "Farther away"
-                          }
-                        ]
+                        "content": []
                       }
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The objects stay the same distance apart, but their separation in the image appears wider when photographed up close and narrower when photographed from farther away."
               }
             ]
           },

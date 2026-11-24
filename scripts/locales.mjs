@@ -9,9 +9,8 @@ export const labels = {
     top: 'Back to top', skip: 'Skip to content', navigation: 'Main navigation',
     copyEmail: 'Copy email address', copied: 'Email copied', copyFallback: 'Select the address to copy',
     readCase: 'Read case study', allWork: 'All work', contents: 'Case study contents',
-    savePDF: 'Save as PDF', savePDFLabel: 'Save case study as PDF', back: 'Back to portfolio',
-    fullImage: 'Open full-size figure', language: 'Language', pending: 'Korean translation in preparation',
-    fallback: 'Korean translations are in preparation. Untranslated content is shown in English.'
+    portfolioPDF: 'Portfolio (PDF)', savePDFLabel: 'Save case study as PDF', back: 'Back to portfolio',
+    fullImage: 'Open full-size figure', language: 'Language', pending: 'Korean translation in preparation'
   },
   ko: {
     portfolio: '포트폴리오', home: 'Home', about: '소개', work: '프로젝트',
@@ -21,9 +20,8 @@ export const labels = {
     top: '맨 위로', skip: '본문으로 이동', navigation: '주요 메뉴',
     copyEmail: '이메일 주소 복사', copied: '이메일을 복사했습니다', copyFallback: '주소를 선택해 복사해 주세요',
     readCase: '상세 보기', allWork: '모든 프로젝트', contents: '프로젝트 목차',
-    savePDF: 'PDF로 저장', savePDFLabel: '프로젝트 상세를 PDF로 저장', back: '포트폴리오로 돌아가기',
-    fullImage: '원본 이미지 보기', language: '언어', pending: '한국어 번역 준비 중',
-    fallback: '한국어 번역을 준비 중입니다. 아직 번역되지 않은 내용은 영어로 표시됩니다.'
+    portfolioPDF: '포트폴리오 (PDF)', savePDFLabel: '프로젝트 상세를 PDF로 저장', back: '포트폴리오로 돌아가기',
+    fullImage: '원본 이미지 보기', language: '언어', pending: '한국어 번역 준비 중'
   }
 };
 

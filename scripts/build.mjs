@@ -4,6 +4,7 @@ import path from 'node:path';
 import { renderPage } from './render.mjs';
 import { renderCaseStudy, caseStudyPath } from './case-studies.mjs';
 import { readContent, emptyTranslation, validateTranslation, localizeContent } from './localization.mjs';
+import { renderPDFExport } from './pdf-export.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 export async function build(data, { outputDir = path.join(root, 'dist'), translation } = {}) {
@@ -17,6 +18,8 @@ export async function build(data, { outputDir = path.join(root, 'dist'), transla
   const pages = [
     ['index.html', html],
     ['ko/index.html', renderPage(korean, { lang: 'ko', translation })],
+    ['export/index.html', renderPDFExport(data)],
+    ['ko/export/index.html', renderPDFExport(korean, { lang: 'ko', translatedSlugs, introTranslated: Boolean(translation.profile.intro) })],
     ...(data.caseStudies ?? []).map(study => [
       `${caseStudyPath(study.slug)}index.html`, renderCaseStudy(study, data.profile, { hasKorean: translatedSlugs.has(study.slug) })
     ]),

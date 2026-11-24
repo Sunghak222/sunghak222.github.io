@@ -54,7 +54,7 @@ export function validateCaseStudies(data) {
   }
 }
 
-export function renderCaseStudyBody(study, profile = {}, { assetPrefix = '../../', lang = 'en' } = {}) {
+export function renderCaseStudyBody(study, profile = {}, { assetPrefix = '../../', lang = 'en', idPrefix = '' } = {}) {
   const t = labels[lang];
   const assetURL = value => {
     const url = safeURL(value);
@@ -63,7 +63,7 @@ export function renderCaseStudyBody(study, profile = {}, { assetPrefix = '../../
   const sourceLink = (url, label) => url ? `<a href="${text(assetURL(url))}"${external(url)}>${text(label)}</a>` : '';
   const figure = ({ image, alt, caption, link = '', label = '' }, className = '') => `<figure class="case-figure ${className}"><a href="${text(assetURL(image))}" target="_blank" rel="noopener noreferrer" aria-label="${t.fullImage}"><img src="${text(assetURL(image))}" alt="${text(alt)}"></a><figcaption>${text(caption)}${link ? ` ${sourceLink(link, label)}` : ''}</figcaption></figure>`;
 
-  if (study.document) return renderRichDocument(study.document, profile.name, { assetPrefix, lang });
+  if (study.document) return renderRichDocument(study.document, profile.name, { assetPrefix, lang, idPrefix });
   const ex = study.example;
   const exampleHTML = `<div class="case-example"><p class="example-question"><strong>${text(ex.question)}</strong></p><p>${text(ex.answer)}</p><p class="example-evidence">${ex.timestamp?.trim() ? `<strong>${text(ex.timestamp)}</strong> · ` : ''}${text(ex.evidence)}${ex.source ? ` ${sourceLink(ex.source, ex.sourceLabel)}` : ''}</p><p class="case-note">${text(ex.note)}</p>${safeURL(ex.image) ? figure({ image: ex.image, alt: ex.alt, caption: ex.caption }) : ''}</div>`;
   const blockHTML = block => {
@@ -75,7 +75,7 @@ export function renderCaseStudyBody(study, profile = {}, { assetPrefix = '../../
   };
   return `<header class="case-header"><h1>${text(study.title)}</h1><p class="case-subtitle">${profile.name ? `<span class="print-author">${text(profile.name)} · </span>` : ''}${text(study.subtitle)}</p></header>
     <div class="case-introduction">${paragraphs(study.introduction)}</div>
-    ${study.sections.map((section, index) => `<section class="case-section" aria-labelledby="${text(section.id)}"><h2 id="${text(section.id)}">${text(section.title)}</h2>${index === 0 ? exampleHTML : ''}${section.blocks.map(blockHTML).join('\n')}</section>`).join('\n')}`;
+    ${study.sections.map((section, index) => `<section class="case-section" aria-labelledby="${text(idPrefix + section.id)}"><h2 id="${text(idPrefix + section.id)}">${text(section.title)}</h2>${index === 0 ? exampleHTML : ''}${section.blocks.map(blockHTML).join('\n')}</section>`).join('\n')}`;
 }
 
 export function renderCaseStudy(study, profile, { lang = 'en', hasKorean = false } = {}) {
@@ -99,7 +99,6 @@ export function renderCaseStudy(study, profile, { lang = 'en', hasKorean = false
   <link rel="stylesheet" href="${assetPrefix}styles.css">
   <link rel="stylesheet" href="${assetPrefix}case-study.css">
   <link rel="stylesheet" href="${assetPrefix}rich-document.css">
-  <script src="${assetPrefix}case-study.js" defer></script>
 </head>
 <body id="top" class="case-page">
   <a class="skip-link" href="#main">${t.skip}</a>
@@ -109,7 +108,7 @@ export function renderCaseStudy(study, profile, { lang = 'en', hasKorean = false
       ${languageSwitcher(lang, enHref, koHref)}
       <a class="back-link" href="../../#work">← ${t.allWork}</a>
       <nav aria-label="${t.contents}">${sections.map((section, index) => `<a href="#${text(section.id)}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span>${text(section.title)}</a>`).join('')}</nav>
-      <button class="print-case" type="button" aria-label="${t.savePDFLabel}">${t.savePDF}</button>
+      <a class="print-case" href="../../export/?projects=${text(study.slug)}" aria-label="${t.savePDFLabel}">${t.portfolioPDF}</a>
     </aside>
     <main id="main" class="case-document" tabindex="-1">
       ${renderCaseStudyBody(study, profile, { assetPrefix, lang })}

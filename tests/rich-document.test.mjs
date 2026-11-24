@@ -35,6 +35,7 @@ test('converts existing content without dropping paragraphs, evidence, images, l
 
 test('all five requested formatting choices survive a JSON save and render with safe static HTML', () => {
   const doc = legacyToDocument(legacy());
+  doc.content.splice(2, 0, { type: 'paragraph', attrs: { role: 'metadata' }, content: [{ type: 'text', text: 'Python · Qiskit' }] });
   doc.content.push({ type: 'heading', attrs: { level: 3, lineSpacing: '1.5' }, content: [{ type: 'text', text: 'My new heading' }] });
   doc.content.push({ type: 'paragraph', attrs: { lineSpacing: '2' }, content: [
     { type: 'text', text: 'Selected <text>', marks: [{ type: 'bold' }, { type: 'underline' }, { type: 'textStyle', attrs: { fontSize: '24px' } }] },
@@ -47,6 +48,7 @@ test('all five requested formatting choices survive a JSON save and render with 
   assert.match(html, /<u><strong>Selected &lt;text&gt;<\/strong><\/u><\/span> unchanged/);
   assert.match(html, /href="#vector-search"/);
   assert.match(html, /rich-document.css/);
+  assert.match(html, /<p class="document-metadata">Python · Qiskit<\/p>/);
   assert.doesNotMatch(html, /editor.bundle|contenteditable/);
   assert.deepEqual(legacyToDocument(data.caseStudies[0]), doc);
 });

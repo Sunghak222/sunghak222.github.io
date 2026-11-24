@@ -12,7 +12,7 @@ const ParagraphStyle = Extension.create({
       lineSpacing: { default: null, parseHTML: el => lineSpacings.includes(el.style.lineHeight) ? el.style.lineHeight : null, renderHTML: attrs => attrs.lineSpacing ? { style: `line-height:${attrs.lineSpacing}` } : {} },
       id: { default: null, parseHTML: el => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(el.id) ? el.id : null, renderHTML: () => ({}) }
     } }, { types: ['paragraph'], attributes: {
-      role: { default: null, parseHTML: el => ['subtitle', 'note', 'label'].find(role => el.classList.contains(`document-${role}`)) || null, renderHTML: attrs => attrs.role ? { class: `document-${attrs.role}` } : {} }
+      role: { default: null, parseHTML: el => ['subtitle', 'metadata', 'note', 'label'].find(role => el.classList.contains(`document-${role}`)) || null, renderHTML: attrs => attrs.role ? { class: `document-${attrs.role}` } : {} }
     } }];
   }
 });
@@ -88,7 +88,7 @@ export function createDocumentEditor(container, study, { onChange, onError, uplo
     style.disabled = !editor.isActive('heading') && !editor.can().setHeading({ level: 3 });
     const explicit = editor.getAttributes('textStyle').fontSize;
     if (document.activeElement !== size) size.value = explicit ? parseFloat(explicit) : '';
-    size.placeholder = editor.isActive('heading') ? ({ 1: '34', 2: '28', 3: '22' }[currentHeading]) : editor.getAttributes('paragraph').role ? '18' : '20';
+    size.placeholder = editor.isActive('heading') ? ({ 1: '34', 2: '26', 3: '22' }[currentHeading]) : editor.getAttributes('paragraph').role ? '18' : '20';
     const attrs = editor.isActive('heading') ? editor.getAttributes('heading') : editor.getAttributes('paragraph');
     spacing.value = attrs.lineSpacing || '';
     for (const mark of ['bold', 'underline']) toolbar.querySelector(`[data-format="${mark}"]`).setAttribute('aria-pressed', String(editor.isActive(mark)));

@@ -46,12 +46,12 @@ test('Korean routes use shared assets and translated details, with explicit Engl
   assert.match(html, /href="\.\.\/assets\/resume.pdf" target="_blank"/);
   assert.match(html, /href="projects\/pet\/">상세 보기/);
   assert.match(html, /href="\.\.\/projects\/research\/">상세 보기 \(EN\)/);
-  assert.match(html, /아직 번역되지 않은 내용은 영어로 표시됩니다/);
+  assert.doesNotMatch(html, /translation-notice|아직 번역되지 않은 내용은 영어로 표시됩니다/);
   const detail = renderCaseStudy(translation.caseStudies[0], base.profile, { lang: 'ko', hasKorean: true });
   assert.match(detail, /src="\.\.\/\.\.\/\.\.\/assets\/example.jpg"/);
   assert.match(detail, /href="\.\.\/\.\.\/\.\.\/projects\/pet\/" lang="en"/);
   assert.match(detail, /href="\.\.\/\.\.\/#work"/);
-  assert.match(detail, /PDF로 저장/);
+  assert.match(detail, /포트폴리오 \(PDF\)/);
   assert.match(detail, /class="case-figure is-portrait"/);
   const unavailable = renderCaseStudy(base.caseStudies[1], base.profile);
   assert.match(unavailable, /aria-disabled="true" title="Korean translation in preparation"/);

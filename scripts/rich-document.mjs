@@ -66,7 +66,7 @@ export function validateRichDocument(doc) {
     const attrs = node.attrs || {};
     if (typeof attrs !== 'object' || Array.isArray(attrs)) fail();
     if (attrs.lineSpacing != null && !lineSpacings.includes(attrs.lineSpacing)) fail();
-    if (attrs.role != null && !['subtitle', 'note', 'label'].includes(attrs.role)) fail();
+    if (attrs.role != null && !['subtitle', 'metadata', 'note', 'label'].includes(attrs.role)) fail();
     if (attrs.id != null && (typeof attrs.id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(attrs.id))) fail();
     if (node.type === 'heading' && ![1, 2, 3].includes(attrs.level)) fail();
     if (node.type === 'figure' && (!safeURL(attrs.image) || typeof attrs.alt !== 'string' || typeof attrs.link !== 'string' || typeof attrs.label !== 'string' || (attrs.link && !safeURL(attrs.link)))) fail();
@@ -95,7 +95,7 @@ export function validateRichDocument(doc) {
   return doc;
 }
 
-export function renderRichDocument(doc, author = '', { assetPrefix = '../../', lang = 'en' } = {}) {
+export function renderRichDocument(doc, author = '', { assetPrefix = '../../', lang = 'en', idPrefix = '' } = {}) {
   validateRichDocument(doc);
   const sections = documentSections(doc);
   const asset = value => value.startsWith('assets/') ? `${assetPrefix}${value}` : value;
@@ -117,9 +117,12 @@ export function renderRichDocument(doc, author = '', { assetPrefix = '../../', l
     if (node.type === 'paragraph') return `<p${attrs.role ? ` class="document-${attrs.role}"` : ''}${spacing}>${attrs.role === 'subtitle' && author ? `<span class="print-author">${escape(author)} · </span>` : ''}${inside || '<br>'}</p>`;
     if (node.type === 'heading') {
       const section = sections.find(item => item.node === node);
-      return `<h${attrs.level}${section ? ` id="${section.id}"` : ''}${spacing}>${inside}</h${attrs.level}>`;
+      return `<h${attrs.level}${section ? ` id="${escape(idPrefix + section.id)}"` : ''}${spacing}>${inside}</h${attrs.level}>`;
     }
-    if (node.type === 'figure') return `<figure class="case-figure${attrs.layout ? ` is-${attrs.layout}` : ''}"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="${labels[lang].fullImage}"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a><figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption></figure>`;
+    if (node.type === 'figure') {
+      const caption = nodeText(node).trim() || attrs.link ? `<figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption>` : '';
+      return `<figure class="case-figure${attrs.layout ? ` is-${attrs.layout}` : ''}"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="${labels[lang].fullImage}"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a>${caption}</figure>`;
+    }
     if (node.type === 'comparison') return `<div class="document-comparison">${inside}</div>`;
     if (node.type === 'comparisonColumn') return `<div class="document-comparison-column">${inside}</div>`;
     if (node.type === 'table') {

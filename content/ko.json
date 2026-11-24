@@ -1,11 +1,12 @@
 {
   "profile": {
-    "intro": "양자컴퓨팅, LLM·RAG 시스템, 머신러닝·강화학습 응용을 공부하는 컴퓨터과학 학부생입니다. 어떤 분야에서든 성능을 가로막는 병목을 찾아내고, 그 원인을 해결하는 일을 좋아합니다."
+    "intro": "양자컴퓨팅, LLM·RAG 시스템, 머신러닝·강화학습 응용을 공부하는 컴퓨터과학 학부생입니다. 어떤 분야에서든 성능을 가로막는 병목을 찾아내고, 그 원인을 해결하는 일을 좋아합니다.",
+    "name": "허성학"
   },
   "projects": [
     {
       "caseStudy": "kaist-gs1-rag",
-      "title": "제품 라벨과 영상에서 답을 찾는 검색 시스템",
+      "title": "Multimodal RAG & RAG Benchmark",
       "year": "2026년",
       "category": "KAIST Auto-ID Labs",
       "summary": "제품 라벨과 영상에서 답의 근거를 찾는 검색 기능을 개발했습니다. 이후 답변 실패가 발생한 단계를 추적할 수 있도록 데이터셋과 벤치마크를 구축했습니다.",
@@ -15,14 +16,14 @@
       "caseStudy": "lipoq",
       "title": "LipoQ — 양자컴퓨팅을 활용한 지질 나노입자 조성 탐색",
       "year": "2026년 11월",
-      "category": "2026 Qiskit Fall Fest 우승 / 양자컴퓨팅 / 최적화",
+      "category": "2026 IBM Qiskit Fall Fest 우승 / 양자컴퓨팅 / 최적화",
       "summary": "사전학습 모델 COMET의 예측 점수를 바탕으로 양자 회로를 학습시켜 6,048개 지질 나노입자 조성을 탐색했습니다. 같은 수의 서로 다른 후보를 평가하며 무작위 탐색과 비교했습니다.",
-      "role": "개발 주도 · 설계 및 구현",
+      "role": "팀 리더 · 설계 및 구현",
       "imageAlt": "양자 회로의 후보 생성, 고정된 COMET 평가, SPSA 피드백으로 구성한 LipoQ 탐색 과정."
     },
     {
       "caseStudy": "qubit-reuse-mapping",
-      "title": "큐비트 재사용 방식에 따른 통신 비용 비교",
+      "title": "Qubit Reuse and Mapping in DQC",
       "year": "2026년 9월 — 현재",
       "category": "Capstone research · 진행 중",
       "summary": "재사용 대상을 고르는 방식이 QPU 사이의 통신량에 어떤 영향을 주는지 살펴보는 캡스톤 연구. 물리 큐비트 수와 회로 깊이가 같은 두 방식에서 최소 전송 횟수가 달라지는 사례를 비교했다.",
@@ -37,12 +38,21 @@
       "imageAlt": "고양이가 유리컵에 머리를 넣은 장면에서 YOLO26s가 고양이와 컵을 탐지하고 HIGH 등급을 표시한 결과. 오른쪽 아래에는 상대 깊이 지도가 있다."
     }
   ],
-  "experience": [],
+  "experience": [
+    {
+      "period": "2026년 5월–8월",
+      "title": "AI Research Engineer Intern",
+      "organization": "KAIST Auto-ID Labs",
+      "description": "제품 라벨과 영상에서 답의 근거를 찾는 검색 기능을 개발했습니다. 이후 답변 실패가 발생한 단계를 추적할 수 있도록 데이터셋과 벤치마크를 구축했습니다.",
+      "url": "",
+      "caseStudy": "kaist-gs1-rag"
+    }
+  ],
   "education": [],
   "caseStudies": [
     {
       "slug": "kaist-gs1-rag",
-      "title": "제품 라벨과 영상에서 답을 찾는 검색 시스템",
+      "title": "Multimodal RAG & RAG Benchmark",
       "description": "제품 라벨과 영상에서 답의 근거를 검색하고, 답변 실패가 발생한 단계를 추적하는 벤치마크를 구축한 KAIST 인턴십 프로젝트.",
       "document": {
         "type": "doc",
@@ -55,7 +65,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "제품 라벨과 영상에서 답을 찾는 검색 시스템"
+                "text": "Multimodal RAG & RAG Benchmark"
               }
             ]
           },
@@ -67,7 +77,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "KAIST Auto-ID Labs · AI 연구 엔지니어 인턴 · 2026년 5월~8월"
+                "text": "KAIST Auto-ID Labs · AI Research Engineer Intern · 2026년 5월–8월"
               }
             ]
           },
@@ -615,46 +625,46 @@
           },
           {
             "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "양자컴퓨팅을 활용한 지질 나노입자 조성 탐색"
-              }
-            ],
             "attrs": {
               "role": "subtitle"
-            }
-          },
-          {
-            "type": "paragraph",
+            },
             "content": [
               {
                 "type": "text",
-                "text": "Qiskit Fall Fest Hackathon 2026 우승 · University of Waterloo"
+                "text": "University of Waterloo · 팀 리더 · 2026년 11월 (2일)"
               }
-            ],
-            "attrs": {
-              "role": "note"
-            }
+            ]
           },
           {
             "type": "paragraph",
+            "attrs": {
+              "role": "metadata"
+            },
             "content": [
               {
                 "type": "text",
-                "text": "개발 기간: 2일 · 역할: 개발 주도 · Python · Qiskit · PyTorch · SciPy"
+                "text": "IBM Qiskit Fall Fest Hackathon 2026 우승"
               }
-            ],
+            ]
+          },
+          {
+            "type": "paragraph",
             "attrs": {
-              "role": "note"
-            }
+              "role": "metadata"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Python · Qiskit · PyTorch · SciPy"
+              }
+            ]
           },
           {
             "type": "paragraph",
             "content": [
               {
                 "type": "text",
-                "text": "지질 나노입자(LNP)를 설계하려면 어떤 지질을 쓸지와 각각의 비율을 함께 정해야 합니다. LipoQ는 양자 회로를 학습시켜 예측 점수가 높은 조성을 찾는 프로젝트입니다. 이틀 동안 개발을 주도하며 코드 대부분을 작성했고, 후보 생성부터 평가와 비교 실험까지 연결했습니다."
+                "text": "지질 나노입자(LNP)를 설계하려면 어떤 지질을 쓸지와 각각의 비율을 함께 정해야 합니다. LipoQ는 양자 회로를 학습시켜 예측 점수가 높은 조성을 찾는 프로젝트입니다. 팀 리더로 참여해 이틀 동안 코드 대부분을 작성했고, 후보 생성부터 평가와 비교 실험까지 연결했습니다."
               }
             ]
           },
@@ -850,33 +860,13 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "paragraph",
-            "attrs": {
-              "role": "note"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "GitHub 코드",
-                "marks": [
-                  {
-                    "type": "link",
-                    "attrs": {
-                      "href": "https://github.com/Sunghak222/lipoq"
-                    }
-                  }
-                ]
-              }
-            ]
           }
         ]
       }
     },
     {
       "slug": "qubit-reuse-mapping",
-      "title": "큐비트 재사용 방식에 따른 통신 비용 비교",
+      "title": "Qubit Reuse and Mapping in DQC",
       "description": "물리 큐비트 수와 회로 깊이가 같은 두 재사용 방식에서 QPU 사이의 최소 전송 횟수가 달라지는 사례를 비교했다.",
       "document": {
         "type": "doc",
@@ -889,7 +879,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "큐비트 재사용 방식에 따른 통신 비용 비교"
+                "text": "Qubit Reuse and Mapping in DQC"
               }
             ]
           },
@@ -1063,22 +1053,22 @@
           },
           {
             "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "사진 속 반려동물과 물체의 위치 관계를 분석해, 물체가 넘어지거나 파손될 우려가 있는 장면에 주의 등급을 표시하는 프로토타입이다."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
             "attrs": {
-              "role": "note"
+              "role": "metadata"
             },
             "content": [
               {
                 "type": "text",
                 "text": "Python · PyTorch · YOLO · Depth Anything V2 · OpenCV"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "사진 속 반려동물과 물체의 위치 관계를 분석해, 물체가 넘어지거나 파손될 우려가 있는 장면에 주의 등급을 표시하는 프로토타입이다."
               }
             ]
           },
@@ -1100,7 +1090,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "마우스와 에어팟 케이스를 같은 자리에 두고 가까이에서, 그리고 멀리에서 찍었다. 실제 간격은 그대로인데 사진에서 보이는 2D 간격은 달라졌다. 이 관찰에서 객체 탐지에 상대 깊이를 더하는 아이디어가 나왔다."
+                "text": "마우스와 에어팟 케이스의 위치는 그대로 두고 촬영 거리를 바꿨다. 이 관찰에서 객체 탐지에 상대 깊이를 더하는 아이디어가 나왔다."
               }
             ]
           },
@@ -1122,12 +1112,7 @@
                     "content": [
                       {
                         "type": "paragraph",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "가까이"
-                          }
-                        ]
+                        "content": []
                       }
                     ]
                   }
@@ -1148,16 +1133,23 @@
                     "content": [
                       {
                         "type": "paragraph",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "멀리"
-                          }
-                        ]
+                        "content": []
                       }
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "두 물체의 실제 간격은 같지만, 가까이서 촬영하면 사진 속 간격이 넓어 보이고 멀리서 촬영하면 좁아 보인다."
               }
             ]
           },
