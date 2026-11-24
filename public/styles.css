@@ -13,7 +13,7 @@
   --index-width: 28px;
   --media-width: 180px;
   --column-gap: 18px;
-  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', 'Pretendard Variable', monospace;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 40px; }

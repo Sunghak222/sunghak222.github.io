@@ -1,4 +1,4 @@
-/* Source Serif 4 — bundled locally under the SIL Open Font License. */
+/* All fonts are bundled locally with their SIL Open Font License in assets/fonts/. */
 @font-face {
   font-family: 'Source Serif 4';
   src: url('assets/fonts/SourceSerif4Variable-Roman.woff2') format('woff2');
@@ -13,5 +13,14 @@
   font-weight: 200 900;
   font-display: swap;
 }
-:root { --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif; }
-:lang(ko) { --serif: 'Source Serif 4', 'AppleMyungjo', 'Noto Serif KR', Batang, Georgia, serif; }
+/* Official Pretendard variable webfont: github.com/orioncactus/pretendard */
+@font-face {
+  font-family: 'Pretendard Variable';
+  src: url('assets/fonts/PretendardVariable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 45 920;
+  font-display: swap;
+}
+/* Explicitly reset English documents nested inside the Korean editor UI. */
+:root, :lang(en) { --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif; }
+:lang(ko) { --serif: 'Pretendard Variable', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }

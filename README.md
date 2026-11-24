@@ -46,6 +46,7 @@ macOS에서 파일 실행을 막거나 터미널 사용을 원하지 않으면 C
 - 그림 설명은 문서 안에서 직접 수정합니다. 이미지 교체와 자료 링크 변경은 문서 아래 **그림과 자료 링크**에서 할 수 있습니다.
 - 프로젝트의 **Read more · 상세 페이지**와 경력의 **연결할 상세 페이지**에서 같은 문서를 선택하면 두 위치가 같은 주소로 연결됩니다. 기관 링크는 별도로 유지됩니다.
 - KAIST 주소는 `/projects/kaist-gs1-rag/`이며, `Vector Search`와 `Benchmark`는 하나의 문서 안에 있습니다.
+- LipoQ 주소는 `/projects/lipoq/`이며, 양자 회로를 이용한 탐색과 무작위 탐색 비교 결과를 두 섹션으로 보여 줍니다. 구조도와 학습 곡선은 `public/assets/lipoq/`에 있습니다.
 - 상세 페이지의 **Save as PDF**를 누르고 인쇄 대상에서 **PDF로 저장**을 선택하세요. 스크롤 위치와 관계없이 사례 전체가 출력됩니다. 권장 용지는 A4이며, 브라우저 머리글·바닥글은 끄면 됩니다.
 - 비교 사례는 웹과 PDF 모두 같은 텍스트를 사용합니다. PDF에서도 진단 문장을 선택하거나 검색할 수 있습니다.
 - 상세 본문은 프로젝트 제목 → 섹션 제목 → 필요한 소제목 → 본문 순서입니다. 첫 검색 사례는 첫 번째 섹션 안에 표시됩니다.
@@ -56,7 +57,7 @@ macOS에서 파일 실행을 막거나 터미널 사용을 원하지 않으면 C
 ## 영어·한국어 전환
 
 - 방문자는 Home 아래의 **EN / 한국어**로 언어를 바꿉니다. 영문 홈은 `/`, 한국어 홈은 `/ko/`입니다.
-- 현재 Pet Mischief Detector의 한국어 소개와 상세가 준비되어 있습니다. 상세 주소는 `/projects/pet-mischief-detector/`와 `/ko/projects/pet-mischief-detector/`입니다.
+- 현재 KAIST와 Pet Mischief Detector의 한국어 소개와 상세가 준비되어 있습니다. 한국어 상세 주소는 `/ko/projects/kaist-gs1-rag/`와 `/ko/projects/pet-mischief-detector/`입니다.
 - 번역하지 않은 홈 내용은 영어로 표시하며, 한국어 홈에는 번역 준비 안내가 나옵니다. 아직 한국어 상세가 없는 프로젝트는 **상세 보기 (EN)**로 영문 상세를 엽니다. 영문 상세의 한국어 선택은 번역이 준비되면 활성화됩니다.
 - 편집기에서 **편집 언어 → 한국어**를 선택하면 한국어 원본만 수정합니다. 저장해도 영문 원본은 바뀌지 않습니다. 수정 중 언어를 바꾸려면 먼저 저장하세요.
 - 한국어 프로젝트의 빈 칸은 영어의 값을 이어받습니다. 대표 이미지·Code·PDF 링크는 보통 영어에서만 관리하면 두 언어에 반영됩니다. **Read more · 상세 페이지** 값으로 영문 프로젝트와 한국어 소개를 연결하므로 이 선택을 유지해 주세요.
@@ -98,7 +99,7 @@ npm test && npm run build && git add . && git commit -m "Update portfolio" && gi
 | `scripts/locales.mjs`, `scripts/localization.mjs` | 언어별 UI 문구, 언어 선택, 번역 연결과 검증 |
 | `public/assets/` | 사진, 프로젝트 이미지, PDF |
 | `public/styles.css` | 색상, 여백, 글꼴, 모바일 화면 |
-| `public/fonts.css`, `public/assets/fonts/` | Source Serif 4 웹폰트와 라이선스 |
+| `public/fonts.css`, `public/assets/fonts/` | 영문 Source Serif 4·국문 Pretendard 웹폰트와 라이선스 |
 | `scripts/render.mjs` | 언어별 홈 페이지 구조 |
 | `scripts/case-studies.mjs` | 상세 페이지 구조와 본문 검증 |
 | `scripts/rich-document.mjs` | 문서 서식 검증, 기존 내용 변환, 정적 HTML 출력 |
@@ -112,11 +113,11 @@ npm test && npm run build && git add . && git commit -m "Update portfolio" && gi
 
 ## 유지보수 메모
 
-- 공개 사이트에는 외부 JavaScript 패키지, 데이터베이스, API 키가 필요 없습니다. 제목과 본문에는 [Adobe Source Serif 4](https://github.com/adobe-fonts/source-serif)를 사용하며 폰트 파일을 사이트에 포함해 외부 폰트 서버 없이 표시합니다. 라이선스는 `public/assets/fonts/LICENSE.md`에 있습니다. 로컬 문서 편집기만 Tiptap과 esbuild를 사용하며, `npm run dev`가 편집기 파일을 자동 생성합니다. 편집기 코드는 배포 폴더에 포함되지 않습니다.
+- 공개 사이트에는 외부 JavaScript 패키지, 데이터베이스, API 키가 필요 없습니다. 영문 제목과 본문에는 [Adobe Source Serif 4](https://github.com/adobe-fonts/source-serif), 국문에는 [Pretendard](https://github.com/orioncactus/pretendard)를 사용하며 폰트 파일을 사이트에 포함해 외부 폰트 서버 없이 표시합니다. 라이선스는 `public/assets/fonts/LICENSE.md`와 `public/assets/fonts/Pretendard-LICENSE.txt`에 있습니다. 로컬 문서 편집기만 Tiptap과 esbuild를 사용하며, `npm run dev`가 편집기 파일을 자동 생성합니다. 편집기 코드는 배포 폴더에 포함되지 않습니다.
 - 모든 본문은 HTML에 포함되므로 JavaScript가 꺼져도 읽을 수 있습니다.
 - 흰 배경으로 고정했습니다. 테마 버튼, 장식용 애니메이션, 채우지 않은 소셜 버튼은 없습니다.
 - 홈의 프로젝트·경력·학력은 같은 글자 크기를 사용합니다. 섹션 제목 32px, 항목 제목 28px, 부제목 20px, 본문 19px, 날짜·분류 15px이며 모바일에서는 제목만 줄어듭니다. `public/styles.css` 맨 위의 공통 변수에서 한 번에 조정할 수 있습니다. 이미지 유무와 관계없이 본문 시작 위치도 같습니다.
-- 영문·국문은 같은 HTML 생성기와 서식 파일을 사용합니다. 한국어 글자는 명조 계열 시스템 글꼴로 표시하고 제목 단계·글자 크기·줄 간격은 영문과 공유합니다. 언어 선택은 일반 링크이므로 JavaScript 없이도 동작합니다.
+- 영문·국문은 같은 HTML 생성기와 서식 파일을 사용합니다. 국문 웹사이트와 편집기 문서는 Pretendard로 표시하고 제목 단계·글자 크기·줄 간격은 영문과 공유합니다. 언어 선택은 일반 링크이므로 JavaScript 없이도 동작합니다.
 - `npm test`는 빈 섹션 숨김, 링크 검증, 텍스트 처리, 하위 경로 호환성을 검사합니다.
 - `public/sw.min.js`는 같은 주소에서 사용했던 블로그의 오프라인 캐시 연결을 해제하는 호환 파일입니다. 예전 방문자에게 옛 블로그가 계속 보이지 않도록 유지합니다. 현재 포트폴리오는 오프라인 캐시를 등록하지 않습니다.
 - 디자인 참고: [Wang Yuqi](https://wangyq.me/en/), [Youngseo Cho](https://cyshello.github.io/portfolio/#/). 원문의 인물 정보·경력·사진은 사용하지 않았습니다.

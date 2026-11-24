@@ -34,7 +34,7 @@
     {
       "title": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design",
       "year": "Nov 2026",
-      "category": "Quantum computing / Optimization",
+      "category": "2026 IBM Qiskit Fall Fest Winner / Quantum computing / Optimization",
       "summary": "2026 IBM Qiskit Fall Fest Hackathon Winner: A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs.",
       "role": "Team lead · Design & implementation",
       "tools": "Qiskit · SPSA · COMET",
@@ -734,8 +734,8 @@
     },
     {
       "slug": "lipoq",
-      "title": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design",
-      "description": "A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs.",
+      "title": "LipoQ",
+      "description": "Quantum-assisted search over 6,048 lipid nanoparticle formulations, evaluated with a fixed COMET model and compared with random search under the same distinct-candidate budget.",
       "document": {
         "type": "doc",
         "content": [
@@ -747,7 +747,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "LipoQ — Quantum-Assisted Lipid Nanoparticle Design"
+                "text": "LipoQ"
               }
             ]
           },
@@ -756,7 +756,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Quantum computing / Optimization · Nov 2026"
+                "text": "Quantum-assisted search for lipid nanoparticle formulations"
               }
             ],
             "attrs": {
@@ -768,7 +768,31 @@
             "content": [
               {
                 "type": "text",
-                "text": "A constrained optimizer for lipid nanoparticle formulations, combining a pretrained ML scoring model with quantum circuits to search 6,048 feasible designs."
+                "text": "Winner — Qiskit Fall Fest Hackathon 2026, University of Waterloo"
+              }
+            ],
+            "attrs": {
+              "role": "note"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "2 days · Lead developer · Python · Qiskit · PyTorch · SciPy"
+              }
+            ],
+            "attrs": {
+              "role": "note"
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Designing a lipid nanoparticle formulation involves choosing both the lipid ingredients and their proportions. LipoQ explores whether a trainable quantum circuit can learn to generate candidates with higher predicted scores. I led development and wrote most of the code over two days, building a working pipeline from candidate generation to evaluation and comparison."
               }
             ]
           },
@@ -776,12 +800,12 @@
             "type": "heading",
             "attrs": {
               "level": 2,
-              "id": "my-role"
+              "id": "quantum-assisted-search"
             },
             "content": [
               {
                 "type": "text",
-                "text": "My role"
+                "text": "Quantum-assisted search"
               }
             ]
           },
@@ -790,7 +814,75 @@
             "content": [
               {
                 "type": "text",
-                "text": "Team lead · Design & implementation"
+                "text": "The search covers "
+              },
+              {
+                "type": "text",
+                "text": "6,048 possible formulations",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": ", combining 84 lipid combinations with 72 valid ratio settings. A "
+              },
+              {
+                "type": "text",
+                "text": "14-qubit circuit",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": " samples candidates, and a decoder maps each measurement to a formulation that satisfies the composition constraints, including proportions that sum to one."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Each candidate is evaluated by "
+              },
+              {
+                "type": "text",
+                "text": "COMET",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": ", an existing pretrained model for lipid nanoparticle design. COMET stays fixed throughout the experiment. A classical optimizer, SPSA, uses its predictions to update the circuit parameters and guide the next round of sampling."
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/lipoq/quantum-search-pipeline.png",
+              "alt": "LipoQ pipeline: a trainable 14-qubit circuit samples constrained lipid formulations, the frozen COMET model predicts their scores, and SPSA updates the circuit. Random search provides an independent comparison with the same distinct-candidate budget.",
+              "link": "",
+              "label": ""
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Quantum sampling, COMET evaluation, and classical feedback."
+                  }
+                ]
               }
             ]
           },
@@ -798,12 +890,12 @@
             "type": "heading",
             "attrs": {
               "level": 2,
-              "id": "tools"
+              "id": "evaluation"
             },
             "content": [
               {
                 "type": "text",
-                "text": "Tools & methods"
+                "text": "Evaluation"
               }
             ]
           },
@@ -812,20 +904,75 @@
             "content": [
               {
                 "type": "text",
-                "text": "Qiskit · SPSA · COMET"
+                "text": "To assess the search, I added a random-search baseline with the same number of distinct candidates. Prediction caching avoids repeated model inference, while saved configurations, candidate records, and automatic plots make each run easier to inspect and reproduce. Both methods use shared evaluation and reporting code to keep the comparison consistent."
               }
             ]
           },
           {
-            "type": "heading",
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "In one local simulator run, the circuit's sampled mean COMET score rose from "
+              },
+              {
+                "type": "text",
+                "text": "−3.06 to 5.16",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": ". After evaluating "
+              },
+              {
+                "type": "text",
+                "text": "4,682 distinct formulations per method",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": ", both quantum and random search reached the same best score of "
+              },
+              {
+                "type": "text",
+                "text": "8.464",
+                "marks": [
+                  {
+                    "type": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": ". The sampled scores improved during training, but the best candidate did not outperform the baseline. These results describe model predictions; biological performance was not tested."
+              }
+            ]
+          },
+          {
+            "type": "figure",
             "attrs": {
-              "level": 2,
-              "id": "question"
+              "image": "assets/lipoq/learning-curves-seed21.png",
+              "alt": "Learning curves from simulator seed 21. The mean predicted COMET score rises during training while the best score found reaches a plateau. The chart reports model predictions, not measured biological efficacy.",
+              "link": "",
+              "label": ""
             },
             "content": [
               {
-                "type": "text",
-                "text": "The question"
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Mean predicted score and best score found during training (seed 21)."
+                  }
+                ]
               }
             ]
           },
@@ -834,62 +981,20 @@
             "content": [
               {
                 "type": "text",
-                "text": "Lipid nanoparticle design involves selecting lipid identities and mixing ratios within a constrained search space. This project explored how to discover promising formulations under a limited model-evaluation budget."
+                "text": "Code on GitHub",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "https://github.com/Sunghak222/lipoq"
+                    }
+                  }
+                ]
               }
-            ]
-          },
-          {
-            "type": "heading",
+            ],
             "attrs": {
-              "level": 2,
-              "id": "approach"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Approach"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "I led the design and implementation of a constrained black-box optimizer, using the pretrained COMET model to score candidate formulations. The search combined Qiskit circuits and SPSA optimization across 6,048 feasible combinations of lipid identities and mixing ratios."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "I benchmarked candidate discovery against random search using matched evaluation budgets."
-              }
-            ]
-          },
-          {
-            "type": "heading",
-            "attrs": {
-              "level": 2,
-              "id": "outcome"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Outcome"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "Winner of the IBM Quantum Qiskit Fall Fest Hackathon. In one simulation run, the mean sampled COMET score increased from -3.06 to 5.16."
-              }
-            ]
+              "role": "note"
+            }
           }
         ]
       }
