@@ -16,4 +16,4 @@ export function safeURL(value = '', asset = false) {
 const text = escapeHTML;
 export const paragraphs = value => String(value || '').split(/\n\s*\n/).filter(s => s.trim()).map(s => `<p>${text(s).replace(/\n/g, '<br>')}</p>`).join('');
 export const external = url => /^https?:/.test(url) ? ' target="_blank" rel="noopener noreferrer"' : '';
-export const link = (url, label, className = '', { newTab = false } = {}) => safeURL(url) ? `<a class="${className}" href="${text(safeURL(url))}"${newTab ? ' target="_blank" rel="noopener noreferrer"' : external(url)}>${text(label)} <span aria-hidden="true">↗</span></a>` : '';
+export const link = (url, label, className = '', { newTab = false, assetPrefix = '' } = {}) => safeURL(url) ? `<a class="${className}" href="${text(`${safeURL(url).startsWith('assets/') ? assetPrefix : ''}${safeURL(url)}`)}"${newTab ? ' target="_blank" rel="noopener noreferrer"' : external(url)}>${text(label)} <span aria-hidden="true">↗</span></a>` : '';

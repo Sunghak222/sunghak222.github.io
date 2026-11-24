@@ -16,6 +16,7 @@
 .rich-document .document-label + p { margin-top: 6px; }
 .rich-document figure { margin: 26px 0 30px; break-inside: avoid; }
 .rich-document figure img { display: block; width: 100%; height: auto; }
+.rich-document figure.is-portrait img { width: min(100%, 360px); }
 .rich-document figcaption { margin-top: 12px; }
 .rich-document figcaption p { font-size: inherit; }
 .rich-document figcaption > a { display: inline-block; margin-top: 4px; }
@@ -41,6 +42,7 @@
   .rich-document .document-label { margin-top: 10pt; }
   .rich-document .document-label + p { margin-top: 4pt; }
   .rich-document figure { margin: 12pt 0 16pt; }
+  .rich-document figure.is-portrait img { width: auto; max-width: 100%; max-height: 90mm; }
   .rich-document figcaption { margin-top: 6pt; }
   .document-comparison { grid-template-columns: 1fr 1fr; gap: 16pt; margin: 12pt 0 10pt; break-inside: avoid; }
   .document-comparison-column { padding-top: 10pt; }

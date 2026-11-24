@@ -1,0 +1,212 @@
+{
+  "profile": {},
+  "projects": [
+    {
+      "caseStudy": "pet-mischief-detector",
+      "title": "The Pet Mischief Detector",
+      "year": "2026년 4월",
+      "category": "컴퓨터 비전 · 팀 프로젝트",
+      "summary": "객체 탐지와 상대 깊이 정보를 조합해 반려동물과 생활 물체 사이의 위험 요소를 살펴보는 팀 프로젝트. 깊이 추정 도입을 제안하고 이미지별 위험도 평가 스크립트를 작성했다.",
+      "imageAlt": "고양이가 유리컵에 머리를 넣은 장면에서 YOLO26s가 고양이와 컵을 탐지하고 HIGH 등급을 표시한 결과. 오른쪽 아래에는 상대 깊이 지도가 있다."
+    }
+  ],
+  "experience": [],
+  "education": [],
+  "caseStudies": [
+    {
+      "slug": "pet-mischief-detector",
+      "title": "The Pet Mischief Detector",
+      "description": "객체 탐지와 상대 깊이 정보를 조합해 반려동물과 생활 물체 사이의 위험 요소를 살펴보는 팀 프로젝트.",
+      "document": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "The Pet Mischief Detector"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "subtitle"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "컴퓨터 비전 · 팀 프로젝트 · 2026년 4월"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "사진 속 반려동물과 물체의 위치 관계를 분석해, 물체가 넘어지거나 파손될 우려가 있는 장면에 주의 등급을 표시하는 프로토타입이다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Python · PyTorch · YOLO · Depth Anything V2 · OpenCV"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "detection-and-depth"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "객체 탐지와 깊이 추정"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "같은 물체 배치도 카메라 위치에 따라 화면에서는 가까워 보이거나 멀어 보인다. 이 문제를 보완하기 위해 YOLO의 객체 탐지 결과에 상대 깊이 정보를 더하는 방법을 제안했다. 팀은 객체 간 근접도, 탐지 박스의 겹침, 깊이 정보를 조합해 장면별 주의 등급을 계산했다. 고양이·개와 컵·꽃병 등 총 8종을 대상으로 했다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "사진 → YOLO 탐지 → Depth Anything V2 깊이 추정 → 관계 점수 계산 → LOW / MEDIUM / HIGH 표시"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "고양이와 유리컵"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/pet-mischief-detector/portfolio-cat-cup.jpg",
+              "alt": "고양이가 유리컵에 머리를 넣은 장면에서 YOLO26s가 고양이와 컵을 탐지하고 HIGH 등급을 표시한 결과. 오른쪽 아래에는 상대 깊이 지도가 있다.",
+              "link": "",
+              "label": "",
+              "layout": "portrait"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "고양이가 유리컵에 머리를 넣은 장면을 HIGH로 표시한 팀 프로젝트의 실행 결과. 컵이 넘어지거나 깨질 가능성을 살펴볼 사례로, 사진에 실제 파손은 보이지 않는다. COCO 이미지 469317 · YOLO26s."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2,
+              "id": "contribution-and-evaluation"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "내 역할과 평가"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "촬영 위치에 따라 달라지는 2D 거리 판단의 한계를 관찰하고 깊이 추정 도입을 제안했다. 탐지부터 깊이 추정, 점수 계산, 시각화까지 전체 과정을 실행하고 결과를 확인했다."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "이미지별 위험도 평가 스크립트를 작성하고 모델별 예측과 혼동행렬을 비교·분석했다. 주요 처리 코드의 구현과 위험도 규칙 수정은 팀원이 담당했다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "평가 전에 확인한 클래스 번호"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "사전학습 YOLO에서 고양이의 클래스 번호는 15였지만, 프로젝트의 8종 데이터에서는 0이었다. 번호를 그대로 비교하면 같은 객체도 다른 클래스로 취급되는 문제가 있었다. 클래스 이름으로 대상 객체를 고르는 추론 경로를 사용하고, 각 이미지의 예측 등급과 정답을 비교하는 위험도 평가 절차를 구성했다. 평가 전에 클래스 번호가 어떤 객체를 가리키는지 확인하는 일이 중요했다."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "주의 등급의 의미"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "주의 등급은 공간 관계를 바탕으로 정한 규칙의 결과다. 실제 사고 확률이나 물리적 거리를 측정한 값은 아니다."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

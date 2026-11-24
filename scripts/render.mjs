@@ -2,17 +2,8 @@ import { escapeHTML as text, safeURL, paragraphs, link } from './html.mjs';
 import { validateCaseStudies, caseStudyPath } from './case-studies.mjs';
 export { escapeHTML, safeURL } from './html.mjs';
 
-// All interface copy lives here. Add another language file and label set later.
-export const labels = {
-  en: {
-    portfolio: 'Personal portfolio', about: 'About', work: 'Selected Work',
-    experience: 'Experience', education: 'Education',
-    project: 'Read more', code: 'Code', paper: 'PDF', resume: 'Résumé',
-    read: 'Read more', problem: 'The question', approach: 'The approach',
-    outcome: 'The outcome', role: 'Role', tools: 'Tools & methods',
-    top: 'Back to top', skip: 'Skip to content'
-  }
-};
+import { labels, languageSwitcher, alternateLanguages } from './locales.mjs';
+export { labels } from './locales.mjs';
 
 export function validateContent(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('내용은 JSON 객체여야 합니다.');
@@ -38,31 +29,40 @@ export function validateContent(data) {
   return data;
 }
 
-export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' } = {}) {
+export function renderPage(data, { year = new Date().getFullYear(), lang = 'en', translation = null } = {}) {
   validateContent(data);
   const t = labels[lang];
+  if (!t) throw new Error('지원하지 않는 언어입니다.');
+  const prefix = lang === 'ko' ? '../' : '';
+  const asset = url => url?.startsWith('assets/') ? `${prefix}${url}` : url;
+  const localLink = (url, label, className = '', options) => link(url, label, className, { ...options, assetPrefix: prefix });
+  const translatedSlugs = new Set((translation?.caseStudies || []).map(study => study.slug));
+  const detailPath = slug => `${lang === 'ko' && !translatedSlugs.has(slug) ? '../' : ''}${caseStudyPath(slug)}`;
+  const detailLabel = (slug, label) => `${label}${lang === 'ko' && !translatedSlugs.has(slug) ? ' (EN)' : ''}`;
+  const enHref = lang === 'ko' ? '../' : './';
+  const koHref = lang === 'ko' ? './' : 'ko/';
   const p = data.profile;
   const projects = data.projects.filter(x => x.title.trim());
   const experiences = data.experience.filter(x => x.title.trim());
   const education = data.education.filter(x => x.title.trim());
-  const email = p.email ? `<div class="email-control"><button type="button" class="email-copy" data-email="${text(p.email)}" title="Copy email address" aria-label="Copy email address: ${text(p.email)}"><span class="email-address">${text(p.email)}</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M10 5V2H2v9h3"/></svg></button><span class="copy-status" role="status" aria-live="polite"></span></div>` : '';
-  const social = [link(p.github, 'GitHub'), link(p.linkedin, 'LinkedIn'), link(p.scholar, 'Google Scholar'), link(p.resume, `${t.resume} (PDF)`, '', { newTab: true })].filter(Boolean).join('');
+  const email = p.email ? `<div class="email-control"><button type="button" class="email-copy" data-email="${text(p.email)}" title="${t.copyEmail}" aria-label="${t.copyEmail}: ${text(p.email)}" data-copied="${t.copied}" data-copy-fallback="${t.copyFallback}"><span class="email-address">${text(p.email)}</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1"/><path d="M10 5V2H2v9h3"/></svg></button><span class="copy-status" role="status" aria-live="polite"></span></div>` : '';
+  const social = [localLink(p.github, 'GitHub'), localLink(p.linkedin, 'LinkedIn'), localLink(p.scholar, 'Google Scholar'), localLink(p.resume, `${t.resume} (PDF)`, '', { newTab: true })].filter(Boolean).join('');
   const sections = [['about', t.about], ...(projects.length ? [['work', t.work]] : []), ...(experiences.length ? [['experience', t.experience]] : []), ...(education.length ? [['education', t.education]] : [])];
   const nav = sections.map(([id, label], i) => `<a href="#${id}"${i === 0 ? ' aria-current="location"' : ''}><span class="nav-index">${String(i + 1).padStart(2, '0')}</span>${text(label)}</a>`).join('');
   const sectionHeader = (id, title) => `<header class="section-heading"><span class="section-index">${String(sections.findIndex(s => s[0] === id) + 1).padStart(2, '0')}</span><h2>${text(title)}</h2></header>`;
-  const history = rows => rows.map(row => `<article class="history-row"><p class="period">${text(row.period)}</p><div><h3>${text(row.title)}</h3><p class="organization">${safeURL(row.url) ? link(row.url, row.organization) : text(row.organization)}</p>${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}${row.caseStudy ? `<div class="text-links project-links"><a href="${caseStudyPath(row.caseStudy)}">Read case study <span aria-hidden="true">↗</span></a></div>` : ''}</div></article>`).join('');
+  const history = rows => rows.map(row => `<article class="history-row"><p class="period">${text(row.period)}</p><div><h3>${text(row.title)}</h3><p class="organization">${safeURL(row.url) ? localLink(row.url, row.organization) : text(row.organization)}</p>${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}${row.caseStudy ? `<div class="text-links project-links"><a href="${detailPath(row.caseStudy)}">${detailLabel(row.caseStudy, t.readCase)} <span aria-hidden="true">↗</span></a></div>` : ''}</div></article>`).join('');
   const educationHTML = education.map(row => {
     const scores = [['CGPA', row.gpa], ['Major GPA', row.majorGpa]].filter(([, value]) => value?.trim());
-    return `<article class="history-row education-row"><p class="period">${text(row.period)}</p><div><h3>${row.organization ? (safeURL(row.url) ? link(row.url, row.organization) : text(row.organization)) : text(row.title)}</h3>${row.organization ? `<p class="degree">${text(row.title)}</p>` : ''}${scores.length ? `<dl class="education-scores">${scores.map(([label, value]) => `<div><dt>${label}</dt><dd>${text(value)}</dd></div>`).join('')}</dl>` : ''}${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}</div></article>`;
+    return `<article class="history-row education-row"><p class="period">${text(row.period)}</p><div><h3>${row.organization ? (safeURL(row.url) ? localLink(row.url, row.organization) : text(row.organization)) : text(row.title)}</h3>${row.organization ? `<p class="degree">${text(row.title)}</p>` : ''}${scores.length ? `<dl class="education-scores">${scores.map(([label, value]) => `<div><dt>${label}</dt><dd>${text(value)}</dd></div>`).join('')}</dl>` : ''}${row.description ? `<div class="description">${paragraphs(row.description)}</div>` : ''}</div></article>`;
   }).join('');
   const projectHTML = projects.map((project, i) => {
-    const casePath = project.caseStudy ? caseStudyPath(project.caseStudy) : '';
+    const casePath = project.caseStudy ? detailPath(project.caseStudy) : '';
     const details = [['problem', t.problem], ['approach', t.approach], ['outcome', t.outcome]].filter(([key]) => project[key]?.trim());
     const metadata = [[t.role, project.role], [t.tools, project.tools]].filter(([, v]) => v?.trim());
-    const readMore = casePath ? `<a href="${casePath}">${t.read} <span aria-hidden="true">↗</span></a>` : link(project.url, t.read);
-    const links = [readMore, link(project.code, t.code), link(project.paper, t.paper)].filter(Boolean).join('');
+    const readMore = casePath ? `<a href="${casePath}">${detailLabel(project.caseStudy, t.read)} <span aria-hidden="true">↗</span></a>` : localLink(project.url, t.read);
+    const links = [readMore, localLink(project.code, t.code), localLink(project.paper, t.paper)].filter(Boolean).join('');
     const hasImage = Boolean(safeURL(project.image));
-    const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(project.image)}" target="_blank" rel="noopener noreferrer" aria-label="View full-size image for ${text(project.title)}"><img class="project-image${project.imageFit === 'contain' ? ' is-contained' : ''}" src="${text(project.image)}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="180"></a></figure>` : '';
+    const figure = hasImage ? `<figure class="project-figure"><a class="project-image-link" href="${text(asset(project.image))}" target="_blank" rel="noopener noreferrer" aria-label="${t.fullImage}: ${text(project.title)}"><img class="project-image${project.imageFit === 'contain' ? ' is-contained' : ''}" src="${text(asset(project.image))}" alt="${text(project.imageAlt || project.title)}" loading="lazy" width="180" height="180"></a></figure>` : '';
     return `<article class="project${hasImage ? ' has-image' : ''}"><span class="project-index" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>${figure}<div class="project-body"><div class="project-meta">${[project.category, project.year].filter(Boolean).map(text).join('<span aria-hidden="true"> / </span>')}</div><h3>${casePath ? `<a href="${casePath}">${text(project.title)}</a>` : text(project.title)}</h3><div class="description">${paragraphs(project.summary)}</div>${links ? `<div class="text-links project-links">${links}</div>` : ''}${!readMore && (details.length || metadata.length) ? `<details><summary>${t.read}<span class="detail-sign" aria-hidden="true"></span></summary><div class="project-details">${metadata.length ? `<dl>${metadata.map(([k, v]) => `<div><dt>${text(k)}</dt><dd>${text(v)}</dd></div>`).join('')}</dl>` : ''}${details.map(([k, v]) => `<section><h4>${text(v)}</h4>${paragraphs(project[k])}</section>`).join('')}</div></details>` : ''}</div></article>`;
   }).join('');
   return `<!doctype html>
@@ -71,29 +71,31 @@ export function renderPage(data, { year = new Date().getFullYear(), lang = 'en' 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
+  ${alternateLanguages(enHref, koHref)}
   <title>${text(p.name)} — ${text(t.portfolio)}</title>
   <meta name="description" content="${text(p.intro || `${p.name} — ${p.role}`)}">
   <meta property="og:title" content="${text(p.name)} — ${text(t.portfolio)}">
   <meta property="og:description" content="${text(p.intro)}">
   <meta property="og:type" content="website">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="styles.css">
-  <script src="site.js" defer></script>
+  <link rel="icon" href="${prefix}assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="${prefix}fonts.css">
+  <link rel="stylesheet" href="${prefix}styles.css">
+  <script src="${prefix}site.js" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main">${t.skip}</a>
   <div class="page-shell">
     <div class="layout">
       <aside class="sidebar">
-        <a class="identity" href="#about">Home</a>
-        <nav aria-label="Main navigation">${nav}</nav>
+        <a class="identity" href="#about">${t.home}</a>
+        ${languageSwitcher(lang, enHref, koHref)}
+        <nav aria-label="${t.navigation}">${nav}</nav>
       </aside>
       <main id="main" tabindex="-1">
         <section id="about" class="about-section" aria-labelledby="intro-heading">
           <div class="intro-layout${p.photo ? ' has-photo' : ''}">
-            ${p.photo ? `<img class="portrait" src="${text(p.photo)}" alt="${text(p.photoAlt || `Portrait of ${p.name}`)}" width="160" height="200">` : ''}
-            <div><h1 id="intro-heading">${text(p.name)}</h1><div class="intro">${paragraphs(p.intro)}</div>${email || social ? `<div class="text-links intro-links">${email}${social}</div>` : ''}</div>
+            ${p.photo ? `<img class="portrait" src="${text(asset(p.photo))}" alt="${text(p.photoAlt || `Portrait of ${p.name}`)}" width="160" height="200">` : ''}
+            <div><h1 id="intro-heading">${text(p.name)}</h1><div class="intro"${lang === 'ko' && !translation?.profile?.intro ? ' lang="en"' : ''}>${paragraphs(p.intro)}</div>${email || social ? `<div class="text-links intro-links">${email}${social}</div>` : ''}${lang === 'ko' ? `<p class="translation-notice">${t.fallback}</p>` : ''}</div>
           </div>
         </section>
         ${projects.length ? `<section id="work" class="content-section">${sectionHeader('work', t.work)}<div class="project-list">${projectHTML}</div></section>` : ''}

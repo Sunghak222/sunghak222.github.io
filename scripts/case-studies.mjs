@@ -1,5 +1,6 @@
 import { escapeHTML as text, safeURL, paragraphs, external } from './html.mjs';
 import { validateRichDocument, renderRichDocument, documentSections, documentTitle } from './rich-document.mjs';
+import { labels, languageSwitcher, alternateLanguages } from './locales.mjs';
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export function caseStudyPath(slug) {
@@ -53,15 +54,16 @@ export function validateCaseStudies(data) {
   }
 }
 
-const assetURL = value => {
-  const url = safeURL(value);
-  return url.startsWith('assets/') ? `../../${url}` : url;
-};
-const sourceLink = (url, label) => url ? `<a href="${text(assetURL(url))}"${external(url)}>${text(label)}</a>` : '';
-const figure = ({ image, alt, caption, link = '', label = '' }, className = '') => `<figure class="case-figure ${className}"><a href="${text(assetURL(image))}" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure"><img src="${text(assetURL(image))}" alt="${text(alt)}"></a><figcaption>${text(caption)}${link ? ` ${sourceLink(link, label)}` : ''}</figcaption></figure>`;
+export function renderCaseStudyBody(study, profile = {}, { assetPrefix = '../../', lang = 'en' } = {}) {
+  const t = labels[lang];
+  const assetURL = value => {
+    const url = safeURL(value);
+    return url.startsWith('assets/') ? `${assetPrefix}${url}` : url;
+  };
+  const sourceLink = (url, label) => url ? `<a href="${text(assetURL(url))}"${external(url)}>${text(label)}</a>` : '';
+  const figure = ({ image, alt, caption, link = '', label = '' }, className = '') => `<figure class="case-figure ${className}"><a href="${text(assetURL(image))}" target="_blank" rel="noopener noreferrer" aria-label="${t.fullImage}"><img src="${text(assetURL(image))}" alt="${text(alt)}"></a><figcaption>${text(caption)}${link ? ` ${sourceLink(link, label)}` : ''}</figcaption></figure>`;
 
-export function renderCaseStudyBody(study, profile = {}) {
-  if (study.document) return renderRichDocument(study.document, profile.name);
+  if (study.document) return renderRichDocument(study.document, profile.name, { assetPrefix, lang });
   const ex = study.example;
   const exampleHTML = `<div class="case-example"><p class="example-question"><strong>${text(ex.question)}</strong></p><p>${text(ex.answer)}</p><p class="example-evidence">${ex.timestamp?.trim() ? `<strong>${text(ex.timestamp)}</strong> · ` : ''}${text(ex.evidence)}${ex.source ? ` ${sourceLink(ex.source, ex.sourceLabel)}` : ''}</p><p class="case-note">${text(ex.note)}</p>${safeURL(ex.image) ? figure({ image: ex.image, alt: ex.alt, caption: ex.caption }) : ''}</div>`;
   const blockHTML = block => {
@@ -76,36 +78,42 @@ export function renderCaseStudyBody(study, profile = {}) {
     ${study.sections.map((section, index) => `<section class="case-section" aria-labelledby="${text(section.id)}"><h2 id="${text(section.id)}">${text(section.title)}</h2>${index === 0 ? exampleHTML : ''}${section.blocks.map(blockHTML).join('\n')}</section>`).join('\n')}`;
 }
 
-export function renderCaseStudy(study, profile) {
+export function renderCaseStudy(study, profile, { lang = 'en', hasKorean = false } = {}) {
+  const t = labels[lang];
+  const assetPrefix = lang === 'ko' ? '../../../' : '../../';
+  const enHref = lang === 'ko' ? `../../../${caseStudyPath(study.slug)}` : './';
+  const koHref = hasKorean ? (lang === 'ko' ? './' : `../../ko/${caseStudyPath(study.slug)}`) : '';
   const sections = study.document ? documentSections(study.document) : study.sections;
   const title = study.document ? documentTitle(study.document, study.title) : study.title;
   return `<!doctype html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
+  ${alternateLanguages(enHref, koHref)}
   <title>${text(title)} | ${text(profile.name)}</title>
   <meta name="description" content="${text(study.description)}">
-  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../fonts.css">
-  <link rel="stylesheet" href="../../styles.css">
-  <link rel="stylesheet" href="../../case-study.css">
-  <link rel="stylesheet" href="../../rich-document.css">
-  <script src="../../case-study.js" defer></script>
+  <link rel="icon" href="${assetPrefix}assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="${assetPrefix}fonts.css">
+  <link rel="stylesheet" href="${assetPrefix}styles.css">
+  <link rel="stylesheet" href="${assetPrefix}case-study.css">
+  <link rel="stylesheet" href="${assetPrefix}rich-document.css">
+  <script src="${assetPrefix}case-study.js" defer></script>
 </head>
 <body id="top" class="case-page">
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">${t.skip}</a>
   <div class="page-shell"><div class="layout">
     <aside class="sidebar">
-      <a class="identity" href="../../">Home</a>
-      <a class="back-link" href="../../#work">← All work</a>
-      <nav aria-label="Case study contents">${sections.map((section, index) => `<a href="#${text(section.id)}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span>${text(section.title)}</a>`).join('')}</nav>
-      <button class="print-case" type="button" aria-label="Save case study as PDF">Save as PDF</button>
+      <a class="identity" href="../../">${t.home}</a>
+      ${languageSwitcher(lang, enHref, koHref)}
+      <a class="back-link" href="../../#work">← ${t.allWork}</a>
+      <nav aria-label="${t.contents}">${sections.map((section, index) => `<a href="#${text(section.id)}"><span class="nav-index">${String(index + 1).padStart(2, '0')}</span>${text(section.title)}</a>`).join('')}</nav>
+      <button class="print-case" type="button" aria-label="${t.savePDFLabel}">${t.savePDF}</button>
     </aside>
     <main id="main" class="case-document" tabindex="-1">
-      ${renderCaseStudyBody(study, profile)}
-      <footer><span>${text(profile.name)} · ${text(title)}</span><a href="../../#work">Back to portfolio ↑</a></footer>
+      ${renderCaseStudyBody(study, profile, { assetPrefix, lang })}
+      <footer><span>${text(profile.name)} · ${text(title)}</span><a href="../../#work">${t.back} ↑</a></footer>
     </main>
   </div></div>
 </body>

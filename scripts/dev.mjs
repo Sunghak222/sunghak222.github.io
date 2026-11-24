@@ -5,10 +5,10 @@ import { randomUUID } from 'node:crypto';
 import { build, root } from './build.mjs';
 import { validateContent } from './render.mjs';
 import { buildEditor } from './build-editor.mjs';
+import { contentFile, readContent, validateTranslation } from './localization.mjs';
 
 const port = Number(process.env.PORT || 4173);
 const origin = `http://127.0.0.1:${port}`;
-const contentPath = path.join(root, 'content/en.json');
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.pdf': 'application/pdf', '.ico': 'image/x-icon', '.csv': 'text/csv; charset=utf-8', '.woff2': 'font/woff2' };
 let saving = false;
 function json(response, status, value) {
@@ -32,18 +32,24 @@ const server = http.createServer(async (req, res) => {
     if (req.headers.host !== `127.0.0.1:${port}` && req.headers.host !== `localhost:${port}`) return json(res, 403, { error: 'Local access only.' });
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'same-origin');
-    const pathname = decodeURIComponent(new URL(req.url, origin).pathname);
+    const requestURL = new URL(req.url, origin);
+    const pathname = decodeURIComponent(requestURL.pathname);
+    const lang = requestURL.searchParams.get('lang') || 'en';
     if (req.method === 'POST') {
       if (![origin, `http://localhost:${port}`].includes(req.headers.origin) || req.headers['x-portfolio-editor'] !== '1' || !req.headers['content-type']?.startsWith('application/json')) return json(res, 403, { error: '편집 화면에서 다시 시도해 주세요.' });
       if (pathname === '/api/content') {
         if (saving) return json(res, 409, { error: '저장 중입니다. 잠시 후 다시 시도해 주세요.' });
         saving = true;
         try {
-          const data = validateContent(await body(req));
+          const contentPath = contentFile(lang);
+          const data = await body(req);
+          const english = lang === 'en' ? validateContent(data) : await readContent('en');
+          const korean = lang === 'ko' ? data : await readContent('ko');
+          validateTranslation(english, korean);
           await mkdir(path.join(root, '.local/backups'), { recursive: true });
-          await writeFile(path.join(root, '.local/backups', `${Date.now()}.json`), await readFile(contentPath));
+          await writeFile(path.join(root, '.local/backups', `${Date.now()}-${lang}.json`), `${JSON.stringify(await readContent(lang), null, 2)}\n`);
           await writeFile(`${contentPath}.tmp`, `${JSON.stringify(data, null, 2)}\n`);
-          await build(data);
+          await build(english, { translation: korean });
           await rename(`${contentPath}.tmp`, contentPath);
           return json(res, 200, { ok: true });
         } finally { saving = false; }
@@ -62,7 +68,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 404, { error: 'Not found.' });
     }
     if (!['GET', 'HEAD'].includes(req.method)) return json(res, 405, { error: 'Method not allowed.' });
-    if (pathname === '/api/content') return json(res, 200, JSON.parse(await readFile(contentPath, 'utf8')));
+    if (pathname === '/api/content') return json(res, 200, await readContent(lang));
     const isEditor = pathname === '/editor' || pathname.startsWith('/editor/');
     const base = path.join(root, isEditor ? 'editor' : 'dist');
     const relative = isEditor ? pathname.replace(/^\/editor\/?/, '') || 'index.html' : pathname === '/' ? 'index.html' : pathname.slice(1);

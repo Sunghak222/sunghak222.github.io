@@ -4,10 +4,13 @@ import { documentTitle } from '../scripts/rich-document.mjs';
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 let content;
+let referenceContent;
+let language = 'en';
 let documentEditors = [];
 let dirty = false;
 let version = 0;
 let pendingUploads = 0;
+let saving = false;
 const fieldsets = {
   profile: [
     ['name', '이름', 'text', '영문 이름'], ['role', '직함 / 관심 분야', 'text', '예: AI Engineer'],
@@ -46,7 +49,7 @@ function fieldHTML(group, index, field, object) {
   const attrs = `id="${id}" data-group="${group}" data-index="${index ?? ''}" data-key="${key}"`;
   const value = escape(object[key]);
   const upload = ['image', 'pdf'].includes(type);
-  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'image-fit' ? `<select ${attrs}><option value="contain"${object[key] === 'contain' ? ' selected' : ''}>전체 보기</option><option value="cover"${object[key] !== 'contain' ? ' selected' : ''}>칸 채우기 (확대)</option></select>` : type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(content.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
+  return `<div class="field ${type === 'textarea' || upload ? 'wide' : ''}"><label for="${id}">${label}</label>${type === 'image-fit' ? `<select ${attrs}><option value="contain"${object[key] === 'contain' ? ' selected' : ''}>전체 보기</option><option value="cover"${object[key] !== 'contain' ? ' selected' : ''}>칸 채우기 (확대)</option></select>` : type === 'case-study' ? `<select ${attrs}><option value="">연결 안 함</option>${(referenceContent.caseStudies || []).map(study => `<option value="${escape(study.slug)}"${study.slug === object[key] ? ' selected' : ''}>${escape(study.title)}</option>`).join('')}</select>` : type === 'textarea' ? `<textarea ${attrs} rows="3" aria-describedby="${id}-help">${value}</textarea>` : `<input ${attrs} type="${type === 'email' ? 'email' : 'text'}" value="${value}" ${key === 'name' && language === 'en' ? 'required' : ''} aria-describedby="${id}-help">`}<p class="help" id="${id}-help">${help}</p>${upload ? `<div class="upload"><input type="file" aria-label="${label} 파일 선택" data-upload-for="${id}" accept="${type === 'pdf' ? '.pdf' : '.png,.jpg,.jpeg,.webp,.gif'}"><span class="help">최대 10 MB · 주소를 직접 붙여넣어도 됩니다.</span></div>` : ''}</div>`;
 }
 function render() {
   documentEditors.forEach(editor => editor.destroy());
@@ -63,6 +66,7 @@ function render() {
       initialized = true;
       const study = content.caseStudies[Number(entry.dataset.documentStudy)];
       const editor = createDocumentEditor(entry.querySelector('.document-editor'), study, {
+        lang: language,
         onChange: doc => {
           study.document = doc;
           study.title = documentTitle(doc, study.title);
@@ -93,7 +97,7 @@ function caseField(path, label, value, kind = 'textarea') {
 function renderCaseStudies() {
   const studies = content.caseStudies || [];
   if (!studies.length) return '';
-  return `<section class="editor-section" id="case-studies"><div class="section-title"><h2>프로젝트 상세 문서</h2></div><p class="case-editor-help">문서를 열고 글을 직접 수정하세요. 제목 1은 프로젝트 제목, 제목 2는 Vector Search 같은 섹션, 제목 3은 소제목입니다. 저장하면 상세 페이지와 PDF에 같은 서식이 적용됩니다.</p>${studies.map((study, index) => `<details class="entry document-entry" data-document-study="${index}"><summary>${escape(study.title)}</summary><div class="entry-inner"><a href="/projects/${escape(study.slug)}/" target="_blank" rel="noopener">상세 페이지 미리보기 ↗</a>${documentEditorHTML()}<details class="document-settings"><summary>검색 결과 소개</summary>${caseField(`${index}.description`, '검색 결과에 표시할 소개', study.description)}</details></div></details>`).join('')}</section>`;
+  return `<section class="editor-section" id="case-studies"><div class="section-title"><h2>프로젝트 상세 문서</h2></div><p class="case-editor-help">문서를 열고 글을 직접 수정하세요. 제목 1은 프로젝트 제목, 제목 2는 Vector Search 같은 섹션, 제목 3은 소제목입니다. 저장하면 상세 페이지와 PDF에 같은 서식이 적용됩니다.</p>${studies.map((study, index) => `<details class="entry document-entry" data-document-study="${index}"><summary>${escape(study.title)}</summary><div class="entry-inner"><a href="${language === 'ko' ? '/ko' : ''}/projects/${escape(study.slug)}/" target="_blank" rel="noopener">상세 페이지 미리보기 ↗</a>${documentEditorHTML()}<details class="document-settings"><summary>검색 결과 소개</summary>${caseField(`${index}.description`, '검색 결과에 표시할 소개', study.description)}</details></div></details>`).join('')}</section>`;
 }
 async function uploadDocumentImage(file) {
   pendingUploads++;
@@ -164,28 +168,56 @@ $('#fields').addEventListener('change', async event => {
 });
 $('#content-form').addEventListener('submit', async event => {
   event.preventDefault();
-  if (pendingUploads) return;
+  if (pendingUploads || saving) return;
+  saving = true;
+  $('#editor-language').disabled = true;
   $('#save').disabled = true;
   $('#status').textContent = '저장 중…';
   $('#error').hidden = true;
   const savingVersion = version;
   try {
-    await api('/api/content', content);
+    await api(`/api/content?lang=${language}`, content);
     dirty = version !== savingVersion;
     $('#status').textContent = dirty ? '저장 후 새 변경사항이 있습니다' : '저장 완료 · 미리보기를 새로고침하세요';
   } catch (err) { error(err.message); $('#status').textContent = '저장하지 못했습니다'; }
-  finally { $('#save').disabled = pendingUploads > 0; }
+  finally { saving = false; $('#editor-language').disabled = false; $('#save').disabled = pendingUploads > 0; }
 });
-window.addEventListener('beforeunload', event => { if (dirty || pendingUploads) { event.preventDefault(); event.returnValue = ''; } });
-async function initialize() {
+window.addEventListener('beforeunload', event => { if (dirty || pendingUploads || saving) { event.preventDefault(); event.returnValue = ''; } });
+async function initialize(nextLanguage = language) {
   try {
-    const response = await fetch('/api/content');
+    const response = await fetch(`/api/content?lang=${nextLanguage}`);
     if (!response.ok) throw new Error('내용을 불러오지 못했습니다.');
-    content = await response.json();
+    const nextContent = await response.json();
+    let nextReference = nextContent;
+    if (nextLanguage === 'ko') {
+      const reference = await fetch('/api/content');
+      if (!reference.ok) throw new Error('영문 프로젝트 목록을 불러오지 못했습니다.');
+      nextReference = await reference.json();
+    }
+    content = nextContent;
+    referenceContent = nextReference;
+    language = nextLanguage;
+    dirty = false;
     render();
+    $('#preview').href = language === 'ko' ? '/ko/' : '/';
     $('#save').disabled = false;
     $('#status').textContent = '모든 변경사항이 저장되어 있습니다';
-  } catch (err) { error(`${err.message} 로컬 서버가 실행 중인지 확인해 주세요.`); }
+  } catch (err) {
+    $('#editor-language').value = language;
+    $('#save').disabled = !content;
+    error(`${err.message} 로컬 서버가 실행 중인지 확인해 주세요.`);
+  }
 }
+$('#editor-language').addEventListener('change', async event => {
+  const next = event.target.value;
+  if (pendingUploads || saving || dirty && !window.confirm('저장하지 않은 변경사항을 버리고 편집 언어를 바꿀까요?')) {
+    event.target.value = language;
+    return;
+  }
+  $('#error').hidden = true;
+  $('#save').disabled = true;
+  event.target.disabled = true;
+  try { await initialize(next); } finally { event.target.disabled = false; }
+});
 new ResizeObserver(([entry]) => document.documentElement.style.setProperty('--editor-header-height', `${entry.target.offsetHeight}px`)).observe($('.toolbar'));
 initialize();

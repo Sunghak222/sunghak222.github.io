@@ -49,7 +49,7 @@ for (const button of document.querySelectorAll('.email-copy')) {
       input.remove();
       button.focus({ preventScroll: true });
     }
-    status.textContent = copied ? 'Email copied' : 'Select the address to copy';
+    status.textContent = copied ? button.dataset.copied : button.dataset.copyFallback;
     if (!copied) {
       const range = document.createRange();
       range.selectNodeContents(button.querySelector('.email-address'));

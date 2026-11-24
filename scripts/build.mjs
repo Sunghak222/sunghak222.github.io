@@ -1,16 +1,29 @@
-import { readFile, mkdir, cp, writeFile, rename, mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, cp, writeFile, rename, mkdtemp, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { renderPage } from './render.mjs';
 import { renderCaseStudy, caseStudyPath } from './case-studies.mjs';
+import { readContent, emptyTranslation, validateTranslation, localizeContent } from './localization.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
-export async function build(data, { outputDir = path.join(root, 'dist') } = {}) {
-  data ??= JSON.parse(await readFile(path.join(root, 'content/en.json'), 'utf8'));
+export async function build(data, { outputDir = path.join(root, 'dist'), translation } = {}) {
+  const fromDisk = data === undefined;
+  data ??= await readContent('en');
+  translation ??= fromDisk ? await readContent('ko') : emptyTranslation();
+  validateTranslation(data, translation);
   const html = renderPage(data);
-  const pages = [['index.html', html], ...(data.caseStudies ?? []).map(study => [
-    `${caseStudyPath(study.slug)}index.html`, renderCaseStudy(study, data.profile)
-  ])];
+  const korean = localizeContent(data, translation);
+  const translatedSlugs = new Set(translation.caseStudies.map(study => study.slug));
+  const pages = [
+    ['index.html', html],
+    ['ko/index.html', renderPage(korean, { lang: 'ko', translation })],
+    ...(data.caseStudies ?? []).map(study => [
+      `${caseStudyPath(study.slug)}index.html`, renderCaseStudy(study, data.profile, { hasKorean: translatedSlugs.has(study.slug) })
+    ]),
+    ...translation.caseStudies.map(study => [
+      `ko/${caseStudyPath(study.slug)}index.html`, renderCaseStudy(study, korean.profile, { lang: 'ko', hasKorean: true })
+    ])
+  ];
   await mkdir(path.dirname(outputDir), { recursive: true });
   const staging = await mkdtemp(`${outputDir}.building-`);
   const previous = `${staging}.previous`;

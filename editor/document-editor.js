@@ -30,11 +30,11 @@ const SizedText = TextStyle.extend({
 });
 const Figure = Node.create({
   name: 'figure', group: 'block', content: 'paragraph', defining: true, isolating: true,
-  addAttributes() { return Object.fromEntries(['id', 'image', 'alt', 'link', 'label'].map(key => [key, { default: '' }])); },
-  parseHTML() { return [{ tag: 'figure[data-document-figure]', getAttrs: el => ({ id: el.dataset.figureId || '', image: el.querySelector('img')?.getAttribute('src') || '', alt: el.querySelector('img')?.alt || '', link: el.dataset.link || '', label: el.dataset.label || '' }), contentElement: '.figure-caption-content' }]; },
+  addAttributes() { return Object.fromEntries(['id', 'image', 'alt', 'link', 'label', 'layout'].map(key => [key, { default: '' }])); },
+  parseHTML() { return [{ tag: 'figure[data-document-figure]', getAttrs: el => ({ id: el.dataset.figureId || '', image: el.querySelector('img')?.getAttribute('src') || '', alt: el.querySelector('img')?.alt || '', link: el.dataset.link || '', label: el.dataset.label || '', layout: el.dataset.layout || '' }), contentElement: '.figure-caption-content' }]; },
   renderHTML({ node }) {
     const a = node.attrs;
-    return ['figure', { 'data-document-figure': '', 'data-figure-id': a.id, 'data-link': a.link, 'data-label': a.label },
+    return ['figure', { 'data-document-figure': '', 'data-figure-id': a.id, 'data-link': a.link, 'data-label': a.label, 'data-layout': a.layout, class: a.layout === 'portrait' ? 'is-portrait' : '' },
       ['div', { contenteditable: 'false' }, ['img', { src: asset(a.image), alt: a.alt }]],
       ['figcaption', {}, ['div', { class: 'figure-caption-content' }, 0], ...(a.link ? [['a', { href: asset(a.link), contenteditable: 'false', tabindex: '-1' }, a.label]] : [])]
     ];
@@ -60,7 +60,7 @@ const TableCell = Node.create({ name: 'tableCell', content: 'paragraph+', isolat
   parseHTML() { return [{ tag: 'td' }]; }, renderHTML() { return ['td', 0]; }
 });
 
-export function createDocumentEditor(container, study, { onChange, onError, upload }) {
+export function createDocumentEditor(container, study, { onChange, onError, upload, lang = 'en' }) {
   const toolbar = container.querySelector('.document-toolbar');
   const style = toolbar.querySelector('[data-format="heading"]');
   const size = toolbar.querySelector('[data-format="size"]');
@@ -84,7 +84,7 @@ export function createDocumentEditor(container, study, { onChange, onError, uplo
     element: container.querySelector('.document-canvas'),
     extensions: [StarterKit.configure({ heading: { levels: [1, 2, 3] }, blockquote: false, bulletList: false, orderedList: false, listItem: false, listKeymap: false, code: false, codeBlock: false, horizontalRule: false, italic: false, strike: false, trailingNode: false, link: { openOnClick: false, autolink: false, linkOnPaste: false, isAllowedUri: url => !!safeURL(url) } }), SizedText, ParagraphStyle, Figure, Comparison, ComparisonColumn, Table, TableRow, TableHeader, TableCell],
     content: doc,
-    editorProps: { attributes: { class: 'rich-document', role: 'textbox', 'aria-label': `${study.title} 상세 문서`, 'aria-multiline': 'true', spellcheck: 'false' } },
+    editorProps: { attributes: { class: 'rich-document', lang, role: 'textbox', 'aria-label': `${study.title} 상세 문서`, 'aria-multiline': 'true', spellcheck: 'false' } },
     onCreate: ({ editor }) => syncToolbar(editor),
     onSelectionUpdate: ({ editor }) => syncToolbar(editor),
     onUpdate: ({ editor }) => { onChange(editor.getJSON()); syncToolbar(editor); }

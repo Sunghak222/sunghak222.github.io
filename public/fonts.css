@@ -14,3 +14,4 @@
   font-display: swap;
 }
 :root { --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif; }
+:lang(ko) { --serif: 'Source Serif 4', 'AppleMyungjo', 'Noto Serif KR', Batang, Georgia, serif; }

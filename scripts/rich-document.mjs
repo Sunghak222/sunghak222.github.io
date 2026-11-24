@@ -1,4 +1,5 @@
 import { escapeHTML as escape, safeURL, external } from './html.mjs';
+import { labels } from './locales.mjs';
 
 export const lineSpacings = ['1', '1.15', '1.3', '1.5', '1.7', '2'];
 export const validFontSize = value => typeof value === 'string' && /^\d+(?:\.\d+)?px$/.test(value) && parseFloat(value) >= 12 && parseFloat(value) <= 48;
@@ -69,6 +70,7 @@ export function validateRichDocument(doc) {
     if (attrs.id != null && (typeof attrs.id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(attrs.id))) fail();
     if (node.type === 'heading' && ![1, 2, 3].includes(attrs.level)) fail();
     if (node.type === 'figure' && (!safeURL(attrs.image) || typeof attrs.alt !== 'string' || typeof attrs.link !== 'string' || typeof attrs.label !== 'string' || (attrs.link && !safeURL(attrs.link)))) fail();
+    if (node.type === 'figure' && attrs.layout != null && !['', 'portrait'].includes(attrs.layout)) fail();
     if (node.type === 'text') {
       if (typeof node.text !== 'string' || !node.text || (characters += node.text.length) > 500000) fail();
       if (node.marks !== undefined && !Array.isArray(node.marks)) fail();
@@ -93,10 +95,10 @@ export function validateRichDocument(doc) {
   return doc;
 }
 
-export function renderRichDocument(doc, author = '') {
+export function renderRichDocument(doc, author = '', { assetPrefix = '../../', lang = 'en' } = {}) {
   validateRichDocument(doc);
   const sections = documentSections(doc);
-  const asset = value => value.startsWith('assets/') ? `../../${value}` : value;
+  const asset = value => value.startsWith('assets/') ? `${assetPrefix}${value}` : value;
   const render = node => {
     const attrs = node.attrs || {};
     if (node.type === 'text') {
@@ -117,7 +119,7 @@ export function renderRichDocument(doc, author = '') {
       const section = sections.find(item => item.node === node);
       return `<h${attrs.level}${section ? ` id="${section.id}"` : ''}${spacing}>${inside}</h${attrs.level}>`;
     }
-    if (node.type === 'figure') return `<figure class="case-figure"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a><figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption></figure>`;
+    if (node.type === 'figure') return `<figure class="case-figure${attrs.layout === 'portrait' ? ' is-portrait' : ''}"><a href="${escape(asset(attrs.image))}" target="_blank" rel="noopener noreferrer" aria-label="${labels[lang].fullImage}"><img src="${escape(asset(attrs.image))}" alt="${escape(attrs.alt)}"></a><figcaption>${inside}${attrs.link ? `<a href="${escape(asset(attrs.link))}"${external(attrs.link)}>${escape(attrs.label)}</a>` : ''}</figcaption></figure>`;
     if (node.type === 'comparison') return `<div class="document-comparison">${inside}</div>`;
     if (node.type === 'comparisonColumn') return `<div class="document-comparison-column">${inside}</div>`;
     if (node.type === 'table') {

@@ -64,19 +64,15 @@
     {
       "title": "The Pet Mischief Detector",
       "year": "Apr 2026",
-      "category": "Computer vision · Group project",
-      "role": "Group project · Pipeline design & fine-tuning",
-      "summary": "A pet-monitoring pipeline that combines object detection with depth estimation to distinguish close interactions from objects that only appear adjacent in a 2D image.",
-      "tools": "YOLOv11 · Depth Anything V2 · COCO-derived dataset",
-      "image": "",
-      "imageAlt": "",
+      "category": "Computer vision · Team project",
+      "summary": "A team prototype combining object detection and relative depth to flag potentially risky pet–object interactions. I proposed adding depth estimation and wrote the image-level risk evaluation script.",
+      "image": "assets/pet-mischief-detector/portfolio-cat-cup.jpg",
+      "imageAlt": "A cat with its head inside a glass. YOLO26s detects the cat and cup, and the system displays HIGH. A relative depth map appears in the lower right.",
       "url": "",
       "code": "https://github.com/Sunghak222/The-Pet-Mischief-Detector",
       "paper": "",
-      "problem": "Two objects may look adjacent in an image while being metres apart in 3D. A proximity rule based only on 2D detections can therefore trigger false alerts.",
-      "approach": "I designed a dual-model pipeline combining YOLOv11 object detection with Depth Anything V2 monocular depth estimation. Depth similarity acts as a multiplicative gate on the 2D proximity score to suppress perspective-induced false positives.\n\nI also designed and ran fine-tuning experiments on a custom eight-class, COCO-derived dataset, using a two-phase backbone-freeze strategy to separate detection-head warmup from backbone adaptation.",
-      "outcome": "The project introduced depth-aware proximity scoring to address a failure mode of 2D-only detection, alongside a structured fine-tuning workflow that separates head warmup from backbone adaptation.",
-      "caseStudy": "pet-mischief-detector"
+      "caseStudy": "pet-mischief-detector",
+      "imageFit": "cover"
     }
   ],
   "experience": [
@@ -1048,7 +1044,7 @@
     {
       "slug": "pet-mischief-detector",
       "title": "The Pet Mischief Detector",
-      "description": "A pet-monitoring pipeline that combines object detection with depth estimation to distinguish close interactions from objects that only appear adjacent in a 2D image.",
+      "description": "A team project combining object detection and relative depth to flag potentially risky interactions between pets and household objects.",
       "document": {
         "type": "doc",
         "content": [
@@ -1066,22 +1062,34 @@
           },
           {
             "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "Computer vision · Group project · Apr 2026"
-              }
-            ],
             "attrs": {
               "role": "subtitle"
-            }
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Computer vision · Team project · Apr 2026"
+              }
+            ]
           },
           {
             "type": "paragraph",
             "content": [
               {
                 "type": "text",
-                "text": "A pet-monitoring pipeline that combines object detection with depth estimation to distinguish close interactions from objects that only appear adjacent in a 2D image."
+                "text": "A prototype that looks at photos and flags interactions where a pet could knock over or break a household object."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Python · PyTorch · YOLO · Depth Anything V2 · OpenCV"
               }
             ]
           },
@@ -1089,12 +1097,12 @@
             "type": "heading",
             "attrs": {
               "level": 2,
-              "id": "my-role"
+              "id": "detection-and-depth"
             },
             "content": [
               {
                 "type": "text",
-                "text": "My role"
+                "text": "Detection & Depth"
               }
             ]
           },
@@ -1103,7 +1111,52 @@
             "content": [
               {
                 "type": "text",
-                "text": "Group project · Pipeline design & fine-tuning"
+                "text": "Moving the camera changes how far apart objects appear, even when the objects stay in place. I proposed adding relative depth to YOLO detections to help interpret these relationships. The team combined proximity, bounding-box overlap, and depth information to assign an attention level to each scene. The system covers eight classes, including cats, dogs, cups, and vases."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "role": "note"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Photo → YOLO detection → Depth Anything V2 → relationship scores → LOW / MEDIUM / HIGH"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 3
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A cat and a glass"
+              }
+            ]
+          },
+          {
+            "type": "figure",
+            "attrs": {
+              "image": "assets/pet-mischief-detector/portfolio-cat-cup.jpg",
+              "alt": "A cat with its head inside a glass. YOLO26s detects the cat and cup, and the system displays HIGH. A relative depth map appears in the lower right.",
+              "link": "",
+              "label": "",
+              "layout": "portrait"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "A cat with its head inside a glass, marked HIGH by the system. This contact could tip or break the glass; no breakage is visible. Team-project output · COCO image 469317 · YOLO26s."
+                  }
+                ]
               }
             ]
           },
@@ -1111,12 +1164,12 @@
             "type": "heading",
             "attrs": {
               "level": 2,
-              "id": "tools"
+              "id": "contribution-and-evaluation"
             },
             "content": [
               {
                 "type": "text",
-                "text": "Tools & methods"
+                "text": "Contribution & Evaluation"
               }
             ]
           },
@@ -1125,20 +1178,28 @@
             "content": [
               {
                 "type": "text",
-                "text": "YOLOv11 · Depth Anything V2 · COCO-derived dataset"
+                "text": "I identified the limits of judging distance from 2D positions and proposed adding depth estimation. I ran and checked the full process, from detection and depth estimation to scoring and visual output."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "I wrote the image-level risk evaluation script and compared model predictions and confusion matrices. A teammate implemented the main pipeline and updated the scoring rules."
               }
             ]
           },
           {
             "type": "heading",
             "attrs": {
-              "level": 2,
-              "id": "question"
+              "level": 3
             },
             "content": [
               {
                 "type": "text",
-                "text": "The question"
+                "text": "Checking class labels before scoring"
               }
             ]
           },
@@ -1147,20 +1208,19 @@
             "content": [
               {
                 "type": "text",
-                "text": "Two objects may look adjacent in an image while being metres apart in 3D. A proximity rule based only on 2D detections can therefore trigger false alerts."
+                "text": "The pretrained YOLO model used class index 15 for “cat,” while our eight-class dataset used 0. Comparing those numbers directly treated the same object as different classes. I used an inference path that selected objects by class name, then built an evaluation process that compared each image’s predicted risk level with its label. Checking what the class numbers meant was an essential step before evaluating the results."
               }
             ]
           },
           {
             "type": "heading",
             "attrs": {
-              "level": 2,
-              "id": "approach"
+              "level": 3
             },
             "content": [
               {
                 "type": "text",
-                "text": "Approach"
+                "text": "Interpreting the attention level"
               }
             ]
           },
@@ -1169,38 +1229,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "I designed a dual-model pipeline combining YOLOv11 object detection with Depth Anything V2 monocular depth estimation. Depth similarity acts as a multiplicative gate on the 2D proximity score to suppress perspective-induced false positives."
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "I also designed and ran fine-tuning experiments on a custom eight-class, COCO-derived dataset, using a two-phase backbone-freeze strategy to separate detection-head warmup from backbone adaptation."
-              }
-            ]
-          },
-          {
-            "type": "heading",
-            "attrs": {
-              "level": 2,
-              "id": "outcome"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Outcome"
-              }
-            ]
-          },
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "The project introduced depth-aware proximity scoring to address a failure mode of 2D-only detection, alongside a structured fine-tuning workflow that separates head warmup from backbone adaptation."
+                "text": "The attention levels come from rules about spatial relationships. They do not measure accident probability or physical distance."
               }
             ]
           }
