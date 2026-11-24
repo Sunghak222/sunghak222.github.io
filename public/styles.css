@@ -47,7 +47,7 @@ h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 4.6vw, 
 .intro p + p { margin-top: 16px; }
 .intro-layout, .project, .history-row { display: grid; grid-template-columns: var(--index-width) var(--media-width) minmax(0, 1fr); column-gap: var(--column-gap); align-items: start; }
 .intro-layout > div, .project-body, .history-row > div { grid-column: 3; min-width: 0; }
-.has-photo h1 { font-size: clamp(36px, 3.5vw, 52px); }
+.intro-layout.has-photo h1 { font-size: clamp(36px, 3.5vw, 52px); }
 .portrait { grid-column: 2; width: var(--media-width); height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
 .text-links { display: flex; gap: 24px; flex-wrap: wrap; font-size: var(--link-size); }
 .text-links span { display: inline-block; margin-left: 5px; color: #8c8c82; }
@@ -124,8 +124,8 @@ footer { padding: 24px 0 30px; border-top: 1px solid var(--line); display: flex;
   .intro-layout { row-gap: 24px; }
   .intro-layout > div, .project-body, .history-row > div { grid-column: 2; }
   .portrait { grid-row: 1; }
-  .has-photo > div { grid-row: 2; }
-  .has-photo h1 { font-size: clamp(38px, 10vw, 54px); }
+  .intro-layout.has-photo > div { grid-row: 2; }
+  .intro-layout.has-photo h1 { font-size: clamp(38px, 10vw, 54px); }
   .section-heading { margin-bottom: 28px; }
   .section-index { font-size: 17px; }
   .project { row-gap: 12px; }

@@ -10,7 +10,7 @@ const copy = {
     phoneHint: 'Used only in this PDF; not saved to the website.', phonePlaceholder: 'Enter a phone number',
     hidePersonal: 'Exclude all contact details and photo', projects: 'Projects', all: 'Select all', none: 'Clear selection',
     projectHint: 'Full project details follow your profile, in the order shown here.',
-    save: 'Save as PDF', saving: 'Preparing…', ready: 'Choose “Save as PDF” in the print dialog. Use A4 and turn off browser headers and footers.',
+    save: 'Save as PDF', saving: 'Preparing…', ready: 'Choose “Save as PDF” in the print dialog and use A4 paper.',
     error: 'An image could not be loaded. Refresh the page and try again.',
     preview: 'Preview', previewHint: 'Pages break naturally to fit A4. Headings stay with the following content.',
     count: '{count} projects selected', profileOnly: 'Profile only', noScript: 'Enable JavaScript to choose what to include and save your PDF.'
@@ -21,7 +21,7 @@ const copy = {
     phoneHint: '이번 PDF에만 사용되며 웹사이트에 저장되지 않습니다.', phonePlaceholder: '전화번호 입력',
     hidePersonal: '연락처·사진 모두 제외', projects: '프로젝트', all: '전체 선택', none: '선택 해제',
     projectHint: '프로필 다음에 선택한 프로젝트 상세가 아래 순서대로 이어집니다.',
-    save: 'PDF로 저장', saving: '준비 중…', ready: '인쇄 창에서 “PDF로 저장”을 선택하세요. 용지는 A4, 브라우저 머리글·바닥글은 꺼 주세요.',
+    save: 'PDF로 저장', saving: '준비 중…', ready: '인쇄 창에서 “PDF로 저장”을 선택하고 용지는 A4로 설정하세요.',
     error: '이미지를 불러오지 못했습니다. 새로고침한 뒤 다시 시도해 주세요.',
     preview: '미리보기', previewHint: 'A4에 맞춰 페이지가 자연스럽게 나뉩니다. 제목은 다음 내용과 함께 배치됩니다.',
     count: '프로젝트 {count}개 선택', profileOnly: '프로필만 포함', noScript: '포함할 항목을 선택하고 PDF로 저장하려면 JavaScript를 켜 주세요.'

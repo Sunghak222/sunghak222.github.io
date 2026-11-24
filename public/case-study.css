@@ -51,6 +51,18 @@
   .trace-comparison { grid-template-columns: 1fr; }
 }
 @page { size: A4; margin: 16mm 17mm; }
+/* Keep browser-added dates, titles and URLs out of the page margins.
+   Clone the content padding instead, so every printed page keeps its whitespace.
+   https://developer.chrome.com/blog/print-margins */
+@supports (box-decoration-break: clone) {
+  @page { margin: 0; }
+  @media print {
+    .case-page:not(.export-page) .case-document {
+      padding: 16mm 17mm;
+      box-decoration-break: clone;
+    }
+  }
+}
 @media print {
   html { scroll-behavior: auto; }
   .case-page { --case-title-size: 24pt; --case-section-size: 18pt; --case-subsection-size: 13pt; --case-body-size: 12pt; --case-note-size: 10.5pt; }

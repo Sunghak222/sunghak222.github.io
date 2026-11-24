@@ -26,6 +26,7 @@
 .export-document { padding: 14mm 17mm; border: 1px solid #deded9; background: white; overflow-wrap: anywhere; }
 .export-profile { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; margin-bottom: 24pt; }
 .export-profile.has-photo { grid-template-columns: 96px minmax(0, 1fr); }
+.export-profile-text { min-width: 0; }
 .export-portrait { width: 96px; height: auto; }
 .export-profile h1 { font-size: 26pt; font-weight: 500; line-height: 1.2; letter-spacing: -.025em; margin-bottom: 12pt; }
 .export-intro { font-size: 12pt; line-height: 1.6; }
@@ -67,17 +68,23 @@
   .export-profile h1 { font-size: 24pt; }
   .export-project .document-comparison { grid-template-columns: 1fr; }
 }
-@page { size: A4; margin: 16mm 17mm; }
 @media print {
   .export-controls, .export-preview-heading { display: none !important; }
   .export-layout { display: block; padding: 0; margin: 0; max-width: none; }
   .export-document { padding: 0; border: 0; }
   .export-profile { break-inside: avoid; }
   .export-profile.has-photo { grid-template-columns: 26mm minmax(0, 1fr); }
+  .export-profile-text { grid-column: 1; grid-row: 1; }
+  .export-profile.has-photo .export-profile-text { grid-column: 2; }
   .export-portrait { width: 26mm; }
   .export-project { break-before: auto; }
   .export-project .document-subtitle, .export-project .document-metadata { break-after: avoid; }
   .export-project p { orphans: 3; widows: 3; }
   .export-project .document-comparison { break-inside: auto; }
   .export-project .document-table-wrap { overflow: visible; }
+}
+@supports (box-decoration-break: clone) {
+  @media print {
+    .export-document { padding: 16mm 17mm; box-decoration-break: clone; }
+  }
 }
